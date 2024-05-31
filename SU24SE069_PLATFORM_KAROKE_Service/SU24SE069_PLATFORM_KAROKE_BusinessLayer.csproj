@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SU24SE069_PLATFORM_KAROKE_Repository\SU24SE069_PLATFORM_KAROKE_Repository.csproj" />
   </ItemGroup>
 
