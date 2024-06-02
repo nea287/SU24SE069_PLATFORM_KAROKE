@@ -11,13 +11,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
     public class AccountRepository : BaseRepository<Account>, IAccountRepository
     {
         #region Read
-        public Account GetAccount(string? email = null, Guid? id = null, string? username = null)
+        public Account GetAccount(Guid id)
         {
             Account result = new Account();
             try
             {
-                result = this.FistOrDefault(x => x.AccountId == id.Value 
-                    || x.Email.Equals(email.ToLower()) || username.Equals(username.ToLower()));
+                result = this.FistOrDefault(x => x.AccountId == id);
 
             }catch(Exception ex)
             {
@@ -27,6 +26,21 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return result;
         }
 
+        public Account GetAccountByMail(string email)
+        {
+            Account result = new Account();
+            try
+            {
+                result = this.FistOrDefault(x => x.Email.ToLower().Equals(email));
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            return result;
+        }
         #endregion
         #region Create
         public bool CreateAccount(Account request)

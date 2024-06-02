@@ -87,7 +87,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
         #endregion
 
         #region Read
-        public ResponseResult<AccountViewModel> GetAccount(string? username = null, string? email = null, Guid? accountId = null)
+        public ResponseResult<AccountViewModel> GetAccount(Guid accountId)
         {
             ResponseResult<AccountViewModel> result = new ResponseResult<AccountViewModel>();
             try
@@ -95,7 +95,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 lock (_accountRepository)
                 {
                     var data = _mapper.Map<AccountViewModel>(_accountRepository
-                        .GetAccount(email: email, username: username, id: accountId));
+                        .GetAccount(id: accountId));
 
                     result = data == null ?
                         new ResponseResult<AccountViewModel>()
@@ -227,7 +227,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             {
                 lock (_accountRepository)
                 {
-                    var data = _accountRepository.GetAccount(email: email);
+                    var data = _accountRepository.GetAccountByMail(email);
 
                     data = _mapper.Map<Account>(request);
 
