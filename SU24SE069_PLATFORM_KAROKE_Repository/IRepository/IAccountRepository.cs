@@ -11,5 +11,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
     public interface IAccountRepository : IBaseDAO<Account>
     {
         public Account Login(string username, string password);
+        public bool CreateAccount(Account request);
+        public bool ExistedAccount(string? email = null, string? username = null);
+        public bool UpdateAccountByMail(string email, Account request);
+        public Account GetAccount(string? email = null, Guid? id = null, string? username = null);
     }
 }

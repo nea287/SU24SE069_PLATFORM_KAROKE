@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
-using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
@@ -9,8 +9,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
     {
         public AutoMapperResolver()
         {
+            #region Account
             CreateMap<Account, AccountViewModel>().ReverseMap();
             CreateMap<CreateAccountRequestModel, Account>().ReverseMap();
+            CreateMap<AccountViewModel, CreateAccountRequestModel>().ReverseMap();
+            #endregion
         }
     }
 }

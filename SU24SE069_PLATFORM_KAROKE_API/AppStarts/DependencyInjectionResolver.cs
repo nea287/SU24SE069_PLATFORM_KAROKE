@@ -13,12 +13,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
         {
             services.AddSingleton(typeof(IBaseDAO<>), typeof(BaseDAO<>));
             services.AddScoped<ITokenService, TokenService>();
-
             services.AddSingleton(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+
+            #region Account
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAccountService, AccountService>();
+            #endregion
 
-            
+
         }
     }
 }

@@ -103,14 +103,18 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireRole("STAFF");
     });
-    options.AddPolicy("RequireStaffOrCustomer", policy =>
+    options.AddPolicy("RequireStaffOrMember", policy =>
     {
-        policy.RequireRole("STAFF", "CUSTOMER");
+        policy.RequireRole("STAFF", "MEMBER");
 
     });
     options.AddPolicy("RequiredAdminOrStaff", policy =>
     {
         policy.RequireRole("ADMIN", "STAFF");
+    });
+    options.AddPolicy("RequiredMemberRole", policy =>
+    {
+        policy.RequireRole("MEMBER");
     });
     options.AddPolicy("Bearer", policy =>
     {
