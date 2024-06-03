@@ -7,6 +7,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
     {
         public Guid LyricSheetId { get; set; }
         public string LyricSheetContent { get; set; } = null!;
-        public Guid InternalSongId { get; set; }
+        public Guid SongId { get; set; }
     }
 }

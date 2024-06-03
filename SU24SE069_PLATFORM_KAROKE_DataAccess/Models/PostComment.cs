@@ -7,7 +7,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
     {
         public Guid CommentId { get; set; }
         public string Comment { get; set; } = null!;
-        public Guid AccountId { get; set; }
+        public Guid MemberId { get; set; }
         public Guid PostId { get; set; }
     }
 }

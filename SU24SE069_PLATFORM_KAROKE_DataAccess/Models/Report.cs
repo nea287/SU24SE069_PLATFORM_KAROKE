@@ -13,7 +13,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public string? Reason { get; set; }
         public DateTime CreateTime { get; set; }
         public int ReportType { get; set; }
-        public Guid? PostId { get; set; }
-        public Guid? CommentId { get; set; }
+        public Guid CommentId { get; set; }
+        public Guid PostId { get; set; }
+        public Guid RoomId { get; set; }
     }
 }

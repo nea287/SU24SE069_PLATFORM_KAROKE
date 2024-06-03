@@ -9,7 +9,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public DateTime PurchaseDate { get; set; }
         public int SongType { get; set; }
         public Guid MemberId { get; set; }
-        public Guid? InternalSongId { get; set; }
-        public Guid? ExternalSongId { get; set; }
+        public Guid SongId { get; set; }
     }
 }

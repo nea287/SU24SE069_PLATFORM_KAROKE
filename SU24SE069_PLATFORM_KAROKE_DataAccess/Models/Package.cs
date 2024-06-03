@@ -7,8 +7,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
     {
         public Guid PackageId { get; set; }
         public string PackageName { get; set; } = null!;
-        public string? Description { get; set; }
-        public decimal MoneyAmount { get; set; }
+        public string Description { get; set; } = null!;
+        public decimal? MoneyAmount { get; set; }
         public int StarNumber { get; set; }
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }

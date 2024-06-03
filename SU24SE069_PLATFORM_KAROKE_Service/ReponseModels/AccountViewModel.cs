@@ -18,7 +18,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels
         public int? Role { get; set; }
         public int? Star { get; set; }
         public bool? IsOnline { get; set; }
-        public Guid? CharacterId { get; set; }
         public string? Fullname { get; set; }
         public string? Yob { get; set; }
         public string? IdentityCardNumber { get; set; }

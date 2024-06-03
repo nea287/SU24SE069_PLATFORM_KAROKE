@@ -12,7 +12,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
         public int Gender { get; set; }
         public string AccountName { get; set; } = null!;
         public int Star { get; set; }
-        public Guid CharacterId { get; set; }
         public string? Fullname { get; set; }
         public string? Yob { get; set; }
         public string? IdentityCardNumber { get; set; }

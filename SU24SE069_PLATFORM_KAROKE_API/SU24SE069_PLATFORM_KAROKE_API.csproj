@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SU24SE069_PLATFORM_KAROKE_Service\SU24SE069_PLATFORM_KAROKE_BusinessLayer.csproj" />
+    <ProjectReference Include="..\SU24SE069_PLATFORM_KAROKE_Service\SU24SE069_PLATFORM_KAROKE_Service.csproj" />
   </ItemGroup>
 
 </Project>
