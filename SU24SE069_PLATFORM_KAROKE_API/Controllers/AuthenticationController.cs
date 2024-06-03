@@ -17,8 +17,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             _accountService = accountService;
         }
 
-        [HttpPost("Login/{username}/{password}")]
-        public IActionResult Login(string username, string password)
+        [HttpPost("Login")]
+        public IActionResult Login([FromBody]string username,[FromBody] string password)
             => Ok(_accountService.Login(username, password));
     }
 }
