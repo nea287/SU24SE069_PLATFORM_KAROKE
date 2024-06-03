@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Castle.Core.Internal;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
+using System.Net.NetworkInformation;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
@@ -37,16 +39,29 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
         [HttpGet("GetAccount/{accountId:guid}")]
         public IActionResult GetAccount(Guid accountId) 
-            => Ok(_service.GetAccount(accountId));
+        {
+            var rs = _service.GetAccount(accountId);
 
-        [HttpGet("GetAccounts")]
-        public IActionResult GetAccounts([FromQuery]AccountViewModel filter,
-            [FromQuery] PagingRequest paging,[FromQuery] AccountOrderFilter orderFilter = AccountOrderFilter.CreatedTime)
-            => Ok(_service.GetAccounts(filter, paging, orderFilter));
+            return rs.Value is null? NotFound(rs) : Ok(rs);
+        }
+
+    [HttpGet("GetAccounts")]
+        public IActionResult GetAccounts([FromQuery] AccountViewModel filter,
+            [FromQuery] PagingRequest paging, [FromQuery] AccountOrderFilter orderFilter = AccountOrderFilter.CreatedTime)
+        {
+            var rs = _service.GetAccounts(filter, paging, orderFilter);
+
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        }
 
         [HttpPut("UpdateAccount/{email}")]
         public IActionResult UpdateAccount(string email, [FromBody] UpdateAccountByMailRequestModel request)
-            => Ok(_service.UpdateAccountByEmail(email, request));
+        {
+            var rs = _service.UpdateAccountByEmail(email, request);
+
+            return rs.result.HasValue? (rs.result.Value? Ok(rs) : BadRequest(rs)) : NotFound(rs);
+
+        }
 
     }
 }
