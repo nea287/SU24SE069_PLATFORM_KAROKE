@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
@@ -18,7 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpPost("Login")]
-        public IActionResult Login([FromBody]string username,[FromBody] string password)
-            => Ok(_accountService.Login(username, password));
+        public IActionResult Login([FromBody] LoginRequestModel request)
+            => Ok(_accountService.Login(request.username, request.password));
     }
 }
