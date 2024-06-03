@@ -31,7 +31,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             {
                 return BadRequest(result);
             }
-            return Ok();
+            return Ok(request);
         }
             
 
