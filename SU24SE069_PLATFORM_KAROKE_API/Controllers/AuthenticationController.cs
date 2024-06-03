@@ -7,7 +7,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
     [Route("api/[controller]s")]
     [ApiController]
-    [EnableCors]
+    [EnableCors("AllowAnyOrigins")]
     public class AuthenticationController : ControllerBase
     {
         private readonly IAccountService _accountService;
