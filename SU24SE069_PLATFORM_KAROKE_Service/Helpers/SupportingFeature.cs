@@ -108,7 +108,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers
                 else
                 {
                     return searchResult.OrderByDescending(item => typeof(T).GetProperties().First(x => x.Name.Equals(colName, StringComparison.CurrentCultureIgnoreCase)).GetValue(item)).AsQueryable();
-
                 }
             }
             else
