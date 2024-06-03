@@ -1,4 +1,5 @@
 ﻿using Castle.Core.Internal;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Asn1.Ocsp;
@@ -13,6 +14,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
     [Route("api/[controller]s")]
     [ApiController]
+    [EnableCors("AllowAnyOrigins")]
     public class SongController : ControllerBase
     {
         private readonly ISongService _songService;
