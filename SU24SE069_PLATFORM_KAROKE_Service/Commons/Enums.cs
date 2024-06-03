@@ -46,4 +46,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         FEMALE = 2,
         OTHERS = 3,
     }
+
+    public enum ItemStatus
+    {
+
+    }
 }
