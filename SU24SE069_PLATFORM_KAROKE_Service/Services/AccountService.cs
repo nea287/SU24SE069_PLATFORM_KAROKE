@@ -196,6 +196,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     data.UserName = data.UserName.ToLower();
                     data.IsOnline = false;
                     data.IsVerified = true;
+                    data.CreatedTime = DateTime.Now;
 
                     _accountRepository.CreateAccount(data); 
 

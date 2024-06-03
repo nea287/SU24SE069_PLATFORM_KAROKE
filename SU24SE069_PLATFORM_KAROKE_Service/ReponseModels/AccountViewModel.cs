@@ -22,5 +22,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels
         public string? Yob { get; set; }
         public string? IdentityCardNumber { get; set; }
         public string? PhoneNumber { get; set; }
+        public DateTime? CreatedTime { get; set; }
     }
 }

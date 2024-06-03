@@ -17,7 +17,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
     public enum AccountOrderFilter
     {
-        NULL,
         AccountId,
         UserName,
         Password,
@@ -33,6 +32,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         Yob,
         IdentityCardNumber,
         PhoneNumber,
+        CreatedTime,
 
     }
     #endregion

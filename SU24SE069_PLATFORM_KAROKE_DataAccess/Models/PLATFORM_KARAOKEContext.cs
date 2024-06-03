@@ -74,6 +74,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasMaxLength(50)
                     .HasColumnName("account_name");
 
+                entity.Property(e => e.CreatedTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_time");
+
                 entity.Property(e => e.Email)
                     .HasMaxLength(100)
                     .IsUnicode(false)

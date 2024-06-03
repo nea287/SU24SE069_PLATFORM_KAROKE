@@ -89,6 +89,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 request.IsOnline = true;
                 request.Role = data.Role;
                 request.AccountId = data.AccountId;
+                request.CreatedTime = data.CreatedTime;
 
                 _ = this.UpdateGuid(data, data.AccountId);
                 this.SaveChages();

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 
@@ -24,7 +25,15 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         //[Authorize(Policy = "RequireStaffRole")]
         [HttpPost("CreateAccount")]
         public IActionResult CreateAccount([FromBody] CreateAccountRequestModel request)
-            => Ok(_service.CreateAccount(request));
+        {
+            ResponseResult<AccountViewModel> result = _service.CreateAccount(request);
+            if(result.Value is null)
+            {
+                return BadRequest(result);
+            }
+            return Ok();
+        }
+            
 
         [HttpGet("GetAccount/{accountId:guid}")]
         public IActionResult GetAccount(Guid accountId) 
@@ -32,7 +41,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
         [HttpGet("GetAccounts")]
         public IActionResult GetAccounts([FromQuery]AccountViewModel filter,
-            [FromQuery] PagingRequest paging,[FromQuery] AccountOrderFilter orderFilter)
+            [FromQuery] PagingRequest paging,[FromQuery] AccountOrderFilter orderFilter = AccountOrderFilter.CreatedTime)
             => Ok(_service.GetAccounts(filter, paging, orderFilter));
 
         [HttpPut("UpdateAccount/{email}")]
