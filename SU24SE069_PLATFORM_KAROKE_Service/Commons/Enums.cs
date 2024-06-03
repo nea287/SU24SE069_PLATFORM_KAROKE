@@ -40,4 +40,10 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         STAFF = 2, 
         MEMBER = 3,
     }
+    public enum AccountGender
+    {
+        MALE = 1,
+        FEMALE = 2,
+        OTHERS = 3,
+    }
 }
