@@ -10,12 +10,14 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     #region filter order
     public enum SortOrder
     {
-        Ascending,
         Descending,
+        Ascending,
+        
     }
 
     public enum AccountOrderFilter
     {
+        NULL,
         AccountId,
         UserName,
         Password,

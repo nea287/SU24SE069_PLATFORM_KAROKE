@@ -89,11 +89,27 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers
         {
             if (sortType == SortOrder.Ascending)
             {
-                return searchResult.OrderBy(item => typeof(T).GetProperties().First(x => x.Name.Equals(colName, StringComparison.CurrentCultureIgnoreCase)).GetValue(item)).AsQueryable();
+                if (colName.Equals("NULL"))
+                {
+                    return searchResult.OrderBy(x => true).AsQueryable();
+
+                }
+                else
+                {
+                    return searchResult.OrderBy(item => typeof(T).GetProperties().First(x => x.Name.Equals(colName, StringComparison.CurrentCultureIgnoreCase)).GetValue(item)).AsQueryable();
+                }
             }
             else if (sortType == SortOrder.Descending)
             {
-                return searchResult.OrderByDescending(item => typeof(T).GetProperties().First(x => x.Name.Equals(colName, StringComparison.CurrentCultureIgnoreCase)).GetValue(item)).AsQueryable();
+                if (colName.Equals("NULL"))
+                {
+                    return searchResult.OrderByDescending(x => true).AsQueryable();
+                }
+                else
+                {
+                    return searchResult.OrderByDescending(item => typeof(T).GetProperties().First(x => x.Name.Equals(colName, StringComparison.CurrentCultureIgnoreCase)).GetValue(item)).AsQueryable();
+
+                }
             }
             else
             {
