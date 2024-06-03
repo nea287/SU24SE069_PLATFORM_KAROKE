@@ -679,7 +679,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("song_id")
                     .HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Category).HasColumnName("category");
+                entity.Property(e => e.SongType).HasColumnName("song_type");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")

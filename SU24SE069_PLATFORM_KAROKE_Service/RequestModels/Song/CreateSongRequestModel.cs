@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
+namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song
 {
-    public partial class Song
+    public class CreateSongRequestModel
     {
-        public Guid SongId { get; set; }
         public string SongName { get; set; } = null!;
         public string? SongDescription { get; set; }
         public string? SongUrl { get; set; }
         public int? Source { get; set; }
-        public int SongStatus { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
         public string? SongCode { get; set; }
         public DateTime? PublicDate { get; set; }
         public int SongType { get; set; }

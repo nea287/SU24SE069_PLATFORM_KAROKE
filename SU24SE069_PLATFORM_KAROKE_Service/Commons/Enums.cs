@@ -12,7 +12,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     {
         Descending,
         Ascending,
-        
+
     }
 
     public enum AccountOrderFilter
@@ -33,13 +33,12 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         IdentityCardNumber,
         PhoneNumber,
         CreatedTime,
-
     }
     #endregion
     public enum AccountRole
     {
         ADMIN = 1,
-        STAFF = 2, 
+        STAFF = 2,
         MEMBER = 3,
     }
     public enum AccountGender
@@ -53,4 +52,34 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     {
 
     }
+
+    public enum SongStatus
+    {
+        DISABLE = 0,
+        ENABLE = 1,
+    }
+
+    public enum SongType
+    {
+        INTERNAL = 1,
+        EXTERNAL = 2,
+    }
+    public enum SongOrderFilter
+    {
+        SongId,
+        SongName,
+        SongDescription,
+        SongUrl,
+        Source,
+        SongStatus,
+        CreatedDate,
+        UpdatedDate,
+        SongCode,
+        PublicDate,
+        SongType,
+        Tempo,
+        CreatorId,
+        Price,
+    }
+
 }
