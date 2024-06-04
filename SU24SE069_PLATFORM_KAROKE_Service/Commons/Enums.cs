@@ -59,6 +59,21 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         Status,
     }
 
+    public enum ItemOrderFilter
+    {
+        ItemId,
+        ItemCode,
+        ItemName,
+        ItemDescription,
+        ItemType,
+        ItemPrice,
+        ItemStatus,
+        CanExpire,
+        CanStack,
+        CreatedDate,
+        CreatorId,
+
+    }
     #endregion
     public enum AccountRole
     {
@@ -73,11 +88,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         OTHERS = 3,
     }
 
-    public enum ItemStatus
-    {
-
-    }
-
     public enum SongStatus
     {
         DISABLE = 0,
@@ -90,5 +100,11 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         EXTERNAL = 2,
     }
 
+    public enum ItemStatus
+    {
+        DISABLE = 0,
+        ENABLE = 1,
+        PENDING = 2,
+    }
 
 }

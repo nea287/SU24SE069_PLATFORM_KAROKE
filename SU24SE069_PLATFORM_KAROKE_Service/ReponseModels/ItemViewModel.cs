@@ -15,8 +15,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public int? ItemType { get; set; }
         public decimal? ItemPrice { get; set; }
         public int? ItemStatus { get; set; }
-        public int? CanExpire { get; set; }
-        public int? CanStack { get; set; }
+        public bool? CanExpire { get; set; }
+        public bool? CanStack { get; set; }
         public DateTime? CreatedDate { get; set; }
         public Guid? CreatorId { get; set; }
     }

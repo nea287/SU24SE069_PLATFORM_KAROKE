@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
+namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item
 {
-    public partial class Item
+    public class UpdateItemRequestModel
     {
-        public Guid ItemId { get; set; }
         public string ItemCode { get; set; } = null!;
         public string ItemName { get; set; } = null!;
         public string ItemDescription { get; set; } = null!;
@@ -14,7 +16,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public int ItemStatus { get; set; }
         public bool CanExpire { get; set; }
         public bool CanStack { get; set; }
-        public DateTime CreatedDate { get; set; }
+        //public DateTime CreatedDate { get; set; }
         public Guid CreatorId { get; set; }
     }
 }

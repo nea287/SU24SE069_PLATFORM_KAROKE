@@ -198,7 +198,10 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     data.IsVerified = true;
                     data.CreatedTime = DateTime.Now;
 
-                    _accountRepository.CreateAccount(data); 
+                    if (!_accountRepository.CreateAccount(data))
+                    {
+                        throw new Exception();
+                    } 
 
                     result = _mapper.Map<AccountViewModel>(data);
                 };
@@ -244,7 +247,10 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                         };
                     }
 
-                    _accountRepository.UpdateAccountByMail(email, data);
+                    if(!_accountRepository.UpdateAccountByMail(email, data))
+                    {
+                        throw new Exception();
+                    }
 
                     result = _mapper.Map<AccountViewModel>(data);
                 };

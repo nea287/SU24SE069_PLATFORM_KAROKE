@@ -40,7 +40,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     rs = _mapper.Map<Friend>(request);
                     rs.Status = 1;
 
-                    _friendRepository.CreateFriend(rs);
+                    if (!_friendRepository.CreateFriend(rs))
+                    {
+                        throw new Exception();
+                    }
                 }
             }catch(Exception ex)
             {
@@ -68,7 +71,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 lock (_friendRepository)
                 {
-                    _friendRepository.DeleteFriend(id);
+                    if (!_friendRepository.DeleteFriend(id))
+                    {
+                        throw new Exception();
+                    }
                 }
             }catch(Exception ex)
             {

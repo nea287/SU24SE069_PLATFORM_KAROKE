@@ -139,7 +139,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     data.CreatedDate = DateTime.Now;
                     data.UpdatedDate = DateTime.Now;
 
-                    _= _songRepository.CreateSong(data);
+                    if (!_songRepository.CreateSong(data))
+                    {
+                        throw new Exception();
+                    }
 
                     result = _mapper.Map<SongViewModel>(data);
                 };
@@ -185,7 +188,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         };
                     }
 
-                    _songRepository.UpdateSong(id, data);
+                    if(!_songRepository.UpdateSong(id, data))
+                    {
+                        throw new Exception();
+                    }
 
                     result = _mapper.Map<SongViewModel>(data);
                 };
@@ -214,7 +220,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         {
             try
             {
-               _= _songRepository.DeleteSong(id);
+                if (!_songRepository.DeleteSong(id))
+                {
+                    throw new Exception();
+                }
             }catch(Exception ex)
             {
                 return new ResponseResult<SongViewModel>()

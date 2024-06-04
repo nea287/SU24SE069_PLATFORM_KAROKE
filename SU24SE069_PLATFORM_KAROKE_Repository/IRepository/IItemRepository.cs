@@ -10,10 +10,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
 {
     public interface IItemRepository : IBaseRepository<Item>
     {
-        public Item GetItem(Guid id);
+        //public Item GetItem(Guid id);
         public IEnumerable<Item> GetItems();
         public bool UpdateItem(Guid id,Item item);
         public bool CreateItem(Item item);
-        public bool DeleteItem(Guid id);    
+        public bool DeleteItem(Item item);
+        public bool ExistedItem(string ItemCode);
+
     }
 }

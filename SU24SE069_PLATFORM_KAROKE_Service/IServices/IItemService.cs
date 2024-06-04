@@ -1,5 +1,9 @@
-﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
+﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +15,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
     public interface IItemService
     {
         public ResponseResult<ItemViewModel> GetItem(Guid id);
-       // public ResponseResult<ItemViewModel> UpdateItem(Guid id,  item);
+        public DynamicModelResponse.DynamicModelsResponse<ItemViewModel> GetItems(ItemViewModel filter, PagingRequest request, ItemOrderFilter orderFilter);
+        public ResponseResult<ItemViewModel> CreateItem(CreateItemRequestModel request);
+        public ResponseResult<ItemViewModel> DeleteItem(Guid id);
+        public ResponseResult<ItemViewModel> UpdateItem(Guid id, UpdateItemRequestModel request);
     }
 }

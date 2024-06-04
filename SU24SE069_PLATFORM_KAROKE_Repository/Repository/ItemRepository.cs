@@ -13,27 +13,47 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
     {
         public bool CreateItem(Item item)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool DeleteItem(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Item GetItem(Guid id)
-        {
-            Item item = new Item();
             try
             {
-                item = GetFirstOrDefault(x => x.ItemId == id);
+                Insert(item);
+                SaveChages();
             }catch(Exception ex)
             {
-                throw new Exception(ex.Message);
+                return false;
             }
-
-            return item;
+            return true;
         }
+
+        public bool DeleteItem(Item item)
+        {
+            try
+            {
+                _= UpdateGuid(item, item.ItemId);
+                SaveChages();
+                
+            }catch(Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool ExistedItem(string ItemCode)
+            => Any(item => item.ItemCode.ToLower().Equals(ItemCode.ToLower()));
+
+        //public Item GetItem(Guid id)
+        //{
+        //    Item item = new Item();
+        //    try
+        //    {
+        //        item = GetByIdGuid(id).Result;
+        //    }catch(Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+        //    }
+
+        //    return item;
+        //}
 
         public IEnumerable<Item> GetItems()
         {

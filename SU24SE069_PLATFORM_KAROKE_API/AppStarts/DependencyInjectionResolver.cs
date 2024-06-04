@@ -32,6 +32,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<IFriendService, FriendService>();
             #endregion
 
+            #region Item
+            services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IItemService, ItemService>();
+            #endregion 
+
 
         }
     }
