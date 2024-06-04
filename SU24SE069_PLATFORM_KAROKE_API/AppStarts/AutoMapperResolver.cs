@@ -3,6 +3,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
@@ -24,6 +25,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<Song, UpdateSongRequestModel>().ReverseMap();
             CreateMap<SongViewModel, CreateSongRequestModel>().ReverseMap();
             CreateMap<SongViewModel, UpdateSongRequestModel>().ReverseMap();
+            #endregion
+
+            #region Friend
+            CreateMap<Friend, FriendViewModel>().ReverseMap();
+            CreateMap<Friend, FriendRequestModel>().ReverseMap();
             #endregion
         }
     }

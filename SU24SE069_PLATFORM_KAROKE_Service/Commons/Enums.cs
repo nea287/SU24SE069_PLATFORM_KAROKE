@@ -34,6 +34,31 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         PhoneNumber,
         CreatedTime,
     }
+    public enum SongOrderFilter
+    {
+        SongId,
+        SongName,
+        SongDescription,
+        SongUrl,
+        Source,
+        SongStatus,
+        CreatedDate,
+        UpdatedDate,
+        SongCode,
+        PublicDate,
+        SongType,
+        Tempo,
+        CreatorId,
+        Price,
+    }
+
+    public enum FriendOrderFilter
+    {
+        SenderId,
+        ReceiverId,
+        Status,
+    }
+
     #endregion
     public enum AccountRole
     {
@@ -64,22 +89,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         INTERNAL = 1,
         EXTERNAL = 2,
     }
-    public enum SongOrderFilter
-    {
-        SongId,
-        SongName,
-        SongDescription,
-        SongUrl,
-        Source,
-        SongStatus,
-        CreatedDate,
-        UpdatedDate,
-        SongCode,
-        PublicDate,
-        SongType,
-        Tempo,
-        CreatorId,
-        Price,
-    }
+
 
 }
