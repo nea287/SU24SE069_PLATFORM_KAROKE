@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Castle.Core.Internal;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
@@ -25,7 +26,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         {
             var rs = _friendService.GetFriends(filter, paging, orderFilter);
 
-            return rs.Results is null ? BadRequest(rs) : Ok(rs);
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
 
         [HttpDelete("DeleteFriend/{friendId:guid}")]

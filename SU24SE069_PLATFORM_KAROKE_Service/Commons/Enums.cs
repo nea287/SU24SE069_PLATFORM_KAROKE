@@ -74,6 +74,17 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         CreatorId,
 
     }
+
+    public enum AccountInventoryItemOrderFilter
+    {
+        AccountInventoryItemId,
+        ItemStatus,
+        ActivateDate,
+        ExpirationDate,
+        Quantity,
+        ItemId,
+        MemberId
+    }
     #endregion
     public enum AccountRole
     {
