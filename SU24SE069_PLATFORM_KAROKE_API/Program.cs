@@ -153,7 +153,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.UseCors();
+app.UseCors("AllowAnyOrigins");
 
 app.UseAuthentication();
 

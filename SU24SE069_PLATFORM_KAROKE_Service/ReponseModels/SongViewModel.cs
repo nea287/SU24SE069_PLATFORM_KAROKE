@@ -9,15 +9,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
 {
     public class SongViewModel
     {
-        public SongViewModel()
-        {
-            FavouriteSongs = new HashSet<FavouriteSong>();
-            InAppTransactions = new HashSet<InAppTransaction>();
-            InstrumentSheets = new HashSet<InstrumentSheet>();
-            Lyrics = new HashSet<Lyric>();
-            PurchasedSongs = new HashSet<PurchasedSong>();
-            Recordings = new HashSet<Recording>();
-        }
+        //public SongViewModel()
+        //{
+        //    FavouriteSongs = new HashSet<FavouriteSong>();
+        //    InAppTransactions = new HashSet<InAppTransaction>();
+        //    InstrumentSheets = new HashSet<InstrumentSheet>();
+        //    Lyrics = new HashSet<Lyric>();
+        //    PurchasedSongs = new HashSet<PurchasedSong>();
+        //    Recordings = new HashSet<Recording>();
+        //}
 
         public Guid? SongId { get; set; }
         public string? SongName { get; set; }
@@ -34,13 +34,13 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public Guid? CreatorId { get; set; }
         public decimal? Price { get; set; }
 
-        public Account Creator { get; set; }
-        public ICollection<FavouriteSong> FavouriteSongs { get; set; }
-        public ICollection<InAppTransaction> InAppTransactions { get; set; }
-        public ICollection<InstrumentSheet> InstrumentSheets { get; set; }
-        public ICollection<Lyric> Lyrics { get; set; }
-        public ICollection<PurchasedSong> PurchasedSongs { get; set; }
-        public ICollection<Recording> Recordings { get; set; }
+        //public Account Creator { get; set; }
+        //public ICollection<FavouriteSong> FavouriteSongs { get; set; }
+        //public ICollection<InAppTransaction> InAppTransactions { get; set; }
+        //public ICollection<InstrumentSheet> InstrumentSheets { get; set; }
+        //public ICollection<Lyric> Lyrics { get; set; }
+        //public ICollection<PurchasedSong> PurchasedSongs { get; set; }
+        //public ICollection<Recording> Recordings { get; set; }
 
     }
 }

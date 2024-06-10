@@ -140,7 +140,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                                                 includeProperties: String.Join(",",
                                                 SupportingFeature.GetNameIncludedProperties<Song>()))
                         .AsQueryable()
-
                         .ProjectTo<ItemViewModel>(_mapper.ConfigurationProvider)
                         .DynamicFilter(filter);
 
