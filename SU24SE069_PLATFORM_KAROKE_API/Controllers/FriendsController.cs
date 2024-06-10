@@ -21,7 +21,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         {
             _friendService = friendService;
         }
-        [HttpGet("GetFriends")]
+        [HttpGet]
         public IActionResult GetFriends([FromQuery] FriendViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] FriendOrderFilter orderFilter = FriendOrderFilter.Status)
         {
             var rs = _friendService.GetFriends(filter, paging, orderFilter);
@@ -30,17 +30,17 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpDelete("{friendId:guid}")]
-        public IActionResult DeleteFriend(Guid friendId)
+        public async Task<IActionResult> DeleteFriend(Guid friendId)
         {
-            var rs = _friendService.DeleteFriend(friendId);
+            var rs = await _friendService.DeleteFriend(friendId);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : NotFound(rs)) : BadRequest(rs);
         }
 
         [HttpPost]
-        public IActionResult CreateFriend([FromBody] FriendRequestModel request)
+        public async Task<IActionResult> CreateFriend([FromBody] FriendRequestModel request)
         {
-            var rs = _friendService.CreateFriend(request);
+            var rs = await _friendService.CreateFriend(request);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }

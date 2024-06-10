@@ -9,11 +9,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
 {
     public interface ISongRepository : IBaseRepository<Song>
     {
-        public Song GetSong(Guid id);
-        public Song GetSongByCode(string code);
-        public bool CreateSong(Song song);
-        public bool UpdateSong(Guid id, Song song);
+        public Task<Song> GetSong(Guid id);
+        public Task<Song> GetSongByCode(string code);
+        public Task<bool> CreateSong(Song song);
+        public Task<bool> UpdateSong(Guid id, Song song);
         public bool ExistedSong(string code);
-        public bool DeleteSong(Guid id);
+        public Task<bool> DeleteSong(Guid id);
     }
 }

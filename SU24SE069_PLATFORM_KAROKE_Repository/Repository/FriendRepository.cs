@@ -10,11 +10,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
     public class FriendRepository : BaseRepository<Friend>, IFriendRepository
     {
-        public bool CreateFriend(Friend request)
+        public async Task<bool> CreateFriend(Friend request)
         {
             try
             {
-                Insert(request);
+                await InsertAsync(request);
                 SaveChages();
 
             }catch(Exception ex)
@@ -24,11 +24,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return true;
         }
 
-        public bool DeleteFriend(Guid id)
+        public async Task<bool> DeleteFriend(Guid id)
         {
             try
             {
-                Friend friend = GetFirstOrDefault(x => x.ReceiverId == id);
+                Friend friend = await FirstOrDefaultAsync(x => x.ReceiverId == id);
                 Delete(friend);
                 SaveChages();
             }catch(Exception ex)

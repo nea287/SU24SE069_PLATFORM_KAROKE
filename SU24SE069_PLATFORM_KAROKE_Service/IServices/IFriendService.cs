@@ -14,8 +14,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
 {
     public interface IFriendService
     {
-        public ResponseResult<FriendViewModel> DeleteFriend(Guid id);
+        public Task<ResponseResult<FriendViewModel>> DeleteFriend(Guid id);
         public DynamicModelResponse.DynamicModelsResponse<FriendViewModel> GetFriends(FriendViewModel filter, PagingRequest paging, FriendOrderFilter orderFilter);
-        public ResponseResult<FriendViewModel> CreateFriend(FriendRequestModel request);
+        public Task<ResponseResult<FriendViewModel>> CreateFriend(FriendRequestModel request);
     }
 }

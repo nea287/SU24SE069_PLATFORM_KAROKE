@@ -2,7 +2,6 @@
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
-using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
@@ -30,7 +29,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             _songRepository = songRepository;
         }
         #region Read
-        public ResponseResult<SongViewModel> GetSong(Guid accountId)
+        public async Task<ResponseResult<SongViewModel>> GetSong(Guid accountId)
         {
             ResponseResult<SongViewModel> result = new ResponseResult<SongViewModel>();
             try
@@ -38,7 +37,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 lock (_songRepository)
                 {
                     var data = _mapper.Map<SongViewModel>(_songRepository
-                        .GetSong(id: accountId));
+                        .GetSong(id: accountId).Result);
 
                     result = data == null ?
                         new ResponseResult<SongViewModel>()
@@ -117,7 +116,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         #endregion
 
         #region Create
-        public ResponseResult<SongViewModel> CreateSong(CreateSongRequestModel request)
+        public async Task<ResponseResult<SongViewModel>> CreateSong(CreateSongRequestModel request)
         {
             SongViewModel result = new SongViewModel();
             try
@@ -139,7 +138,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     data.CreatedDate = DateTime.Now;
                     data.UpdatedDate = DateTime.Now;
 
-                    if (!_songRepository.CreateSong(data))
+                    if (!_songRepository.CreateSong(data).Result)
                     {
                         throw new Exception();
                     }
@@ -167,16 +166,21 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         #endregion
 
         #region Update
-        public ResponseResult<SongViewModel> UpdateSong(Guid id, UpdateSongRequestModel request)
+        public async Task<ResponseResult<SongViewModel>> UpdateSong(Guid id, UpdateSongRequestModel request)
         {
             SongViewModel result = new SongViewModel();
             try
             {
                 lock (_songRepository)
                 {
-                    var data = _songRepository.GetSong(id);
+                    var data1 = _songRepository.GetSong(id).Result;
 
-                    data = _mapper.Map<Song>(request);
+                    var data = _mapper.Map<Song>(request);
+
+                    data.CreatedDate = data1.CreatedDate;
+                    data.UpdatedDate = DateTime.Now;
+                    data.SongStatus = data1.SongStatus;
+                    data.SongId = id;
 
                     if (data == null)
                     {
@@ -188,7 +192,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         };
                     }
 
-                    if(!_songRepository.UpdateSong(id, data))
+                    _songRepository.DetachEntity(data1);
+                    _songRepository.MotifyEntity(data);
+
+                    if(!_songRepository.UpdateSong(id, data).Result)
                     {
                         throw new Exception();
                     }
@@ -216,11 +223,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public ResponseResult<SongViewModel> DeleteSong(Guid id)
+        public async Task<ResponseResult<SongViewModel>> DeleteSong(Guid id)
         {
             try
             {
-                if (!_songRepository.DeleteSong(id))
+                if (!_songRepository.DeleteSong(id).Result)
                 {
                     throw new Exception();
                 }

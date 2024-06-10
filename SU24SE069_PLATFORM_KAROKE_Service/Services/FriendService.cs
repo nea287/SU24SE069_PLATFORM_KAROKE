@@ -7,7 +7,6 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
-using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
@@ -30,7 +29,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             _friendRepository = friendRepository;
         }
         #region Create
-        public ResponseResult<FriendViewModel> CreateFriend(FriendRequestModel request)
+        public async Task<ResponseResult<FriendViewModel>> CreateFriend(FriendRequestModel request)
         {
             Friend rs = new Friend();
             try
@@ -40,7 +39,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     rs = _mapper.Map<Friend>(request);
                     rs.Status = 1;
 
-                    if (!_friendRepository.CreateFriend(rs))
+                    if (!_friendRepository.CreateFriend(rs).Result)
                     {
                         throw new Exception();
                     }
@@ -65,13 +64,13 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         #endregion
 
         #region Delete
-        public ResponseResult<FriendViewModel> DeleteFriend(Guid id)
+        public async Task<ResponseResult<FriendViewModel>> DeleteFriend(Guid id)
         {
             try
             {
                 lock (_friendRepository)
                 {
-                    if (!_friendRepository.DeleteFriend(id))
+                    if (!_friendRepository.DeleteFriend(id).Result)
                     {
                         throw new Exception();
                     }

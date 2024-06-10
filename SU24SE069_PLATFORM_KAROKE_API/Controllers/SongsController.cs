@@ -25,9 +25,9 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpGet("{songId:guid}")]
-        public IActionResult GetSong(Guid songId)
+        public async Task<IActionResult> GetSong(Guid songId)
         {
-            ResponseResult<SongViewModel> result = _songService.GetSong(songId);
+            ResponseResult<SongViewModel> result = await _songService.GetSong(songId);
 
             return result.result.HasValue ? 
                 (result.result.Value ? Ok(result) : NotFound(result)) : BadRequest(result);
@@ -43,25 +43,25 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateSong([FromBody] CreateSongRequestModel request)
+        public async Task<IActionResult> CreateSong([FromBody] CreateSongRequestModel request)
         {
-            var rs = _songService.CreateSong(request);
+            var rs = await _songService.CreateSong(request);
             
             return rs.result.HasValue? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
         }
 
         [HttpPut("{songId:guid}")]
-        public IActionResult UpdateSong(Guid songId, [FromBody] UpdateSongRequestModel request)
+        public async Task<IActionResult> UpdateSong(Guid songId, [FromBody] UpdateSongRequestModel request)
         {
-            var rs = _songService.UpdateSong(songId, request);
+            var rs = await _songService.UpdateSong(songId, request);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
         }
 
         [HttpDelete("{songId:guid}")]
-        public IActionResult DeleteSong(Guid songId)
+        public async Task<IActionResult> DeleteSong(Guid songId)
         {
-            var rs = _songService.DeleteSong(songId);
+            var rs =await _songService.DeleteSong(songId);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
         }

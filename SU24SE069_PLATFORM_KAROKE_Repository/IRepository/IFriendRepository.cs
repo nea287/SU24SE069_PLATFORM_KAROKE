@@ -9,8 +9,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
 {
     public interface IFriendRepository : IBaseRepository<Friend>
     {
-        public bool DeleteFriend(Guid id);
-        public bool CreateFriend(Friend request);
+        public Task<bool> DeleteFriend(Guid id);
+        public Task<bool> CreateFriend(Friend request);
         
     }
 }
