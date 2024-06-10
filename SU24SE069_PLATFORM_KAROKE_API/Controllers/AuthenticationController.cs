@@ -5,7 +5,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
-    [Route("api/[controller]s")]
+    [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowAnyOrigins")]
     public class AuthenticationController : ControllerBase
@@ -19,6 +19,10 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
         [HttpPost("Login")]
         public IActionResult Login([FromBody] LoginRequestModel request)
-            => Ok(_accountService.Login(request.username, request.password).Result);
+        {
+            var rs = _accountService.Login(request.username, request.password).Result;
+
+            return rs.Result.HasValue? (rs.Result.Value? Ok(rs) : BadRequest(rs)): BadRequest(rs);
+        }
     }
 }

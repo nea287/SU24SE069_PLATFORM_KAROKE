@@ -14,10 +14,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
 {
     public interface IItemService
     {
-        public ResponseResult<ItemViewModel> GetItem(Guid id);
+        public Task<ResponseResult<ItemViewModel>> GetItem(Guid id);
         public DynamicModelResponse.DynamicModelsResponse<ItemViewModel> GetItems(ItemViewModel filter, PagingRequest request, ItemOrderFilter orderFilter);
-        public ResponseResult<ItemViewModel> CreateItem(CreateItemRequestModel request);
-        public ResponseResult<ItemViewModel> DeleteItem(Guid id);
-        public ResponseResult<ItemViewModel> UpdateItem(Guid id, UpdateItemRequestModel request);
+        public Task<ResponseResult<ItemViewModel>> CreateItem(CreateItemRequestModel request);
+        public Task<ResponseResult<ItemViewModel>> DeleteItem(Guid id);
+        public Task<ResponseResult<ItemViewModel>> UpdateItem(Guid id, UpdateItemRequestModel request);
     }
 }

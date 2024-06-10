@@ -65,7 +65,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     {
                         result = new UserLoginResponse()
                         {
-                            Message = Constraints.NOT_FOUND,
+                            Message = Constraints.EMAIL_PASSWORD_INVALID,
                             Result = false
                         };
 

@@ -12,9 +12,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
     {
         //public Item GetItem(Guid id);
         public IEnumerable<Item> GetItems();
-        public bool UpdateItem(Guid id,Item item);
-        public bool CreateItem(Item item);
-        public bool DeleteItem(Item item);
+        public Task<bool> UpdateItem(Guid id,Item item);
+        public Task<bool> CreateItem(Item item);
+        public Task<bool> DeleteItem(Item item);
         public bool ExistedItem(string ItemCode);
 
     }

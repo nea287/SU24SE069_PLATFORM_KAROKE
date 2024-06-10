@@ -11,11 +11,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
     public class ItemRepository : BaseRepository<Item>, IItemRepository
     {
-        public bool CreateItem(Item item)
+        public async Task<bool> CreateItem(Item item)
         {
             try
             {
-                Insert(item);
+                await InsertAsync(item);
                 SaveChages();
             }catch(Exception ex)
             {
@@ -24,11 +24,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return true;
         }
 
-        public bool DeleteItem(Item item)
+        public async Task<bool> DeleteItem(Item item)
         {
             try
             {
-                _= UpdateGuid(item, item.ItemId);
+                await UpdateGuid(item, item.ItemId);
                 SaveChages();
                 
             }catch(Exception ex)
@@ -69,11 +69,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return items;
         }
 
-        public bool UpdateItem(Guid id, Item item)
+        public async Task<bool> UpdateItem(Guid id, Item item)
         {
             try
             {
-                _ = UpdateGuid(item, id);
+                await UpdateGuid(item, id);
                 SaveChages();
 
             }catch(Exception ex)

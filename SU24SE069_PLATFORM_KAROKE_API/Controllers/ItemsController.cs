@@ -11,26 +11,26 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
-    [Route("api/[controller]s")]
+    [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowAnyOrigins")]
-    public class ItemController : ControllerBase
+    public class ItemsController : ControllerBase
     {
         private readonly IItemService _itemService;
 
-        public ItemController(IItemService itemService)
+        public ItemsController(IItemService itemService)
         {
             _itemService = itemService;
         }
-        [HttpGet("GetItem/{id:guid}")]
-        public IActionResult GetItem(Guid id)
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetItem(Guid id)
         {
-            var rs = _itemService.GetItem(id);
+            var rs = await _itemService.GetItem(id);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : NotFound(rs)) : BadRequest(rs);
         }
 
-        [HttpGet("GetItems")]
+        [HttpGet]
         public IActionResult GetItems([FromQuery] ItemViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] ItemOrderFilter orderFilter = ItemOrderFilter.CreatedDate)
         {
             var rs = _itemService.GetItems(filter, paging, orderFilter);
@@ -38,26 +38,26 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.Results.IsNullOrEmpty()? NotFound(rs) : Ok(rs);
         }
 
-        [HttpDelete("DeleteItem/{id:guid}")]
-        public IActionResult DeleteItem(Guid id)
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteItem(Guid id)
         {
-            var rs = _itemService.DeleteItem(id);
+            var rs = await _itemService.DeleteItem(id);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);   
         }
 
-        [HttpPost("CreateItem")]
-        public IActionResult CreateItem([FromBody] CreateItemRequestModel request)
+        [HttpPost]
+        public async Task<IActionResult> CreateItem([FromBody] CreateItemRequestModel request)
         {
-            var rs = _itemService.CreateItem(request);
+            var rs = await _itemService.CreateItem(request);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
 
-        [HttpPut("UpdateItem/{id:guid}")]
-        public IActionResult UpdateItem(Guid id, [FromBody] UpdateItemRequestModel request)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateItem(Guid id, [FromBody] UpdateItemRequestModel request)
         {
-            var rs = _itemService.UpdateItem(id, request);
+            var rs = await _itemService.UpdateItem(id, request);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }

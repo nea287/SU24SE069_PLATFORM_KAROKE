@@ -29,7 +29,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             _mapper = mapper;
             _itemRepository = itemRepository;
         }
-        public ResponseResult<ItemViewModel> CreateItem(CreateItemRequestModel request)
+        public async Task<ResponseResult<ItemViewModel>> CreateItem(CreateItemRequestModel request)
         {
             Item rs = new Item();
             try
@@ -51,7 +51,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     rs.CanExpire = true;
                     rs.CanStack = true;
 
-                    if (!_itemRepository.CreateItem(rs))
+                    if (!_itemRepository.CreateItem(rs).Result)
                     {
                         throw new Exception();
                     }
@@ -72,7 +72,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public ResponseResult<ItemViewModel> DeleteItem(Guid id)
+        public async Task<ResponseResult<ItemViewModel>> DeleteItem(Guid id)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     var data = _itemRepository.GetByIdGuid(id).Result;
                     data.ItemStatus = (int)ItemStatus.DISABLE;
 
-                    if (!_itemRepository.DeleteItem(data))
+                    if (!_itemRepository.DeleteItem(data).Result)
                     {
                         throw new Exception();
                     }
@@ -103,7 +103,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public ResponseResult<ItemViewModel> GetItem(Guid id)
+        public async Task<ResponseResult<ItemViewModel>> GetItem(Guid id)
         {
             Item rs = new Item();
             try
@@ -173,7 +173,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public ResponseResult<ItemViewModel> UpdateItem(Guid id, UpdateItemRequestModel request)
+        public async Task<ResponseResult<ItemViewModel>> UpdateItem(Guid id, UpdateItemRequestModel request)
         {
             Item rs = new Item();
             try
@@ -194,7 +194,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     rs.CreatedDate = data.CreatedDate;
                     rs.ItemId = data.ItemId;
 
-                    if(!_itemRepository.UpdateItem(id, rs))
+                    _itemRepository.DetachEntity(data);
+                    _itemRepository.MotifyEntity(rs);
+
+                    if(!_itemRepository.UpdateItem(id, rs).Result)
                     {
                         throw new Exception();
                     }

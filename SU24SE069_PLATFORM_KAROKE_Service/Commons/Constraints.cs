@@ -21,6 +21,10 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         public const string INFORMATION_EXISTED = "Information Already Existed!";
         #endregion
 
+        #region Login
+        public const string EMAIL_PASSWORD_INVALID = "Incorrect email or password!";
+        #endregion
+
         #region Page
         public const int DefaultPaging = 50;
         public const int LimitPaging = 500;

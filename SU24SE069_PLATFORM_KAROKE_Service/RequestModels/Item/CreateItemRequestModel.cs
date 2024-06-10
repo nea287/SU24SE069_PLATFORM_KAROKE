@@ -17,6 +17,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item
         public bool CanExpire { get; set; }
         public bool CanStack { get; set; }
         //public DateTime CreatedDate { get; set; }
-        public Guid CreatorId { get; set; }
+        public Guid? CreatorId { get; set; }
     }
 }

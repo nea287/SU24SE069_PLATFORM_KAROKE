@@ -10,14 +10,14 @@ using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
-    [Route("api/[controller]s")]
+    [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowAnyOrigins")]
-    public class FriendController : ControllerBase
+    public class FriendsController : ControllerBase
     {
         private readonly IFriendService _friendService;
 
-        public FriendController(IFriendService friendService)
+        public FriendsController(IFriendService friendService)
         {
             _friendService = friendService;
         }
@@ -29,7 +29,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
 
-        [HttpDelete("DeleteFriend/{friendId:guid}")]
+        [HttpDelete("{friendId:guid}")]
         public IActionResult DeleteFriend(Guid friendId)
         {
             var rs = _friendService.DeleteFriend(friendId);
@@ -37,7 +37,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : NotFound(rs)) : BadRequest(rs);
         }
 
-        [HttpPost("CreateFriend")]
+        [HttpPost]
         public IActionResult CreateFriend([FromBody] FriendRequestModel request)
         {
             var rs = _friendService.CreateFriend(request);

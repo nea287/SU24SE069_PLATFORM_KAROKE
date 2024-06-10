@@ -12,19 +12,19 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
-    [Route("api/[controller]s")]
+    [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowAnyOrigins")]
-    public class SongController : ControllerBase
+    public class SongsController : ControllerBase
     {
         private readonly ISongService _songService;
 
-        public SongController(ISongService songService)
+        public SongsController(ISongService songService)
         {
             _songService = songService;
         }
 
-        [HttpGet("GetSong/{songId:guid}")]
+        [HttpGet("{songId:guid}")]
         public IActionResult GetSong(Guid songId)
         {
             ResponseResult<SongViewModel> result = _songService.GetSong(songId);
@@ -33,7 +33,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
                 (result.result.Value ? Ok(result) : NotFound(result)) : BadRequest(result);
         }
 
-        [HttpGet("GetSongs")]
+        [HttpGet]
         public IActionResult GetSongs([FromQuery]SongViewModel filter,
             [FromQuery]PagingRequest paging,[FromQuery] SongOrderFilter orderFilter = SongOrderFilter.UpdatedDate)
         {
@@ -42,7 +42,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
 
-        [HttpPost("CreateSong")]
+        [HttpPost]
         public IActionResult CreateSong([FromBody] CreateSongRequestModel request)
         {
             var rs = _songService.CreateSong(request);
@@ -50,7 +50,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.result.HasValue? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
         }
 
-        [HttpPut("UpdateSong/{songId:guid}")]
+        [HttpPut("{songId:guid}")]
         public IActionResult UpdateSong(Guid songId, [FromBody] UpdateSongRequestModel request)
         {
             var rs = _songService.UpdateSong(songId, request);
@@ -58,7 +58,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
         }
 
-        [HttpDelete("DeleteSong/{songId:guid}")]
+        [HttpDelete("{songId:guid}")]
         public IActionResult DeleteSong(Guid songId)
         {
             var rs = _songService.DeleteSong(songId);

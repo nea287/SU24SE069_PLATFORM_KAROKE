@@ -13,19 +13,19 @@ using System.Net.NetworkInformation;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
-    [Route("api/[controller]s")]
+    [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowAnyOrigins")]
-    public class AccountController : ControllerBase
+    public class AccountsController : ControllerBase
     {
         private readonly IAccountService _service;
 
-        public AccountController(IAccountService service)
+        public AccountsController(IAccountService service)
         {
             _service = service;
         }
         //[Authorize(Policy = "RequireStaffRole")]
-        [HttpPost("CreateAccount")]
+        [HttpPost]
         public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequestModel request)
         {
             ResponseResult<AccountViewModel> result = await _service.CreateAccount(request);
@@ -37,15 +37,15 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
             
 
-        [HttpGet("GetAccount/{accountId:guid}")]
+        [HttpGet("{accountId:guid}")]
         public async Task<IActionResult> GetAccount(Guid accountId) 
         {
-            var rs = _service.GetAccount(accountId);
+            var rs = await _service.GetAccount(accountId);
 
-            return rs.Result.Value is null? NotFound(rs) : Ok(rs);
+            return rs.Value is null? NotFound(rs) : Ok(rs);
         }
 
-    [HttpGet("GetAccounts")]
+    [HttpGet]
         public IActionResult GetAccounts([FromQuery] AccountViewModel filter,
             [FromQuery] PagingRequest paging, [FromQuery] AccountOrderFilter orderFilter = AccountOrderFilter.CreatedTime)
         {
@@ -54,12 +54,12 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
 
-        [HttpPut("UpdateAccount/{email}")]
+        [HttpPut("{email}")]
         public async Task<IActionResult> UpdateAccount(string email, [FromBody] UpdateAccountByMailRequestModel request)
         {
-            var rs = _service.UpdateAccountByEmail(email, request);
+            var rs = await _service.UpdateAccountByEmail(email, request);
 
-            return rs.Result.result.HasValue? (rs.Result.result.Value? Ok(rs) : BadRequest(rs)) : NotFound(rs);
+            return rs.result.HasValue? (rs.result.Value? Ok(rs) : BadRequest(rs)) : NotFound(rs);
 
         }
 
