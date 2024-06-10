@@ -14,5 +14,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public DateTime CreatedDate { get; set; }
         public Guid PackageId { get; set; }
         public Guid MemberId { get; set; }
+
+        public virtual Account Member { get; set; } = null!;
+        public virtual Package Package { get; set; } = null!;
     }
 }

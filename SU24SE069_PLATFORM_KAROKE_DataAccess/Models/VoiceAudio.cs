@@ -14,5 +14,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public int Pitch { get; set; }
         public Guid RecordingId { get; set; }
         public Guid MemberId { get; set; }
+
+        public virtual Account Member { get; set; } = null!;
+        public virtual Recording Recording { get; set; } = null!;
     }
 }

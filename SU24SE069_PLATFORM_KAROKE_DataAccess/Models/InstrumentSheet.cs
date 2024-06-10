@@ -9,5 +9,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public string InstrumentSheetContent { get; set; } = null!;
         public int InstrumentType { get; set; }
         public Guid SongId { get; set; }
+
+        public virtual Song Song { get; set; } = null!;
     }
 }

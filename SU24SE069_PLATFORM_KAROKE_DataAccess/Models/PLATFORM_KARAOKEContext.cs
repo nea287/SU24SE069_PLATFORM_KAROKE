@@ -17,7 +17,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         }
 
         public virtual DbSet<Account> Accounts { get; set; } = null!;
-        public virtual DbSet<AccountCharacter> AccountCharacters { get; set; } = null!;
         public virtual DbSet<AccountInventoryItem> AccountInventoryItems { get; set; } = null!;
         public virtual DbSet<Conversation> Conversations { get; set; } = null!;
         public virtual DbSet<FavouriteSong> FavouriteSongs { get; set; } = null!;
@@ -57,13 +56,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             {
                 entity.ToTable("Account");
 
-                entity.HasIndex(e => e.AccountId, "UQ__Account__46A222CC0372D537")
+                entity.HasIndex(e => e.AccountId, "UQ__Account__46A222CCB95F54B5")
                     .IsUnique();
 
-                entity.HasIndex(e => e.UserName, "UQ__Account__7C9273C40D371C5F")
+                entity.HasIndex(e => e.UserName, "UQ__Account__7C9273C4BE4FEFD8")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Email, "UQ__Account__AB6E616440B88E80")
+                entity.HasIndex(e => e.Email, "UQ__Account__AB6E6164AF554E58")
                     .IsUnique();
 
                 entity.Property(e => e.AccountId)
@@ -73,6 +72,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.AccountName)
                     .HasMaxLength(50)
                     .HasColumnName("account_name");
+
+                entity.Property(e => e.CharacterItemId).HasColumnName("character_item_id");
 
                 entity.Property(e => e.CreatedTime)
                     .HasColumnType("datetime")
@@ -99,7 +100,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.IsVerified).HasColumnName("is_verified");
 
                 entity.Property(e => e.Password)
-                    .HasMaxLength(50)
+                    .HasColumnType("VARCHAR(MAX)")
                     .IsUnicode(false)
                     .HasColumnName("password");
 
@@ -110,6 +111,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.Role).HasColumnName("role");
 
+                entity.Property(e => e.RoomItemId).HasColumnName("room_item_id");
+
                 entity.Property(e => e.Star).HasColumnName("star");
 
                 entity.Property(e => e.UserName)
@@ -118,25 +121,23 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("user_name");
 
                 entity.Property(e => e.Yob).HasColumnName("yob");
-            });
 
-            modelBuilder.Entity<AccountCharacter>(entity =>
-            {
-                entity.HasKey(e => new { e.AccountId, e.CharacterId })
-                    .HasName("PK__AccountC__B7BF549FEC939403");
+                entity.HasOne(d => d.CharacterItem)
+                    .WithMany(p => p.AccountCharacterItems)
+                    .HasForeignKey(d => d.CharacterItemId)
+                    .HasConstraintName("FK__Account__charact__7C4F7684");
 
-                entity.ToTable("AccountCharacter");
-
-                entity.Property(e => e.AccountId).HasColumnName("account_id");
-
-                entity.Property(e => e.CharacterId).HasColumnName("character_id");
+                entity.HasOne(d => d.RoomItem)
+                    .WithMany(p => p.AccountRoomItems)
+                    .HasForeignKey(d => d.RoomItemId)
+                    .HasConstraintName("FK__Account__room_it__7D439ABD");
             });
 
             modelBuilder.Entity<AccountInventoryItem>(entity =>
             {
                 entity.ToTable("AccountInventoryItem");
 
-                entity.HasIndex(e => e.AccountInventoryItemId, "UQ__AccountI__3C30841E34E39FEC")
+                entity.HasIndex(e => e.AccountInventoryItemId, "UQ__AccountI__3C30841ED7833689")
                     .IsUnique();
 
                 entity.Property(e => e.AccountInventoryItemId)
@@ -158,13 +159,25 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany(p => p.AccountInventoryItems)
+                    .HasForeignKey(d => d.ItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__AccountIn__item___7E37BEF6");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.AccountInventoryItems)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__AccountIn__membe__7F2BE32F");
             });
 
             modelBuilder.Entity<Conversation>(entity =>
             {
                 entity.ToTable("Conversation");
 
-                entity.HasIndex(e => e.ConversationId, "UQ__Conversa__311E7E9BEE3C2821")
+                entity.HasIndex(e => e.ConversationId, "UQ__Conversa__311E7E9B9619D04A")
                     .IsUnique();
 
                 entity.Property(e => e.ConversationId)
@@ -178,33 +191,56 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.MemberId2).HasColumnName("member_id_2");
 
                 entity.Property(e => e.SupportRequestId).HasColumnName("support_request_id");
+
+                entity.HasOne(d => d.MemberId1Navigation)
+                    .WithMany(p => p.ConversationMemberId1Navigations)
+                    .HasForeignKey(d => d.MemberId1)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Conversat__membe__00200768");
+
+                entity.HasOne(d => d.MemberId2Navigation)
+                    .WithMany(p => p.ConversationMemberId2Navigations)
+                    .HasForeignKey(d => d.MemberId2)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Conversat__membe__01142BA1");
+
+                entity.HasOne(d => d.SupportRequest)
+                    .WithMany(p => p.Conversations)
+                    .HasForeignKey(d => d.SupportRequestId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Conversat__suppo__02084FDA");
             });
 
             modelBuilder.Entity<FavouriteSong>(entity =>
             {
-                entity.HasKey(e => e.FavouriteId)
-                    .HasName("PK__Favourit__B3E742CE9F2BE9DE");
+                entity.HasKey(e => new { e.MemberId, e.SongId })
+                    .HasName("PK__Favourit__68C8DFD514CDDEC7");
 
                 entity.ToTable("FavouriteSong");
-
-                entity.HasIndex(e => e.FavouriteId, "UQ__Favourit__B3E742CF1BFE1543")
-                    .IsUnique();
-
-                entity.Property(e => e.FavouriteId)
-                    .HasColumnName("favourite_id")
-                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
 
                 entity.Property(e => e.SongId).HasColumnName("song_id");
 
                 entity.Property(e => e.SongType).HasColumnName("song_type");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.FavouriteSongs)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Favourite__membe__02FC7413");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.FavouriteSongs)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Favourite__song___03F0984C");
             });
 
             modelBuilder.Entity<Friend>(entity =>
             {
                 entity.HasKey(e => new { e.SenderId, e.ReceiverId })
-                    .HasName("PK__Friend__39A74E2FDEEB87AE");
+                    .HasName("PK__Friend__39A74E2FEA2EB197");
 
                 entity.ToTable("Friend");
 
@@ -213,13 +249,25 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.ReceiverId).HasColumnName("receiver_id");
 
                 entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Receiver)
+                    .WithMany(p => p.FriendReceivers)
+                    .HasForeignKey(d => d.ReceiverId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Friend__receiver__04E4BC85");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.FriendSenders)
+                    .HasForeignKey(d => d.SenderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Friend__sender_i__05D8E0BE");
             });
 
             modelBuilder.Entity<InAppTransaction>(entity =>
             {
                 entity.ToTable("InAppTransaction");
 
-                entity.HasIndex(e => e.InAppTransactionId, "UQ__InAppTra__783D788F38A01030")
+                entity.HasIndex(e => e.InAppTransactionId, "UQ__InAppTra__783D788F3120721B")
                     .IsUnique();
 
                 entity.Property(e => e.InAppTransactionId)
@@ -245,13 +293,31 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.TransactionType).HasColumnName("transaction_type");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany(p => p.InAppTransactions)
+                    .HasForeignKey(d => d.ItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__InAppTran__item___06CD04F7");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.InAppTransactions)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__InAppTran__membe__07C12930");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.InAppTransactions)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__InAppTran__song___08B54D69");
             });
 
             modelBuilder.Entity<InstrumentSheet>(entity =>
             {
                 entity.ToTable("InstrumentSheet");
 
-                entity.HasIndex(e => e.InstrumentSheetId, "UQ__Instrume__B44A38C35BF41994")
+                entity.HasIndex(e => e.InstrumentSheetId, "UQ__Instrume__B44A38C3DC5E3165")
                     .IsUnique();
 
                 entity.Property(e => e.InstrumentSheetId)
@@ -265,16 +331,22 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.InstrumentType).HasColumnName("instrument_type");
 
                 entity.Property(e => e.SongId).HasColumnName("song_id");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.InstrumentSheets)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Instrumen__song___09A971A2");
             });
 
             modelBuilder.Entity<Item>(entity =>
             {
                 entity.ToTable("Item");
 
-                entity.HasIndex(e => e.ItemCode, "UQ__Item__4A67201ECF647929")
+                entity.HasIndex(e => e.ItemCode, "UQ__Item__4A67201E86BAC7DD")
                     .IsUnique();
 
-                entity.HasIndex(e => e.ItemId, "UQ__Item__52020FDC5D2EF0E0")
+                entity.HasIndex(e => e.ItemId, "UQ__Item__52020FDCCC7458B7")
                     .IsUnique();
 
                 entity.Property(e => e.ItemId)
@@ -311,16 +383,21 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.ItemStatus).HasColumnName("item_status");
 
                 entity.Property(e => e.ItemType).HasColumnName("item_type");
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.Items)
+                    .HasForeignKey(d => d.CreatorId)
+                    .HasConstraintName("FK__Item__creator_id__0A9D95DB");
             });
 
             modelBuilder.Entity<KaraokeRoom>(entity =>
             {
                 entity.HasKey(e => e.RoomId)
-                    .HasName("PK__KaraokeR__19675A8A1B3185AD");
+                    .HasName("PK__KaraokeR__19675A8A6BA327E4");
 
                 entity.ToTable("KaraokeRoom");
 
-                entity.HasIndex(e => e.RoomId, "UQ__KaraokeR__19675A8B84146B38")
+                entity.HasIndex(e => e.RoomId, "UQ__KaraokeR__19675A8BC5A9ED1B")
                     .IsUnique();
 
                 entity.Property(e => e.RoomId)
@@ -336,16 +413,22 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.RoomLog)
                     .HasColumnType("text")
                     .HasColumnName("room_log");
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.KaraokeRooms)
+                    .HasForeignKey(d => d.CreatorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__KaraokeRo__creat__0B91BA14");
             });
 
             modelBuilder.Entity<LoginActivity>(entity =>
             {
                 entity.HasKey(e => e.LoginId)
-                    .HasName("PK__LoginAct__C2C971DB4FD13A29");
+                    .HasName("PK__LoginAct__C2C971DB811BF7A3");
 
                 entity.ToTable("LoginActivity");
 
-                entity.HasIndex(e => e.LoginId, "UQ__LoginAct__C2C971DA48A055B2")
+                entity.HasIndex(e => e.LoginId, "UQ__LoginAct__C2C971DA5DBB7ACA")
                     .IsUnique();
 
                 entity.Property(e => e.LoginId)
@@ -361,16 +444,22 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("login_time");
 
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.LoginActivities)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__LoginActi__membe__0C85DE4D");
             });
 
             modelBuilder.Entity<Lyric>(entity =>
             {
                 entity.HasKey(e => e.LyricSheetId)
-                    .HasName("PK__Lyric__AAAC3784A109C8A6");
+                    .HasName("PK__Lyric__AAAC3784E06440E0");
 
                 entity.ToTable("Lyric");
 
-                entity.HasIndex(e => e.LyricSheetId, "UQ__Lyric__AAAC3785FD89FE5F")
+                entity.HasIndex(e => e.LyricSheetId, "UQ__Lyric__AAAC37856E2307B7")
                     .IsUnique();
 
                 entity.Property(e => e.LyricSheetId)
@@ -382,13 +471,19 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("lyric_sheet_content");
 
                 entity.Property(e => e.SongId).HasColumnName("song_id");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.Lyrics)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Lyric__song_id__0D7A0286");
             });
 
             modelBuilder.Entity<Message>(entity =>
             {
                 entity.ToTable("Message");
 
-                entity.HasIndex(e => e.MessageId, "UQ__Message__0BBF6EE79EC144F5")
+                entity.HasIndex(e => e.MessageId, "UQ__Message__0BBF6EE78703A3BB")
                     .IsUnique();
 
                 entity.Property(e => e.MessageId)
@@ -406,13 +501,25 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.TimeStamp)
                     .HasColumnType("datetime")
                     .HasColumnName("time_stamp");
+
+                entity.HasOne(d => d.Conversation)
+                    .WithMany(p => p.Messages)
+                    .HasForeignKey(d => d.ConversationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Message__convers__0E6E26BF");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.Messages)
+                    .HasForeignKey(d => d.SenderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Message__sender___0F624AF8");
             });
 
             modelBuilder.Entity<MoneyTransaction>(entity =>
             {
                 entity.ToTable("MoneyTransaction");
 
-                entity.HasIndex(e => e.MoneyTransactionId, "UQ__MoneyTra__EC443D7DD1B1FB64")
+                entity.HasIndex(e => e.MoneyTransactionId, "UQ__MoneyTra__EC443D7DCAA4141D")
                     .IsUnique();
 
                 entity.Property(e => e.MoneyTransactionId)
@@ -443,13 +550,25 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.PaymentType).HasColumnName("payment_type");
 
                 entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.MoneyTransactions)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__MoneyTran__membe__10566F31");
+
+                entity.HasOne(d => d.Package)
+                    .WithMany(p => p.MoneyTransactions)
+                    .HasForeignKey(d => d.PackageId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__MoneyTran__packa__114A936A");
             });
 
             modelBuilder.Entity<Package>(entity =>
             {
                 entity.ToTable("Package");
 
-                entity.HasIndex(e => e.PackageId, "UQ__Package__63846AE905A50AF7")
+                entity.HasIndex(e => e.PackageId, "UQ__Package__63846AE9D3373BE0")
                     .IsUnique();
 
                 entity.Property(e => e.PackageId)
@@ -477,13 +596,19 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.StarNumber).HasColumnName("star_number");
 
                 entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.Packages)
+                    .HasForeignKey(d => d.CreatorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Package__creator__123EB7A3");
             });
 
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.ToTable("Post");
 
-                entity.HasIndex(e => e.PostId, "UQ__Post__3ED7876790C0F2DB")
+                entity.HasIndex(e => e.PostId, "UQ__Post__3ED78767E3F1F3DF")
                     .IsUnique();
 
                 entity.Property(e => e.PostId)
@@ -505,16 +630,28 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.UploadTime)
                     .HasColumnType("datetime")
                     .HasColumnName("upload_time");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.Posts)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Post__member_id__1332DBDC");
+
+                entity.HasOne(d => d.Recording)
+                    .WithMany(p => p.Posts)
+                    .HasForeignKey(d => d.RecordingId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Post__recording___14270015");
             });
 
             modelBuilder.Entity<PostComment>(entity =>
             {
                 entity.HasKey(e => e.CommentId)
-                    .HasName("PK__PostComm__E7957687BDC979F7");
+                    .HasName("PK__PostComm__E7957687279A4949");
 
                 entity.ToTable("PostComment");
 
-                entity.HasIndex(e => e.CommentId, "UQ__PostComm__E7957686B3AEB33E")
+                entity.HasIndex(e => e.CommentId, "UQ__PostComm__E79576863EE120FB")
                     .IsUnique();
 
                 entity.Property(e => e.CommentId)
@@ -528,13 +665,25 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
 
                 entity.Property(e => e.PostId).HasColumnName("post_id");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.PostComments)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PostComme__membe__151B244E");
+
+                entity.HasOne(d => d.Post)
+                    .WithMany(p => p.PostComments)
+                    .HasForeignKey(d => d.PostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PostComme__post___160F4887");
             });
 
             modelBuilder.Entity<PostShare>(entity =>
             {
                 entity.ToTable("PostShare");
 
-                entity.HasIndex(e => e.PostShareId, "UQ__PostShar__6F03FC2032916E39")
+                entity.HasIndex(e => e.PostShareId, "UQ__PostShar__6F03FC20AE6B0180")
                     .IsUnique();
 
                 entity.Property(e => e.PostShareId)
@@ -556,12 +705,24 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.UpdateTime)
                     .HasColumnType("datetime")
                     .HasColumnName("update_time");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.PostShares)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PostShare__membe__17036CC0");
+
+                entity.HasOne(d => d.Post)
+                    .WithMany(p => p.PostShares)
+                    .HasForeignKey(d => d.PostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PostShare__post___17F790F9");
             });
 
             modelBuilder.Entity<PostVote>(entity =>
             {
                 entity.HasKey(e => new { e.MemberId, e.PostId })
-                    .HasName("PK__PostVote__C176FD421A1EEAD3");
+                    .HasName("PK__PostVote__C176FD426D6D26E0");
 
                 entity.ToTable("PostVote");
 
@@ -570,13 +731,25 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.PostId).HasColumnName("post_id");
 
                 entity.Property(e => e.VoteType).HasColumnName("vote_type");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.PostVotes)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PostVote__member__18EBB532");
+
+                entity.HasOne(d => d.Post)
+                    .WithMany(p => p.PostVotes)
+                    .HasForeignKey(d => d.PostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PostVote__post_i__19DFD96B");
             });
 
             modelBuilder.Entity<PurchasedSong>(entity =>
             {
                 entity.ToTable("PurchasedSong");
 
-                entity.HasIndex(e => e.PurchasedSongId, "UQ__Purchase__12FEA5F36BE187C3")
+                entity.HasIndex(e => e.PurchasedSongId, "UQ__Purchase__12FEA5F379BFEF7C")
                     .IsUnique();
 
                 entity.Property(e => e.PurchasedSongId)
@@ -592,13 +765,25 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.SongId).HasColumnName("song_id");
 
                 entity.Property(e => e.SongType).HasColumnName("song_type");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.PurchasedSongs)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Purchased__membe__1AD3FDA4");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.PurchasedSongs)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Purchased__song___1BC821DD");
             });
 
             modelBuilder.Entity<Recording>(entity =>
             {
                 entity.ToTable("Recording");
 
-                entity.HasIndex(e => e.RecordingId, "UQ__Recordin__0C5B24E48F564281")
+                entity.HasIndex(e => e.RecordingId, "UQ__Recordin__0C5B24E46D5CE3E3")
                     .IsUnique();
 
                 entity.Property(e => e.RecordingId)
@@ -630,13 +815,37 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("updated_date");
+
+                entity.HasOne(d => d.Host)
+                    .WithMany(p => p.RecordingHosts)
+                    .HasForeignKey(d => d.HostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Recording__host___1CBC4616");
+
+                entity.HasOne(d => d.KaraokeRoom)
+                    .WithMany(p => p.Recordings)
+                    .HasForeignKey(d => d.KaraokeRoomId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Recording__karao__1DB06A4F");
+
+                entity.HasOne(d => d.Owner)
+                    .WithMany(p => p.RecordingOwners)
+                    .HasForeignKey(d => d.OwnerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Recording__owner__1EA48E88");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.Recordings)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Recording__song___1F98B2C1");
             });
 
             modelBuilder.Entity<Report>(entity =>
             {
                 entity.ToTable("Report");
 
-                entity.HasIndex(e => e.ReportId, "UQ__Report__779B7C59DFAEEF57")
+                entity.HasIndex(e => e.ReportId, "UQ__Report__779B7C5917900A24")
                     .IsUnique();
 
                 entity.Property(e => e.ReportId)
@@ -666,20 +875,51 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.RoomId).HasColumnName("room_id");
 
                 entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Comment)
+                    .WithMany(p => p.Reports)
+                    .HasForeignKey(d => d.CommentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Report__comment___208CD6FA");
+
+                entity.HasOne(d => d.Post)
+                    .WithMany(p => p.Reports)
+                    .HasForeignKey(d => d.PostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Report__post_id__2180FB33");
+
+                entity.HasOne(d => d.ReportedAccount)
+                    .WithMany(p => p.ReportReportedAccounts)
+                    .HasForeignKey(d => d.ReportedAccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Report__reported__22751F6C");
+
+                entity.HasOne(d => d.Reporter)
+                    .WithMany(p => p.ReportReporters)
+                    .HasForeignKey(d => d.ReporterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Report__reporter__236943A5");
+
+                entity.HasOne(d => d.Room)
+                    .WithMany(p => p.Reports)
+                    .HasForeignKey(d => d.RoomId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Report__room_id__245D67DE");
             });
 
             modelBuilder.Entity<Song>(entity =>
             {
                 entity.ToTable("Song");
 
-                entity.HasIndex(e => e.SongId, "UQ__Song__A535AE1D841F900F")
+                entity.HasIndex(e => e.SongCode, "UQ__Song__43F33A39E8877F76")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.SongId, "UQ__Song__A535AE1D1351FFFF")
                     .IsUnique();
 
                 entity.Property(e => e.SongId)
                     .HasColumnName("song_id")
                     .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.SongType).HasColumnName("song_type");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
@@ -710,6 +950,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.SongStatus).HasColumnName("song_status");
 
+                entity.Property(e => e.SongType).HasColumnName("song_type");
+
                 entity.Property(e => e.SongUrl)
                     .HasColumnType("text")
                     .HasColumnName("song_url");
@@ -721,16 +963,22 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("updated_date");
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.Songs)
+                    .HasForeignKey(d => d.CreatorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Song__creator_id__25518C17");
             });
 
             modelBuilder.Entity<SupportRequest>(entity =>
             {
                 entity.HasKey(e => e.RequestId)
-                    .HasName("PK__SupportR__18D3B90FA499A25E");
+                    .HasName("PK__SupportR__18D3B90FC2899572");
 
                 entity.ToTable("SupportRequest");
 
-                entity.HasIndex(e => e.RequestId, "UQ__SupportR__18D3B90EEABB5AF2")
+                entity.HasIndex(e => e.RequestId, "UQ__SupportR__18D3B90EB565E032")
                     .IsUnique();
 
                 entity.Property(e => e.RequestId)
@@ -750,16 +998,22 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.SenderId).HasColumnName("sender_id");
 
                 entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.SupportRequests)
+                    .HasForeignKey(d => d.SenderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__SupportRe__sende__2645B050");
             });
 
             modelBuilder.Entity<VoiceAudio>(entity =>
             {
                 entity.HasKey(e => e.VoiceId)
-                    .HasName("PK__VoiceAud__128AF3816B244F5F");
+                    .HasName("PK__VoiceAud__128AF381A07F9D92");
 
                 entity.ToTable("VoiceAudio");
 
-                entity.HasIndex(e => e.VoiceId, "UQ__VoiceAud__128AF3806DDA3CFA")
+                entity.HasIndex(e => e.VoiceId, "UQ__VoiceAud__128AF3808BA35F61")
                     .IsUnique();
 
                 entity.Property(e => e.VoiceId)
@@ -789,6 +1043,18 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.VoiceUrl)
                     .HasColumnType("text")
                     .HasColumnName("voice_url");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.VoiceAudios)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__VoiceAudi__membe__2739D489");
+
+                entity.HasOne(d => d.Recording)
+                    .WithMany(p => p.VoiceAudios)
+                    .HasForeignKey(d => d.RecordingId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__VoiceAudi__recor__282DF8C2");
             });
 
             OnModelCreatingPartial(modelBuilder);

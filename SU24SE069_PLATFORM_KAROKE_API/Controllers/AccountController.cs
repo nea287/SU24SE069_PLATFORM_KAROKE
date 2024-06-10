@@ -26,9 +26,9 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
         //[Authorize(Policy = "RequireStaffRole")]
         [HttpPost("CreateAccount")]
-        public IActionResult CreateAccount([FromBody] CreateAccountRequestModel request)
+        public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequestModel request)
         {
-            ResponseResult<AccountViewModel> result = _service.CreateAccount(request);
+            ResponseResult<AccountViewModel> result = await _service.CreateAccount(request);
             if(result.Value is null)
             {
                 return BadRequest(result);
@@ -38,11 +38,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             
 
         [HttpGet("GetAccount/{accountId:guid}")]
-        public IActionResult GetAccount(Guid accountId) 
+        public async Task<IActionResult> GetAccount(Guid accountId) 
         {
             var rs = _service.GetAccount(accountId);
 
-            return rs.Value is null? NotFound(rs) : Ok(rs);
+            return rs.Result.Value is null? NotFound(rs) : Ok(rs);
         }
 
     [HttpGet("GetAccounts")]
@@ -55,11 +55,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpPut("UpdateAccount/{email}")]
-        public IActionResult UpdateAccount(string email, [FromBody] UpdateAccountByMailRequestModel request)
+        public async Task<IActionResult> UpdateAccount(string email, [FromBody] UpdateAccountByMailRequestModel request)
         {
             var rs = _service.UpdateAccountByEmail(email, request);
 
-            return rs.result.HasValue? (rs.result.Value? Ok(rs) : BadRequest(rs)) : NotFound(rs);
+            return rs.Result.result.HasValue? (rs.Result.result.Value? Ok(rs) : BadRequest(rs)) : NotFound(rs);
 
         }
 

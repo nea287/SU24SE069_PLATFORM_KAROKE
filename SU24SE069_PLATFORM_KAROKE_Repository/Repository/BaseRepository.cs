@@ -478,5 +478,51 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task SaveChagesAsync()
+        {
+            try
+            {
+                await BaseDAO<TEntity>.Instance.SaveChagesAsync();
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void AttrachEntity(TEntity entity)
+        {
+            try
+            {
+                BaseDAO<TEntity>.Instance.AttrachEntity(entity);
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void MotifyEntity(TEntity entity)
+        {
+            try
+            {
+                BaseDAO<TEntity>.Instance.MotifyEntity(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void DetachEntity(TEntity entity)
+        {
+            try
+            {
+                BaseDAO<TEntity>.Instance.DetachEntity(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

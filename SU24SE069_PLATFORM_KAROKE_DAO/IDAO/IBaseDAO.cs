@@ -39,6 +39,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.IDAO
         public TEntity FistOrDefault(Func<TEntity, bool> predicate);
         public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
         public void SaveChages();
+        public Task SaveChagesAsync();
         public bool IsMin(Func<TEntity, bool> predicate);
         public bool IsMax(Func<TEntity, bool> predicate);
         public TEntity GetMin();
@@ -47,5 +48,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.IDAO
         public Task<bool> IsMinAsync(Expression<Func<TEntity, bool>> predicate);
         public TEntity GetMin(Func<TEntity, bool> predicate);
         public TEntity GetMax(Func<TEntity, bool> predicate);
+        public void AttrachEntity(TEntity entity);
+        public void MotifyEntity(TEntity entity);
+        public void DetachEntity(TEntity entity);
     }
 }

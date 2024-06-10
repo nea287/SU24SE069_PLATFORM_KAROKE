@@ -13,12 +13,12 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices
 {
     public interface IAccountService
     {
-        public UserLoginResponse Login(string username, string password);
-        public ResponseResult<AccountViewModel> GetAccount(Guid accountId);
+        public Task<UserLoginResponse> Login(string username, string password);
+        public Task<ResponseResult<AccountViewModel>> GetAccount(Guid accountId);
         public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccounts(AccountViewModel filter,
             PagingRequest paging, AccountOrderFilter orderFilter);
-        public ResponseResult<AccountViewModel> CreateAccount(CreateAccountRequestModel request);
-        public ResponseResult<AccountViewModel> UpdateAccountByEmail(string email, UpdateAccountByMailRequestModel request);
+        public Task<ResponseResult<AccountViewModel>> CreateAccount(CreateAccountRequestModel request);
+        public Task<ResponseResult<AccountViewModel>> UpdateAccountByEmail(string email, UpdateAccountByMailRequestModel request);
 
 
 

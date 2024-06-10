@@ -16,5 +16,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public Guid CommentId { get; set; }
         public Guid PostId { get; set; }
         public Guid RoomId { get; set; }
+
+        public virtual PostComment Comment { get; set; } = null!;
+        public virtual Post Post { get; set; } = null!;
+        public virtual Account ReportedAccount { get; set; } = null!;
+        public virtual Account Reporter { get; set; } = null!;
+        public virtual KaraokeRoom Room { get; set; } = null!;
     }
 }

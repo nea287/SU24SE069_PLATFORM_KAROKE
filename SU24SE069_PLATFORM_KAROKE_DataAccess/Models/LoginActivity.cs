@@ -9,5 +9,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public DateTime LoginTime { get; set; }
         public string? LoginDevice { get; set; }
         public Guid MemberId { get; set; }
+
+        public virtual Account Member { get; set; } = null!;
     }
 }

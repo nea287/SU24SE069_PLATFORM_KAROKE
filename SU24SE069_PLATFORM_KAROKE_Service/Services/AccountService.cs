@@ -37,25 +37,25 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             _token = token;
         }
         #region Authenticate
-        public UserLoginResponse Login(string username, string password)
+        public async Task<UserLoginResponse> Login(string email, string password)
         {
             UserLoginResponse result = new UserLoginResponse();
             try
             {
                 lock (_accountRepository)
                 {
-                    var data = _mapper.Map<AccountViewModel>(_accountRepository
-                        .Login(username, password));
+                    var data = _accountRepository
+                        .Login(email).Result;
 
-                    if (data != null)
+                    if (data != null && BCrypt.Net.BCrypt.Verify(password, data.Password))
                     {
                         string roleName = Enum.GetName(typeof(AccountRole), data.Role);
 
-                        var dataToken = _token.GenerateAccessToken(username, roleName);
+                        var dataToken = _token.GenerateAccessToken(email, roleName);
                         result = new UserLoginResponse()
                         {
                             Message = Constraints.INFORMATION,
-                            Value = data,
+                            Value = _mapper.Map<AccountViewModel>(data),
                             Result = true,
                             AccessToken = dataToken.accessToken,
                             RefreshToken = dataToken.refreshToken
@@ -87,7 +87,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
         #endregion
 
         #region Read
-        public ResponseResult<AccountViewModel> GetAccount(Guid accountId)
+        public async Task<ResponseResult<AccountViewModel>> GetAccount(Guid accountId)
         {
             ResponseResult<AccountViewModel> result = new ResponseResult<AccountViewModel>();
             try
@@ -95,7 +95,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 lock (_accountRepository)
                 {
                     var data = _mapper.Map<AccountViewModel>(_accountRepository
-                        .GetAccount(id: accountId));
+                        .GetAccount(id: accountId).Result);
 
                     result = data == null ?
                         new ResponseResult<AccountViewModel>()
@@ -174,7 +174,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             #endregion
 
             #region Create
-            public ResponseResult<AccountViewModel> CreateAccount(CreateAccountRequestModel request)
+            public async Task<ResponseResult<AccountViewModel>> CreateAccount(CreateAccountRequestModel request)
         {
             AccountViewModel result = new AccountViewModel();
             try
@@ -198,7 +198,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     data.IsVerified = true;
                     data.CreatedTime = DateTime.Now;
 
-                    if (!_accountRepository.CreateAccount(data))
+                    data.Password = BCrypt.Net.BCrypt.HashPassword(data.Password, 12);
+
+                    if (!_accountRepository.CreateAccount(data).Result)
                     {
                         throw new Exception();
                     } 
@@ -226,16 +228,31 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
         #endregion
 
         #region Update
-        public ResponseResult<AccountViewModel> UpdateAccountByEmail(string email, UpdateAccountByMailRequestModel request)
+        public async Task<ResponseResult<AccountViewModel>> UpdateAccountByEmail(string email, UpdateAccountByMailRequestModel request)
         {
             AccountViewModel result = new AccountViewModel();
             try
             {
                 lock (_accountRepository)
                 {
-                    var data = _accountRepository.GetAccountByMail(email);
+                    var data1 = _accountRepository.GetAccountByMail(email).Result;
 
-                    data = _mapper.Map<Account>(request);
+                    
+
+                    var data = _mapper.Map<Account>(request);
+
+                    data.UserName = data1.UserName;
+                    data.Email = data1.Email;
+                    data.Role = data1.Role;
+                    data.IsOnline = true;
+                    data.Role = data1.Role;
+                    data.AccountId = data1.AccountId;
+                    data.CreatedTime = data1.CreatedTime;
+
+                    data.Password = BCrypt.Net.BCrypt.HashPassword(request.Password, 12);
+
+                    _accountRepository.DetachEntity(data1);
+                    _accountRepository.MotifyEntity(data);  
 
                     if (data == null)
                     {
@@ -247,7 +264,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                         };
                     }
 
-                    if(!_accountRepository.UpdateAccountByMail(email, data))
+                    if(!_accountRepository.UpdateAccountByMail(email, data).Result)
                     {
                         throw new Exception();
                     }

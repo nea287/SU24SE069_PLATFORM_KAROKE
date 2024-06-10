@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,5 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
         public int? Yob { get; set; }
         public string? IdentityCardNumber { get; set; }
         public string? PhoneNumber { get; set; }
+        public Guid? CharacterItemId { get; set; }
+        public Guid? RoomItemId { get; set; }
     }
 }

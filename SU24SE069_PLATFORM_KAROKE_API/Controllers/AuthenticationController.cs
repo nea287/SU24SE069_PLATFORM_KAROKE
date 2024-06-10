@@ -19,6 +19,6 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
         [HttpPost("Login")]
         public IActionResult Login([FromBody] LoginRequestModel request)
-            => Ok(_accountService.Login(request.username, request.password));
+            => Ok(_accountService.Login(request.username, request.password).Result);
     }
 }

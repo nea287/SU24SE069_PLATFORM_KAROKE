@@ -10,11 +10,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
 {
     public interface IAccountRepository : IBaseDAO<Account>
     {
-        public Account Login(string username, string password);
-        public bool CreateAccount(Account request);
+        public Task<Account> Login(string email);
+        public Task<bool> CreateAccount(Account request);
         public bool ExistedAccount(string? email = null, string? username = null);
-        public bool UpdateAccountByMail(string email, Account request);
-        public Account GetAccount(Guid id);
-        public Account GetAccountByMail(string email);
+        public Task<bool> UpdateAccountByMail(string email, Account request);
+        public Task<Account> GetAccount(Guid id);
+        public Task<Account> GetAccountByMail(string email);
     }
 }

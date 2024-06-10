@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -197,6 +198,20 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.DAO
             return await Table.FirstOrDefaultAsync(predicate);
         }
 
+        public void AttrachEntity(TEntity entity)
+        {
+            _context.Attach(entity);
+        }
+
+        public void DetachEntity(TEntity entity)
+        {
+            _context.Entry(entity).State = EntityState.Detached;
+        }
+        public void MotifyEntity(TEntity entity)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+        }
+
         public bool IsMin(Func<TEntity, bool> predicate)
         {
             return Table.Min(predicate);
@@ -245,6 +260,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.DAO
         public virtual void Delete(TEntity entity)
         {
             Table.Remove(entity);
+        }
+
+        public async Task SaveChagesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }
