@@ -18,9 +18,9 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpPost("Login")]
-        public IActionResult Login([FromBody] LoginRequestModel request)
+        public async Task<IActionResult> Login([FromBody] LoginRequestModel request)
         {
-            var rs = _accountService.Login(request.username, request.password).Result;
+            var rs = _accountService.Login(request.email, request.password).Result;
 
             return rs.Result.HasValue? (rs.Result.Value? Ok(rs) : BadRequest(rs)): BadRequest(rs);
         }
