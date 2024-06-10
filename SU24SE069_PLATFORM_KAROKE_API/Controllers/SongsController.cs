@@ -12,7 +12,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/songs")]
     [ApiController]
     [EnableCors("AllowAnyOrigins")]
     public class SongsController : ControllerBase

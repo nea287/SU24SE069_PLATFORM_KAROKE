@@ -13,7 +13,7 @@ using System.Net.NetworkInformation;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/accounts")]
     [ApiController]
     [EnableCors("AllowAnyOrigins")]
     public class AccountsController : ControllerBase

@@ -11,7 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/items")]
     [ApiController]
     [EnableCors("AllowAnyOrigins")]
     public class ItemsController : ControllerBase

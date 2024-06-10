@@ -5,7 +5,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/authentication")]
     [ApiController]
     [EnableCors("AllowAnyOrigins")]
     public class AuthenticationController : ControllerBase
@@ -17,7 +17,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             _accountService = accountService;
         }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestModel request)
         {
             var rs = await _accountService.Login(request.email, request.password);

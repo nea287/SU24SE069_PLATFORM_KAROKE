@@ -10,7 +10,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/friends")]
     [ApiController]
     [EnableCors("AllowAnyOrigins")]
     public class FriendsController : ControllerBase

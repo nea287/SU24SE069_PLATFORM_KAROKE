@@ -9,20 +9,20 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     public class Constraints
     {
         #region Generic
-        public const string NOT_FOUND = "Infomation Not Found!";
-        public const string LOAD_FAILED = "Load Failed!";
-        public const string CREATE_SUCCESS = "Create Success";
-        public const string CREATE_FAILED = "Create Failed!";
-        public const string DELETE_SUCCESS = "Delete Success";
-        public const string DELETE_FAILED = "Delete Failed";
-        public const string UPDATE_SUCCESS = "Update Success";
-        public const string UPDATE_FAILED = "Update Failed!";
-        public const string INFORMATION = "Information: ";
-        public const string INFORMATION_EXISTED = "Information Already Existed!";
+        public const string NOT_FOUND = "Thông tin không tồn tại!";
+        public const string LOAD_FAILED = "Tải thông tin thất bại!";
+        public const string CREATE_SUCCESS = "Tạo thông tin thành công!";
+        public const string CREATE_FAILED = "Tạo thông tin thất bại!";
+        public const string DELETE_SUCCESS = "Xóa thông tin thành công!";
+        public const string DELETE_FAILED = "Xóa thông tin thất bại!";
+        public const string UPDATE_SUCCESS = "Cập nhật thông tin thành công!";
+        public const string UPDATE_FAILED = "Cập nhật thông tin thất bại!";
+        public const string INFORMATION = "Thông tin: ";
+        public const string INFORMATION_EXISTED = "Thông tin đã tồn tại!";
         #endregion
 
         #region Login
-        public const string EMAIL_PASSWORD_INVALID = "Incorrect email or password!";
+        public const string EMAIL_PASSWORD_INVALID = "email hoặc mật khẩu không đúng!";
         #endregion
 
         #region Page
@@ -32,7 +32,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
         #endregion
         #region Authenticate
-        public const string INVALID_VERIFICATION_CODE = "Verification code is invalid!";
+        public const string INVALID_VERIFICATION_CODE = "mã xác thực không hợp lệ!";
         #endregion
     }
 }

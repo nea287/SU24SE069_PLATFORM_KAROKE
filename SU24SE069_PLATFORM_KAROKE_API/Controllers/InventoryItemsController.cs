@@ -10,7 +10,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/inventory-items")]
     [ApiController]
     [EnableCors("AllowAnyOrigins")]
 
