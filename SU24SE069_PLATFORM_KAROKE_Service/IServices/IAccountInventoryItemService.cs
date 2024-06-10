@@ -13,8 +13,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
 {
     public interface IAccountInventoryItemService
     {
-        public ResponseResult<AccountInventoryItemViewModel> CreateAccountInventory(CreateAccountInventoryItemRequestModel request);
-        public ResponseResult<AccountInventoryItemViewModel> UpdateAccountInventoryItem(Guid id, CreateAccountInventoryItemRequestModel request);
+        public Task<ResponseResult<AccountInventoryItemViewModel>> CreateAccountInventory(CreateAccountInventoryItemRequestModel request);
+        public Task<ResponseResult<AccountInventoryItemViewModel>> UpdateAccountInventoryItem(Guid id, CreateAccountInventoryItemRequestModel request);
         public DynamicModelResponse.DynamicModelsResponse<AccountInventoryItemViewModel> GetAccountInventories(AccountInventoryItemViewModel filter, PagingRequest paging, AccountInventoryItemOrderFilter orderFilter);
         
     }

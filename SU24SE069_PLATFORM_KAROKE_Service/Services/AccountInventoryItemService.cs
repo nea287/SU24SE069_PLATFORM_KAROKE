@@ -28,7 +28,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             _mapper = mapper;
             _inventoryRepository = inventoryRepository;
         }
-        public ResponseResult<AccountInventoryItemViewModel> CreateAccountInventory(CreateAccountInventoryItemRequestModel request)
+        public async Task<ResponseResult<AccountInventoryItemViewModel>> CreateAccountInventory(CreateAccountInventoryItemRequestModel request)
         {
             AccountInventoryItem rs = new AccountInventoryItem();
             try
@@ -38,7 +38,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     rs = _mapper.Map<AccountInventoryItem>(request);    
                     rs.ActivateDate = DateTime.Now;
 
-                    if (!_inventoryRepository.CreateAccountInventory(rs))
+                    if (!_inventoryRepository.CreateAccountInventory(rs).Result)
                     {
                         throw new Exception();
                     }
@@ -105,7 +105,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public ResponseResult<AccountInventoryItemViewModel> UpdateAccountInventoryItem(Guid id, CreateAccountInventoryItemRequestModel request)
+        public async  Task<ResponseResult<AccountInventoryItemViewModel>> UpdateAccountInventoryItem(Guid id, CreateAccountInventoryItemRequestModel request)
         {
             AccountInventoryItem rs = new AccountInventoryItem();
             try
@@ -122,10 +122,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         };
                     }
 
-                    rs = _mapper.Map<AccountInventoryItem>(rs);
+                    rs = _mapper.Map<AccountInventoryItem>(request);
                     rs.ActivateDate = data.ActivateDate;
 
-                    if(!_inventoryRepository.UpdateAccountInventory(id, rs))
+                    rs.AccountInventoryItemId = id;
+
+                    _inventoryRepository.DetachEntity(data);
+                    _inventoryRepository.MotifyEntity(rs);
+
+                    if (!_inventoryRepository.UpdateAccountInventory(id, rs).Result)
                     {
                         throw new Exception();
                     }

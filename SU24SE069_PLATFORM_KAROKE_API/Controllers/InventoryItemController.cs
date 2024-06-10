@@ -32,19 +32,19 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpPost("CreateInventoryItem")]
-        public IActionResult CreateInventoryItem([FromBody] CreateAccountInventoryItemRequestModel request)
+        public async Task<IActionResult> CreateInventoryItem([FromBody] CreateAccountInventoryItemRequestModel request)
         {
             var rs = _inventoryService.CreateAccountInventory(request);
 
-            return rs.result.HasValue? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+            return rs.Result.result.HasValue? (rs.Result.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
 
         [HttpPut("UpdateInventoryItem/{id:guid}")]
-        public IActionResult UpdateInventoryItem(Guid id, [FromBody] CreateAccountInventoryItemRequestModel request)
+        public async Task<IActionResult> UpdateInventoryItem(Guid id, [FromBody] CreateAccountInventoryItemRequestModel request)
         {
             var rs = _inventoryService.UpdateAccountInventoryItem(id, request);
 
-            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+            return rs.Result.result.HasValue ? (rs.Result.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
     }
 }

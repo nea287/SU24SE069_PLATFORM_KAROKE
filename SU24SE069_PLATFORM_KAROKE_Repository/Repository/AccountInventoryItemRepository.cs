@@ -10,11 +10,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
     public class AccountInventoryItemRepository : BaseRepository<AccountInventoryItem>, IAccountInventoryItemRepository
     {
-        public bool CreateAccountInventory(AccountInventoryItem request)
+        public async Task<bool> CreateAccountInventory(AccountInventoryItem request)
         {
             try
             {
-                Insert(request);
+                await InsertAsync(request);
                 SaveChages();
             }catch(Exception ex)
             {
@@ -23,11 +23,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return true;
         }
 
-        public bool UpdateAccountInventory(Guid id, AccountInventoryItem request)
+        public async Task<bool> UpdateAccountInventory(Guid id, AccountInventoryItem request)
         {
             try
             {
-                _ = UpdateGuid(request, id);
+                await UpdateGuid(request, id);
                 SaveChages();
             }catch(Exception ex)
             {

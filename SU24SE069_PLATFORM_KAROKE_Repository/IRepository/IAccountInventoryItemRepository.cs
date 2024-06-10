@@ -9,8 +9,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
 {
     public interface IAccountInventoryItemRepository : IBaseRepository<AccountInventoryItem>
     {
-        public bool CreateAccountInventory(AccountInventoryItem request);
+        public Task<bool> CreateAccountInventory(AccountInventoryItem request);
         //public bool DeleteAccountInventory(AccountInventoryItem request);
-        public bool UpdateAccountInventory(Guid id, AccountInventoryItem request);
+        public Task<bool> UpdateAccountInventory(Guid id, AccountInventoryItem request);
     }
 }
