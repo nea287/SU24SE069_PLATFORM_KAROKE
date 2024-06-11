@@ -27,8 +27,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public DateTime? CreatedDate { get; set; }
         public Guid? CreatorId { get; set; }
 
-
-
         //public ICollection<AccountInventoryItem>? AccountInventoryItems { get; set; }
         //public ICollection<InAppTransaction>? InAppTransactions { get; set; }
     }

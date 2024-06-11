@@ -40,6 +40,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     if (!_inventoryRepository.CreateAccountInventory(rs).Result)
                     {
+                        _inventoryRepository.DetachEntity(rs);
                         throw new Exception();
                     }
                 }
@@ -132,6 +133,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     if (!_inventoryRepository.UpdateAccountInventory(id, rs).Result)
                     {
+                        _inventoryRepository.DetachEntity(rs);
                         throw new Exception();
                     }
                 }

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 {
@@ -45,9 +48,40 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=database.monoinfinity.net;database=PLATFORM_KARAOKE;Uid=sa;Pwd=1234567890Aa;TrustServerCertificate=true");
+
+
+                optionsBuilder.UseSqlServer(GetConnectionString());
+                optionsBuilder.UseLazyLoadingProxies();
+
+                using (SqlConnection conn = new SqlConnection(GetConnectionString()))
+                {
+                    // Đóng kết nối hiện tại nếu đang mở
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        conn.Close();
+                    }
+                    conn.Open();
+
+                    // Thực hiện các lệnh để reset trạng thái phiên làm việc
+                    //SqlCommand resetCommand = new SqlCommand("DBCC FREESESSIONCACHE; DBCC FREEPROCCACHE; DBCC DROPCLEANBUFFERS;", conn);
+                    //resetCommand.ExecuteNonQuery();
+
+
+                }
+
+
             }
+
+        }
+
+        private string GetConnectionString()
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+            var strConn = config.GetConnectionString("Database");
+            return strConn;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

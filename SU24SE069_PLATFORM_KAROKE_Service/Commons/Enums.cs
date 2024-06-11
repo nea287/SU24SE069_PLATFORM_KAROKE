@@ -75,6 +75,22 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
     }
 
+    public enum RecordingOrderFilter
+    {
+        RecordingId,
+        RecordingName,
+        RecordingType,
+        CreatedDate,
+        UpdatedDate,
+        Score,
+        SongType,
+        SongId,
+        HostId,
+        OwnerId,
+        KaraokeRoomId,
+
+    }
+
     public enum AccountInventoryItemOrderFilter
     {
         AccountInventoryItemId,
@@ -117,5 +133,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         ENABLE = 1,
         PENDING = 2,
     }
+
 
 }

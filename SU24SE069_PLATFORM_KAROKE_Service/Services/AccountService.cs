@@ -202,6 +202,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 
                     if (!_accountRepository.CreateAccount(data).Result)
                     {
+                        _accountRepository.DetachEntity(data);
                         throw new Exception();
                     } 
 
@@ -266,6 +267,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 
                     if(!_accountRepository.UpdateAccountByMail(email, data).Result)
                     {
+                        _accountRepository.DetachEntity(data);
                         throw new Exception();
                     }
 

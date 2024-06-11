@@ -53,6 +53,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     if (!_itemRepository.CreateItem(rs).Result)
                     {
+                        _itemRepository.DetachEntity(rs);
                         throw new Exception();
                     }
                 }
@@ -83,6 +84,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     if (!_itemRepository.DeleteItem(data).Result)
                     {
+                        _itemRepository.DetachEntity(data);
                         throw new Exception();
                     }
                 }
@@ -138,7 +140,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 {
                     var data = _itemRepository.GetAll(
                                                 includeProperties: String.Join(",",
-                                                SupportingFeature.GetNameIncludedProperties<Song>()))
+                                                SupportingFeature.GetNameIncludedProperties<Item>()))
                         .AsQueryable()
                         .ProjectTo<ItemViewModel>(_mapper.ConfigurationProvider)
                         .DynamicFilter(filter);
@@ -198,6 +200,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     if(!_itemRepository.UpdateItem(id, rs).Result)
                     {
+                        _itemRepository.DetachEntity(rs);
                         throw new Exception();
                     }
 

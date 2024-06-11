@@ -6,6 +6,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
@@ -45,6 +46,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region AccountInventoryItem
             CreateMap<AccountInventoryItem, AccountInventoryItemViewModel>().ReverseMap();
             CreateMap<AccountInventoryItem, CreateAccountInventoryItemRequestModel>().ReverseMap();
+            #endregion
+
+            #region Recording
+            CreateMap<Recording, RecordingViewModel>().ReverseMap();
+            CreateMap<Recording, CreateRecordingRequestModel>().ReverseMap();
             #endregion
         }
     }

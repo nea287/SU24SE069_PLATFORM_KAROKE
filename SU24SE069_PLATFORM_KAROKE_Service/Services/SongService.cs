@@ -140,6 +140,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     if (!_songRepository.CreateSong(data).Result)
                     {
+                        _songRepository.DetachEntity(data);
                         throw new Exception();
                     }
 
@@ -197,6 +198,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     if(!_songRepository.UpdateSong(id, data).Result)
                     {
+                        _songRepository.DetachEntity(data);
                         throw new Exception();
                     }
 

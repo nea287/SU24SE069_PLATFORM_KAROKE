@@ -41,6 +41,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     if (!_friendRepository.CreateFriend(rs).Result)
                     {
+                        _friendRepository.DetachEntity(rs);
                         throw new Exception();
                     }
                 }
