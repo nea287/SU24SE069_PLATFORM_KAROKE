@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.6" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SU24SE069_PLATFORM_KAROKE_Service\SU24SE069_PLATFORM_KAROKE_BusinessLayer.csproj" />
+    <ProjectReference Include="..\SU24SE069_PLATFORM_KAROKE_Service\SU24SE069_PLATFORM_KAROKE_Service.csproj" />
   </ItemGroup>
 
 </Project>
