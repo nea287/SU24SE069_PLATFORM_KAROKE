@@ -265,7 +265,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                         };
                     }
 
-                    if(!_accountRepository.UpdateAccountByMail(email, data).Result)
+                    if(!_accountRepository.UpdateAccount(data).Result)
                     {
                         _accountRepository.DetachEntity(data);
                         throw new Exception();
@@ -291,6 +291,44 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 Message = Constraints.UPDATE_SUCCESS,
                 result = true,
                 Value = result
+            };
+        }
+
+        public async Task<ResponseResult<AccountViewModel>> DeleteAccount(Guid id)
+        {
+            try
+            {
+                 var data = await _accountRepository.GetAccount(id);
+                if(data is null)
+                {
+                    return new ResponseResult<AccountViewModel>()
+                    {
+                        Message = Constraints.NOT_FOUND,
+                        result = false,
+                    };
+                }
+
+                data.IsVerified = false;
+
+                if(!await _accountRepository.UpdateAccount(data))
+                {
+                    _accountRepository.DetachEntity(data);
+                    throw new Exception();
+                }
+
+            }catch(Exception ex)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.DELETE_FAILED,
+                    result = false,
+                };
+            }
+
+            return new ResponseResult<AccountViewModel>()
+            {
+                Message = Constraints.DELETE_SUCCESS,
+                result = true,
             };
         }
         #endregion

@@ -20,7 +20,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 
             }catch(Exception ex)
             {
-                throw new Exception(ex.Message);
+                return result = null;
             }
 
             return result;
@@ -77,7 +77,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
         #endregion
 
         #region Update 
-        public async Task<bool> UpdateAccountByMail(string email, Account request)
+        public async Task<bool> UpdateAccount(Account request)
         {
             try
             {
@@ -100,6 +100,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             => this.Any(x =>
                         x.Email.ToLower().Equals(email.ToLower())
                         || x.UserName.ToLower().Equals(username.ToLower(), StringComparison.Ordinal));
+
         #endregion
     }
 }

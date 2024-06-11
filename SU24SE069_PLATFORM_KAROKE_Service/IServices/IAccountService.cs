@@ -19,6 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices
             PagingRequest paging, AccountOrderFilter orderFilter);
         public Task<ResponseResult<AccountViewModel>> CreateAccount(CreateAccountRequestModel request);
         public Task<ResponseResult<AccountViewModel>> UpdateAccountByEmail(string email, UpdateAccountByMailRequestModel request);
+        public Task<ResponseResult<AccountViewModel>> DeleteAccount(Guid id);
 
 
 

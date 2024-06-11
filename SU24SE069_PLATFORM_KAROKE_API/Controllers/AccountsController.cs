@@ -63,6 +63,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
         }
 
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteAccount(Guid id)
+        {
+            var rs = await _service.DeleteAccount(id);
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
+
+        }
+
     }
 }
 

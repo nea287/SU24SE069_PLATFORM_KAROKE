@@ -13,7 +13,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
         public Task<Account> Login(string email);
         public Task<bool> CreateAccount(Account request);
         public bool ExistedAccount(string? email = null, string? username = null);
-        public Task<bool> UpdateAccountByMail(string email, Account request);
+        public Task<bool> UpdateAccount(Account request);
         public Task<Account> GetAccount(Guid id);
         public Task<Account> GetAccountByMail(string email);
     }
