@@ -59,10 +59,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     }
                     conn.Open();
 
-                    // Thực hiện các lệnh để reset trạng thái phiên làm việc
-                    //SqlCommand resetCommand = new SqlCommand("DBCC FREESESSIONCACHE; DBCC FREEPROCCACHE; DBCC DROPCLEANBUFFERS;", conn);
-                    //resetCommand.ExecuteNonQuery();
-
 
                 }
 
@@ -103,6 +99,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasMaxLength(50)
                     .HasColumnName("account_name");
 
+                entity.Property(e => e.AccountStatus).HasColumnName("account_status");
+
                 entity.Property(e => e.CharacterItemId).HasColumnName("character_item_id");
 
                 entity.Property(e => e.CreatedTime)
@@ -126,8 +124,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("identity_card_number");
 
                 entity.Property(e => e.IsOnline).HasColumnName("is_online");
-
-                entity.Property(e => e.IsVerified).HasColumnName("is_verified");
 
                 entity.Property(e => e.Password)
                     .IsUnicode(false)

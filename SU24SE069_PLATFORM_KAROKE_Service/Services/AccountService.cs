@@ -195,7 +195,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     data.Email = data.Email.ToLower();
                     data.UserName = data.UserName.ToLower();
                     data.IsOnline = false;
-                    data.IsVerified = true;
+                    data.AccountStatus = (int)AccountStatus.ACTIVE;
                     data.CreatedTime = DateTime.Now;
 
                     data.Password = BCrypt.Net.BCrypt.HashPassword(data.Password, 12);
@@ -249,6 +249,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     data.Role = data1.Role;
                     data.AccountId = data1.AccountId;
                     data.CreatedTime = data1.CreatedTime;
+                    data.AccountStatus = (int)AccountStatus.ACTIVE;
 
                     data.Password = BCrypt.Net.BCrypt.HashPassword(request.Password, 12);
 
@@ -308,7 +309,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     };
                 }
 
-                data.IsVerified = false;
+                data.AccountStatus = (int)AccountStatus.INACTIVE;
 
                 if(!await _accountRepository.UpdateAccount(data))
                 {

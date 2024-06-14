@@ -40,7 +40,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public string Email { get; set; } = null!;
         public int Gender { get; set; }
         public string AccountName { get; set; } = null!;
-        public bool IsVerified { get; set; }
         public int Role { get; set; }
         public int Star { get; set; }
         public bool IsOnline { get; set; }
@@ -51,6 +50,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public DateTime? CreatedTime { get; set; }
         public Guid? CharacterItemId { get; set; }
         public Guid? RoomItemId { get; set; }
+        public int? AccountStatus { get; set; }
 
         public virtual AccountInventoryItem? CharacterItem { get; set; }
         public virtual AccountInventoryItem? RoomItem { get; set; }

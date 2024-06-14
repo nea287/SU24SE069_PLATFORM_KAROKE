@@ -66,7 +66,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             try
             {
                 result = FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()) 
-                            && x.IsVerified == true).Result;
+                            && x.AccountStatus == 1).Result;
             }catch(Exception ex)
             {
                 throw new Exception(ex?.Message);

@@ -23,7 +23,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         Email,
         Gender,
         AccountName,
-        IsVerified,
         Role,
         Star,
         IsOnline,
@@ -33,6 +32,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         IdentityCardNumber,
         PhoneNumber,
         CreatedTime,
+        AccountStatus,
     }
     public enum SongOrderFilter
     {
@@ -40,14 +40,11 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         SongName,
         SongDescription,
         SongUrl,
-        Source,
         SongStatus,
         CreatedDate,
         UpdatedDate,
         SongCode,
         PublicDate,
-        SongType,
-        Tempo,
         CreatorId,
         Price,
     }
@@ -113,6 +110,13 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         MALE = 1,
         FEMALE = 2,
         OTHERS = 3,
+    }
+
+    public enum AccountStatus
+    {
+        NOT_VERIFY = 0,
+        ACTIVE = 1,
+        INACTIVE = 2,
     }
 
     public enum SongStatus
