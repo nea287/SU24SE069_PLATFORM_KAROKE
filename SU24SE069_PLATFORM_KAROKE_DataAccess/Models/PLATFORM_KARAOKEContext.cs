@@ -4,7 +4,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 {
@@ -25,11 +24,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual DbSet<FavouriteSong> FavouriteSongs { get; set; } = null!;
         public virtual DbSet<Friend> Friends { get; set; } = null!;
         public virtual DbSet<InAppTransaction> InAppTransactions { get; set; } = null!;
-        public virtual DbSet<InstrumentSheet> InstrumentSheets { get; set; } = null!;
         public virtual DbSet<Item> Items { get; set; } = null!;
         public virtual DbSet<KaraokeRoom> KaraokeRooms { get; set; } = null!;
         public virtual DbSet<LoginActivity> LoginActivities { get; set; } = null!;
-        public virtual DbSet<Lyric> Lyrics { get; set; } = null!;
         public virtual DbSet<Message> Messages { get; set; } = null!;
         public virtual DbSet<MoneyTransaction> MoneyTransactions { get; set; } = null!;
         public virtual DbSet<Package> Packages { get; set; } = null!;
@@ -83,7 +80,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             var strConn = config.GetConnectionString("Database");
             return strConn;
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>(entity =>
@@ -134,7 +130,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.IsVerified).HasColumnName("is_verified");
 
                 entity.Property(e => e.Password)
-                    .HasColumnType("VARCHAR(MAX)")
                     .IsUnicode(false)
                     .HasColumnName("password");
 
@@ -347,32 +342,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasConstraintName("FK__InAppTran__song___08B54D69");
             });
 
-            modelBuilder.Entity<InstrumentSheet>(entity =>
-            {
-                entity.ToTable("InstrumentSheet");
-
-                entity.HasIndex(e => e.InstrumentSheetId, "UQ__Instrume__B44A38C3DC5E3165")
-                    .IsUnique();
-
-                entity.Property(e => e.InstrumentSheetId)
-                    .HasColumnName("instrument_sheet_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.InstrumentSheetContent)
-                    .HasColumnType("text")
-                    .HasColumnName("instrument_sheet_content");
-
-                entity.Property(e => e.InstrumentType).HasColumnName("instrument_type");
-
-                entity.Property(e => e.SongId).HasColumnName("song_id");
-
-                entity.HasOne(d => d.Song)
-                    .WithMany(p => p.InstrumentSheets)
-                    .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Instrumen__song___09A971A2");
-            });
-
             modelBuilder.Entity<Item>(entity =>
             {
                 entity.ToTable("Item");
@@ -484,33 +453,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__LoginActi__membe__0C85DE4D");
-            });
-
-            modelBuilder.Entity<Lyric>(entity =>
-            {
-                entity.HasKey(e => e.LyricSheetId)
-                    .HasName("PK__Lyric__AAAC3784E06440E0");
-
-                entity.ToTable("Lyric");
-
-                entity.HasIndex(e => e.LyricSheetId, "UQ__Lyric__AAAC37856E2307B7")
-                    .IsUnique();
-
-                entity.Property(e => e.LyricSheetId)
-                    .HasColumnName("lyric_sheet_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.LyricSheetContent)
-                    .HasColumnType("text")
-                    .HasColumnName("lyric_sheet_content");
-
-                entity.Property(e => e.SongId).HasColumnName("song_id");
-
-                entity.HasOne(d => d.Song)
-                    .WithMany(p => p.Lyrics)
-                    .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Lyric__song_id__0D7A0286");
             });
 
             modelBuilder.Entity<Message>(entity =>
@@ -955,6 +897,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("song_id")
                     .HasDefaultValueSql("(newid())");
 
+                entity.Property(e => e.Author)
+                    .HasMaxLength(150)
+                    .HasColumnName("author");
+
+                entity.Property(e => e.Category).HasColumnName("category");
+
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("created_date");
@@ -968,6 +916,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.PublicDate)
                     .HasColumnType("datetime")
                     .HasColumnName("public_date");
+
+                entity.Property(e => e.Singer)
+                    .HasMaxLength(150)
+                    .HasColumnName("singer");
 
                 entity.Property(e => e.SongCode)
                     .HasMaxLength(150)
@@ -984,15 +936,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.SongStatus).HasColumnName("song_status");
 
-                entity.Property(e => e.SongType).HasColumnName("song_type");
-
                 entity.Property(e => e.SongUrl)
                     .HasColumnType("text")
                     .HasColumnName("song_url");
-
-                entity.Property(e => e.Source).HasColumnName("source");
-
-                entity.Property(e => e.Tempo).HasColumnName("tempo");
 
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")
