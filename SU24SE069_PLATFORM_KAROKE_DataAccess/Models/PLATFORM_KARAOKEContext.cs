@@ -45,37 +45,45 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-
-
-                optionsBuilder.UseSqlServer(GetConnectionString());
-                optionsBuilder.UseLazyLoadingProxies();
-
-                using (SqlConnection conn = new SqlConnection(GetConnectionString()))
-                {
-                    // Đóng kết nối hiện tại nếu đang mở
-                    if (conn.State == System.Data.ConnectionState.Open)
-                    {
-                        conn.Close();
-                    }
-                    conn.Open();
-
-
-                }
-
-
+                optionsBuilder.UseSqlServer("Server=gible-db.database.windows.net;Initial Catalog=Kok-DB;Uid=gible-db-sa;Pwd=G!ble87654321;TrustServerCertificate=true");
             }
-
         }
 
-        private string GetConnectionString()
-        {
-            IConfiguration config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", true, true)
-                .Build();
-            var strConn = config.GetConnectionString("Database");
-            return strConn;
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+
+
+        //        optionsBuilder.UseSqlServer(GetConnectionString());
+        //        optionsBuilder.UseLazyLoadingProxies();
+
+        //        using (SqlConnection conn = new SqlConnection(GetConnectionString()))
+        //        {
+        //            // Đóng kết nối hiện tại nếu đang mở
+        //            if (conn.State == System.Data.ConnectionState.Open)
+        //            {
+        //                conn.Close();
+        //            }
+        //            conn.Open();
+
+
+        //        }
+
+
+        //    }
+
+        //}
+
+        //private string GetConnectionString()
+        //{
+        //    IConfiguration config = new ConfigurationBuilder()
+        //        .SetBasePath(Directory.GetCurrentDirectory())
+        //        .AddJsonFile("appsettings.json", true, true)
+        //        .Build();
+        //    var strConn = config.GetConnectionString("Database");
+        //    return strConn;
+        //}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>(entity =>
@@ -782,7 +790,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.SongId).HasColumnName("song_id");
 
-                entity.Property(e => e.SongType).HasColumnName("song_type");
 
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")
