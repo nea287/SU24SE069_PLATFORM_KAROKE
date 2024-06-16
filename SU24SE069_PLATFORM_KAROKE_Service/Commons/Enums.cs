@@ -72,6 +72,13 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
     }
 
+    public enum ItemType
+    {
+        CHARACTER,
+        ROOM, 
+        DEFAULT,
+    }
+
     public enum RecordingOrderFilter
     {
         RecordingId,
@@ -131,6 +138,11 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         EXTERNAL = 2,
     }
 
+    public enum FriendStatus
+    {
+        OFFLINE = 0,
+        ONLINE =  1,
+    }
     public enum ItemStatus
     {
         DISABLE = 0,
