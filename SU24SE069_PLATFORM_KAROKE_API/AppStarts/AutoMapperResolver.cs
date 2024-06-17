@@ -30,7 +30,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
 
             #region Song
             CreateMap<Song, SongViewModel>()
-                .ForMember(x => x.Category, dest => dest.MapFrom(opt => (SongCategory)opt.Category))
+                //.ForMember(x => x.Category, dest => dest.MapFrom(opt => (SongCategory)opt.Category))
                 .ReverseMap();
 
             CreateMap<Song, CreateSongRequestModel>().ReverseMap();

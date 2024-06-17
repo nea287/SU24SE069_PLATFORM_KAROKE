@@ -30,7 +30,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public DateTime? PublicDate { get; set; }
         public Guid? CreatorId { get; set; }
         public decimal? Price { get; set; }
-        public SongCategory? Category { get; set; }
+        public string? Category { get; set; }
         public string? Author { get; set; } 
         public string? Singer { get; set; }
 
