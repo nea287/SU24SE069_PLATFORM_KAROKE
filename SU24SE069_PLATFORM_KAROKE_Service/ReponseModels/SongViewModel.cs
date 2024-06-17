@@ -1,4 +1,5 @@
-﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public DateTime? PublicDate { get; set; }
         public Guid? CreatorId { get; set; }
         public decimal? Price { get; set; }
-        public int? Category { get; set; }
+        public SongCategory? Category { get; set; }
         public string? Author { get; set; } 
         public string? Singer { get; set; }
 

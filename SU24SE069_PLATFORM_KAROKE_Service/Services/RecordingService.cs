@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Castle.Core.Internal;
 using Org.BouncyCastle.Asn1.Ocsp;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
@@ -12,6 +13,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,12 +43,30 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 data.CreatedDate = DateTime.Now;
                 data.UpdatedDate = DateTime.Now;
 
+
+                
+
+                if (!data.Posts.IsNullOrEmpty())
+                {
+                    
+                    data.Posts = data.Posts
+                        .Select(item => { item.UpdateTime = DateTime.Now; item.UploadTime = DateTime.Now; return item; })
+                        .ToList();
+                }
+                else if (!data.VoiceAudios.IsNullOrEmpty())
+                {
+                    data.VoiceAudios = data.VoiceAudios
+                        .Select(item => {item.UploadTime = DateTime.Now; return item; })
+                        .ToList();
+                }
+
                 if (!await _recordingRepository.AddRecording(data))
                 {
                     _recordingRepository.DetachEntity(data);
                     throw new Exception();
                 }
 
+                await _recordingRepository.SaveChagesAsync();
                 result = _mapper.Map<RecordingViewModel>(data);
 
 

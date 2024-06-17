@@ -1,4 +1,7 @@
-﻿using System;
+﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.VoiceAudio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +21,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording
         public Guid HostId { get; set; }
         public Guid OwnerId { get; set; }
         public Guid KaraokeRoomId { get; set; }
+
+        public ICollection<CreatePostRequestModel>? Posts { get; set; }
+        public ICollection<CreateVoiceAudioRequestModel>? VoiceAudios { get; set; }
 
     }
 }

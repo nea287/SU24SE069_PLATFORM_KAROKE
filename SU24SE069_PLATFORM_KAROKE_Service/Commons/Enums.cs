@@ -137,6 +137,13 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         INTERNAL = 1,
         EXTERNAL = 2,
     }
+    public enum SongCategory
+    {
+        VPOP = 0,
+        POP = 1,
+        KPOP = 2,
+        ROCK = 3,
+    }
 
     public enum FriendStatus
     {

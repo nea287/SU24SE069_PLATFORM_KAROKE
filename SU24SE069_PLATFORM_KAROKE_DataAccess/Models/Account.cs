@@ -20,9 +20,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             Messages = new HashSet<Message>();
             MoneyTransactions = new HashSet<MoneyTransaction>();
             Packages = new HashSet<Package>();
-            PostComments = new HashSet<PostComment>();
             PostShares = new HashSet<PostShare>();
-            PostVotes = new HashSet<PostVote>();
+            PostRates = new HashSet<PostRate>();
             Posts = new HashSet<Post>();
             PurchasedSongs = new HashSet<PurchasedSong>();
             RecordingHosts = new HashSet<Recording>();
@@ -67,9 +66,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<MoneyTransaction> MoneyTransactions { get; set; }
         public virtual ICollection<Package> Packages { get; set; }
-        public virtual ICollection<PostComment> PostComments { get; set; }
         public virtual ICollection<PostShare> PostShares { get; set; }
-        public virtual ICollection<PostVote> PostVotes { get; set; }
+        public virtual ICollection<PostRate> PostRates { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<PurchasedSong> PurchasedSongs { get; set; }
         public virtual ICollection<Recording> RecordingHosts { get; set; }

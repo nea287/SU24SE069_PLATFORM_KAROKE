@@ -31,9 +31,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual DbSet<MoneyTransaction> MoneyTransactions { get; set; } = null!;
         public virtual DbSet<Package> Packages { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
-        public virtual DbSet<PostComment> PostComments { get; set; } = null!;
         public virtual DbSet<PostShare> PostShares { get; set; } = null!;
-        public virtual DbSet<PostVote> PostVotes { get; set; } = null!;
+        public virtual DbSet<PostRate> PostRates { get; set; } = null!;
         public virtual DbSet<PurchasedSong> PurchasedSongs { get; set; } = null!;
         public virtual DbSet<Recording> Recordings { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
@@ -41,49 +40,51 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual DbSet<SupportRequest> SupportRequests { get; set; } = null!;
         public virtual DbSet<VoiceAudio> VoiceAudios { get; set; } = null!;
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        optionsBuilder.UseSqlServer("Server=gible-db.database.windows.net;Initial Catalog=Kok-DB;Uid=gible-db-sa;Pwd=G!ble87654321;TrustServerCertificate=true");
-        //    }
-        //}
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-
-
-                optionsBuilder.UseSqlServer(GetConnectionString());
-                optionsBuilder.UseLazyLoadingProxies();
-
-                using (SqlConnection conn = new SqlConnection(GetConnectionString()))
-                {
-                    // Đóng kết nối hiện tại nếu đang mở
-                    if (conn.State == System.Data.ConnectionState.Open)
-                    {
-                        conn.Close();
-                    }
-                    conn.Open();
-
-
-                }
-
-
+                optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS01;Initial Catalog=Kok-DB;Uid=sa;Pwd=1234;TrustServerCertificate=true");
+                //optionsBuilder.UseSqlServer("Server=gible-db.database.windows.net;Initial Catalog=Kok-DB;Uid=gible-db-sa;Pwd=G!ble87654321;TrustServerCertificate=true");
             }
-
         }
 
-        private string GetConnectionString()
-        {
-            IConfiguration config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", true, true)
-                .Build();
-            var strConn = config.GetConnectionString("Database");
-            return strConn;
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+
+
+        //        optionsBuilder.UseSqlServer(GetConnectionString());
+        //        optionsBuilder.UseLazyLoadingProxies();
+
+        //        using (SqlConnection conn = new SqlConnection(GetConnectionString()))
+        //        {
+        //            // Đóng kết nối hiện tại nếu đang mở
+        //            if (conn.State == System.Data.ConnectionState.Open)
+        //            {
+        //                conn.Close();
+        //            }
+        //            conn.Open();
+
+
+        //        }
+
+
+        //    }
+
+        //}
+
+        //private string GetConnectionString()
+        //{
+        //    IConfiguration config = new ConfigurationBuilder()
+        //        .SetBasePath(Directory.GetCurrentDirectory())
+        //        .AddJsonFile("appsettings.json", true, true)
+        //        .Build();
+        //    var strConn = config.GetConnectionString("Database");
+        //    return strConn;
+        //}
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>(entity =>
@@ -624,41 +625,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasConstraintName("FK__Post__recording___14270015");
             });
 
-            modelBuilder.Entity<PostComment>(entity =>
-            {
-                entity.HasKey(e => e.CommentId)
-                    .HasName("PK__PostComm__E7957687279A4949");
-
-                entity.ToTable("PostComment");
-
-                entity.HasIndex(e => e.CommentId, "UQ__PostComm__E79576863EE120FB")
-                    .IsUnique();
-
-                entity.Property(e => e.CommentId)
-                    .HasColumnName("comment_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.Comment)
-                    .HasColumnType("text")
-                    .HasColumnName("comment");
-
-                entity.Property(e => e.MemberId).HasColumnName("member_id");
-
-                entity.Property(e => e.PostId).HasColumnName("post_id");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.PostComments)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PostComme__membe__151B244E");
-
-                entity.HasOne(d => d.Post)
-                    .WithMany(p => p.PostComments)
-                    .HasForeignKey(d => d.PostId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PostComme__post___160F4887");
-            });
-
             modelBuilder.Entity<PostShare>(entity =>
             {
                 entity.ToTable("PostShare");
@@ -699,12 +665,15 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasConstraintName("FK__PostShare__post___17F790F9");
             });
 
-            modelBuilder.Entity<PostVote>(entity =>
+            modelBuilder.Entity<PostRate>(entity =>
             {
-                entity.HasKey(e => new { e.MemberId, e.PostId })
-                    .HasName("PK__PostVote__C176FD426D6D26E0");
+                entity.HasKey(e => e.RateId )
+                    .HasName("PK__PostRate__C176FD426D6D26E0");
 
-                entity.ToTable("PostVote");
+                entity.ToTable("PostRate");
+
+                entity.HasIndex(e => e.RateId, "UQ__PostRate__E79576863EE120FB")
+                    .IsUnique();
 
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
 
@@ -713,17 +682,21 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.VoteType).HasColumnName("vote_type");
 
                 entity.HasOne(d => d.Member)
-                    .WithMany(p => p.PostVotes)
+                    .WithMany(p => p.PostRates)
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__PostVote__member__18EBB532");
 
                 entity.HasOne(d => d.Post)
-                    .WithMany(p => p.PostVotes)
+                    .WithMany(p => p.PostRates)
                     .HasForeignKey(d => d.PostId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__PostVote__post_i__19DFD96B");
+
+
             });
+
+
 
             modelBuilder.Entity<PurchasedSong>(entity =>
             {

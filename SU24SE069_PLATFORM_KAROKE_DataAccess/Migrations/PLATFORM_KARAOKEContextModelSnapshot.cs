@@ -622,18 +622,18 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     b.ToTable("Post", (string)null);
                 });
 
-            modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostComment", b =>
+            modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostRate", b =>
                 {
-                    b.Property<Guid>("CommentId")
+                    b.Property<Guid>("RateId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("comment_id")
-                        .HasDefaultValueSql("(newid())");
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("comment");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("MemberId")
                         .HasColumnType("uniqueidentifier")
@@ -643,17 +643,21 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("post_id");
 
-                    b.HasKey("CommentId")
-                        .HasName("PK__PostComm__E7957687279A4949");
+                    b.Property<int>("VoteType")
+                        .HasColumnType("int")
+                        .HasColumnName("vote_type");
+
+                    b.HasKey("RateId")
+                        .HasName("PK__PostRate__C176FD426D6D26E0");
 
                     b.HasIndex("MemberId");
 
                     b.HasIndex("PostId");
 
-                    b.HasIndex(new[] { "CommentId" }, "UQ__PostComm__E79576863EE120FB")
+                    b.HasIndex(new[] { "RateId" }, "UQ__PostRate__E79576863EE120FB")
                         .IsUnique();
 
-                    b.ToTable("PostComment", (string)null);
+                    b.ToTable("PostRate", (string)null);
                 });
 
             modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostShare", b =>
@@ -694,28 +698,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("PostShare", (string)null);
-                });
-
-            modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostVote", b =>
-                {
-                    b.Property<Guid>("MemberId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("member_id");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("post_id");
-
-                    b.Property<int>("VoteType")
-                        .HasColumnType("int")
-                        .HasColumnName("vote_type");
-
-                    b.HasKey("MemberId", "PostId")
-                        .HasName("PK__PostVote__C176FD426D6D26E0");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("PostVote", (string)null);
                 });
 
             modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PurchasedSong", b =>
@@ -1286,19 +1268,19 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     b.Navigation("Recording");
                 });
 
-            modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostComment", b =>
+            modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostRate", b =>
                 {
                     b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Account", "Member")
-                        .WithMany("PostComments")
+                        .WithMany("PostRates")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostComme__membe__151B244E");
+                        .HasConstraintName("FK__PostVote__member__18EBB532");
 
                     b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Post", "Post")
-                        .WithMany("PostComments")
+                        .WithMany("PostRates")
                         .HasForeignKey("PostId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostComme__post___160F4887");
+                        .HasConstraintName("FK__PostVote__post_i__19DFD96B");
 
                     b.Navigation("Member");
 
@@ -1318,25 +1300,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasForeignKey("PostId")
                         .IsRequired()
                         .HasConstraintName("FK__PostShare__post___17F790F9");
-
-                    b.Navigation("Member");
-
-                    b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostVote", b =>
-                {
-                    b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Account", "Member")
-                        .WithMany("PostVotes")
-                        .HasForeignKey("MemberId")
-                        .IsRequired()
-                        .HasConstraintName("FK__PostVote__member__18EBB532");
-
-                    b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Post", "Post")
-                        .WithMany("PostVotes")
-                        .HasForeignKey("PostId")
-                        .IsRequired()
-                        .HasConstraintName("FK__PostVote__post_i__19DFD96B");
 
                     b.Navigation("Member");
 
@@ -1399,7 +1362,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
             modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Report", b =>
                 {
-                    b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostComment", "Comment")
+                    b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostRate", "Comment")
                         .WithMany("Reports")
                         .HasForeignKey("CommentId")
                         .IsRequired()
@@ -1509,11 +1472,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.Navigation("Packages");
 
-                    b.Navigation("PostComments");
+                    b.Navigation("PostRates");
 
                     b.Navigation("PostShares");
-
-                    b.Navigation("PostVotes");
 
                     b.Navigation("Posts");
 
@@ -1567,16 +1528,14 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
             modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Post", b =>
                 {
-                    b.Navigation("PostComments");
+                    b.Navigation("PostRates");
 
                     b.Navigation("PostShares");
-
-                    b.Navigation("PostVotes");
 
                     b.Navigation("Reports");
                 });
 
-            modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostComment", b =>
+            modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostRate", b =>
                 {
                     b.Navigation("Reports");
                 });

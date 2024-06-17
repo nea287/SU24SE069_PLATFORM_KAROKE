@@ -24,9 +24,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public DateTime? PublicDate { get; set; }
         public Guid CreatorId { get; set; }
         public decimal Price { get; set; }
-        public int? Category { get; set; }
-        public string? Author { get; set; }
-        public string? Singer { get; set; }
+        public int Category { get; set; }
+        public string Author { get; set; }
+        public string Singer { get; set; }
 
         public virtual Account Creator { get; set; } = null!;
         public virtual ICollection<FavouriteSong> FavouriteSongs { get; set; }
