@@ -73,7 +73,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     can_expire = table.Column<bool>(type: "bit", nullable: true),
                     can_stack = table.Column<bool>(type: "bit", nullable: true),
                     created_date = table.Column<DateTime>(type: "datetime", nullable: false),
-                    creator_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    creator_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    prefab_code = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -161,7 +162,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     public_date = table.Column<DateTime>(type: "datetime", nullable: true),
                     creator_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     price = table.Column<decimal>(type: "money", nullable: false),
-                    category = table.Column<string>(type: "nvarchar(150)", maxLength:150, nullable: false),
+                    category = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     author = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     singer = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
                 },

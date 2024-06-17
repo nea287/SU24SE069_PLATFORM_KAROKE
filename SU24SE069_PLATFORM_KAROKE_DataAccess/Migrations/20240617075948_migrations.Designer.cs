@@ -12,7 +12,7 @@ using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 {
     [DbContext(typeof(PLATFORM_KARAOKEContext))]
-    [Migration("20240617004631_migrations")]
+    [Migration("20240617075948_migrations")]
     partial class migrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -363,6 +363,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     b.Property<int>("ItemType")
                         .HasColumnType("int")
                         .HasColumnName("item_type");
+
+                    b.Property<string>("PrefabCode")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("prefab_code");
 
                     b.HasKey("ItemId");
 
@@ -876,12 +882,14 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("Author")
+                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)")
                         .HasColumnName("author");
 
-                    b.Property<int?>("Category")
-                        .HasColumnType("int")
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("category");
 
                     b.Property<DateTime>("CreatedDate")
@@ -901,6 +909,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnName("public_date");
 
                     b.Property<string>("Singer")
+                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)")
                         .HasColumnName("singer");

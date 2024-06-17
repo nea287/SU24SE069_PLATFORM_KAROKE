@@ -362,6 +362,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("int")
                         .HasColumnName("item_type");
 
+                    b.Property<string>("PrefabCode")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("prefab_code");
+
                     b.HasKey("ItemId");
 
                     b.HasIndex("CreatorId");
@@ -874,12 +880,14 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("Author")
+                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)")
                         .HasColumnName("author");
 
-                    b.Property<int?>("Category")
-                        .HasColumnType("int")
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("category");
 
                     b.Property<DateTime>("CreatedDate")
@@ -899,6 +907,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnName("public_date");
 
                     b.Property<string>("Singer")
+                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)")
                         .HasColumnName("singer");
