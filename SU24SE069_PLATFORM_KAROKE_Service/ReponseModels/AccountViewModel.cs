@@ -43,7 +43,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels
         public string? UserName { get; set; }
         public string? Email { get; set; } 
         public AccountGender? Gender { get; set; }
-        public string? AccountName { get; set; } 
+        //public string? AccountName { get; set; } 
         public AccountRole? Role { get; set; }
         public int? Star { get; set; }
         public bool? IsOnline { get; set; }
@@ -54,7 +54,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels
         public DateTime? CreatedTime { get; set; }
         public Guid? CharacterItemId { get; set; }
         public Guid? RoomItemId { get; set; }
-        public int? AccountStatus { get; set; }
+        public AccountStatus? AccountStatus { get; set; }
 
         //public ICollection<AccountInventoryItem>? AccountInventoryItems { get; set; }
         //public ICollection<Conversation>? ConversationMemberId1Navigations { get; set; }

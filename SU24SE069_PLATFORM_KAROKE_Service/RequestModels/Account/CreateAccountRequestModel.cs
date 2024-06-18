@@ -13,7 +13,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
         public string Password { get; set; }
         public string Email { get; set; }
         public int? Gender { get; set; }
-        public string AccountName { get; set; }
         ///public bool IsVerified { get; set; }
         public int Role { get; set; }
         public int Star { get; set; }

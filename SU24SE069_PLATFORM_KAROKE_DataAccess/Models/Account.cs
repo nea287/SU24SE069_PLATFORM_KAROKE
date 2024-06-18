@@ -38,7 +38,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public string Password { get; set; } = null!;
         public string Email { get; set; } = null!;
         public int Gender { get; set; }
-        public string AccountName { get; set; } = null!;
+        //public string AccountName { get; set; } = null!;
         public int Role { get; set; }
         public int Star { get; set; }
         public bool IsOnline { get; set; }

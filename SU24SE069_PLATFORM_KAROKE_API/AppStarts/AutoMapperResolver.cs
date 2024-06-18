@@ -22,6 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<Account, AccountViewModel>()
                 .ForMember(x => x.Role, dest => dest.MapFrom(src => (AccountRole)src.Role))
                 .ForMember(x => x.Gender, dest => dest.MapFrom(src => (AccountGender)src.Gender))
+                .ForMember(x => x.AccountStatus, dest => dest.MapFrom(src => (AccountStatus)src.AccountStatus))
                 .ReverseMap();
             CreateMap<Account, CreateAccountRequestModel>().ReverseMap();
             CreateMap<AccountViewModel, CreateAccountRequestModel>().ReverseMap();

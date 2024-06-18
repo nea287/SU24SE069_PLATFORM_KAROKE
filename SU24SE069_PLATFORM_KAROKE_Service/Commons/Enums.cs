@@ -75,7 +75,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     public enum ItemType
     {
         CHARACTER,
-        ROOM, 
+        ROOM,
         DEFAULT,
     }
 
@@ -104,6 +104,20 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         Quantity,
         ItemId,
         MemberId
+    }
+
+    public enum InAppTransactionOrderFilter
+    {
+
+        InAppTransactionId,
+        StarAmount,
+        Status,
+        CreatedDate,
+        TransactionType,
+        MemberId,
+        ItemId,
+        SongType,
+        SongId,
     }
     #endregion
     public enum AccountRole
@@ -148,7 +162,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     public enum FriendStatus
     {
         OFFLINE = 0,
-        ONLINE =  1,
+        ONLINE = 1,
     }
     public enum ItemStatus
     {
@@ -156,6 +170,19 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         ENABLE = 1,
         PENDING = 2,
     }
+
+    public enum InAppTransactionType
+    {
+        BUY_ITEM = 1,
+    }
+
+    public enum InAppTransactionStatus
+    {
+        PENDING,
+        COMPLETE,
+        CANCELED,
+    }
+
 
 
 }

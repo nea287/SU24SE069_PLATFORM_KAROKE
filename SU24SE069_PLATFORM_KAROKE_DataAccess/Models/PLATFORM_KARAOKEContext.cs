@@ -104,10 +104,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("account_id")
                     .HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.AccountName)
-                    .HasMaxLength(50)
-                    .HasColumnName("account_name");
-
                 entity.Property(e => e.AccountStatus).HasColumnName("account_status");
 
                 entity.Property(e => e.CharacterItemId).HasColumnName("character_item_id");
@@ -317,8 +313,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
 
                 entity.Property(e => e.SongId).HasColumnName("song_id");
-
-                entity.Property(e => e.SongType).HasColumnName("song_type");
 
                 entity.Property(e => e.StarAmount)
                     .HasColumnType("money")

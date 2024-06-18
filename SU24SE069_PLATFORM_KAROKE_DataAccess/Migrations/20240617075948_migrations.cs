@@ -18,7 +18,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     password = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
                     email = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
                     gender = table.Column<int>(type: "int", nullable: false),
-                    account_name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     role = table.Column<int>(type: "int", nullable: false),
                     star = table.Column<int>(type: "int", nullable: false),
                     is_online = table.Column<bool>(type: "bit", nullable: false),
@@ -287,7 +286,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     transaction_type = table.Column<int>(type: "int", nullable: false),
                     member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    song_type = table.Column<int>(type: "int", nullable: false),
                     song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>

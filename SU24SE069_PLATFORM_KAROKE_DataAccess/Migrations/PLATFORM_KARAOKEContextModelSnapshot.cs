@@ -30,12 +30,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnName("account_id")
                         .HasDefaultValueSql("(newid())");
 
-                    b.Property<string>("AccountName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("account_name");
-
                     b.Property<int?>("AccountStatus")
                         .HasColumnType("int")
                         .HasColumnName("account_status");
@@ -276,10 +270,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     b.Property<Guid>("SongId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("song_id");
-
-                    b.Property<int>("SongType")
-                        .HasColumnType("int")
-                        .HasColumnName("song_type");
 
                     b.Property<decimal>("StarAmount")
                         .HasColumnType("money")
