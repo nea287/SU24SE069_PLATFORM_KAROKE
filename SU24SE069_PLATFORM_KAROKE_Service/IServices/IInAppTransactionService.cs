@@ -13,9 +13,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
 {
     public interface IInAppTransactionService
     {
-        public ResponseResult<InAppTransactionViewModel> CreateInAppTransaction(CrreateInAppTransactionRequestModel request);
-        public ResponseResult<InAppTransactionViewModel> UpdateInAppTransaction(UpdateInAppTransactionRequestModel request, Guid id);
-        public DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel> GetTransactions(InAppTransactionViewModel filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter);
+        public Task<ResponseResult<InAppTransactionViewModel>> CreateInAppTransaction(CrreateInAppTransactionRequestModel request);
+        public Task<ResponseResult<InAppTransactionViewModel>> UpdateInAppTransaction(UpdateInAppTransactionRequestModel request, Guid id);
+        public Task<DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>> GetTransactions(InAppTransactionViewModel filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter);
 
 
     }

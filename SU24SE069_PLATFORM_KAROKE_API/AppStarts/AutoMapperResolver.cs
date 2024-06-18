@@ -6,6 +6,7 @@ using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording;
@@ -80,6 +81,17 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region Post
             CreateMap<Post, CreatePostRequestModel>().ReverseMap();
             #endregion
+
+            #region InAppTransaction
+            CreateMap<InAppTransaction, InAppTransactionViewModel>()
+                .ForMember(x => x.Status, dest => dest.MapFrom(src => (InAppTransactionStatus)src.Status))
+                .ForMember(x => x.TransactionType, dest => dest.MapFrom(src => (InAppTransactionType)src.TransactionType))
+                .ReverseMap();
+
+            CreateMap<InAppTransaction, CrreateInAppTransactionRequestModel>().ReverseMap();
+            CreateMap<InAppTransaction, UpdateInAppTransactionRequestModel>().ReverseMap();
+            #endregion
+
         }
     }
 }

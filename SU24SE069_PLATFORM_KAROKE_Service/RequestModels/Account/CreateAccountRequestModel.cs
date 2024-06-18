@@ -9,9 +9,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
 {
     public class CreateAccountRequestModel
     {
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
+        public string UserName { get; set; } = null!;
+        public string Password { get; set; } = null!;
+        public string Email { get; set; } = null!; 
         public int? Gender { get; set; }
         ///public bool IsVerified { get; set; }
         public int Role { get; set; }

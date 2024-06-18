@@ -27,7 +27,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             _mapper = mapper;
             _repository = repository;
         }
-        public ResponseResult<InAppTransactionViewModel> CreateInAppTransaction(CrreateInAppTransactionRequestModel request)
+        public async Task<ResponseResult<InAppTransactionViewModel>> CreateInAppTransaction(CrreateInAppTransactionRequestModel request)
         {
             InAppTransaction rs = new InAppTransaction();
             try
@@ -61,7 +61,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel> GetTransactions(InAppTransactionViewModel filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter)
+        public async Task<DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>> GetTransactions(InAppTransactionViewModel filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter)
         {
             (int, IQueryable<InAppTransactionViewModel>) result;
             try
@@ -106,9 +106,52 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public ResponseResult<InAppTransactionViewModel> UpdateInAppTransaction(UpdateInAppTransactionRequestModel request, Guid id)
+        public async Task<ResponseResult<InAppTransactionViewModel>> UpdateInAppTransaction(UpdateInAppTransactionRequestModel request, Guid id)
         {
-            throw new NotImplementedException();
+            InAppTransaction rs = new InAppTransaction();
+            try
+            {
+                lock (_repository)
+                {
+                    var data = _repository.GetByIdGuid(id).Result;
+                    if (data is null)
+                    {
+                        return new ResponseResult<InAppTransactionViewModel>()
+                        {
+                            Message = Constraints.NOT_FOUND,
+                            result = false,
+                        };
+                    }
+                    rs = data;
+                    rs.Status = (int)request.Status;
+
+                    rs.InAppTransactionId = id;
+
+                    _repository.DetachEntity(data);
+                    _repository.MotifyEntity(rs);
+
+                    if (!_repository.UpdateInAppTransaction(id, rs).Result)
+                    {
+                        _repository.DetachEntity(rs);
+                        throw new Exception();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseResult<InAppTransactionViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false,
+                };
+            }
+
+            return new ResponseResult<InAppTransactionViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+                Value = _mapper.Map<InAppTransactionViewModel>(rs)
+            };
         }
     }
 }

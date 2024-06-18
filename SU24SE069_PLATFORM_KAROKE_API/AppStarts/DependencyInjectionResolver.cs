@@ -47,6 +47,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<IRecordingService, RecordingService>();
             #endregion
 
+            #region InAppTransaction
+            services.AddScoped<IInAppTransactionRepository, InAppTransactionRepository>();
+            services.AddScoped<IInAppTransactionService, InAppTransactionService>();
+            #endregion
+
 
         }
     }
