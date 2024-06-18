@@ -43,9 +43,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 data.CreatedDate = DateTime.Now;
                 data.UpdatedDate = DateTime.Now;
 
-
-                
-
                 if (!data.Posts.IsNullOrEmpty())
                 {
                     

@@ -258,7 +258,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 {
                     member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    song_type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

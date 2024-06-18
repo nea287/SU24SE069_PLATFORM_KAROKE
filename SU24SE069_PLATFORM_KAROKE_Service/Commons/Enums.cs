@@ -119,6 +119,11 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         SongType,
         SongId,
     }
+    public enum FavouriteSongOrderFilter
+    {
+        MemberId,
+        SongId
+    }
     #endregion
     public enum AccountRole
     {
@@ -188,6 +193,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         SINGLE,
         MULTIPLE
     }
+
 
 
 

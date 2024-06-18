@@ -52,6 +52,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<IInAppTransactionService, InAppTransactionService>();
             #endregion
 
+            #region FavouriteSong
+            services.AddScoped<IFavouriteSongRepository, FavouriteSongRepository>();
+            services.AddScoped<IFavouriteSongSerivce, FavouriteSongService>();
+            #endregion
+
 
         }
     }

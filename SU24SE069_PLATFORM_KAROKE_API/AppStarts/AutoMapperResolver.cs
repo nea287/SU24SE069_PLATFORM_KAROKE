@@ -6,6 +6,7 @@ using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.FavouriteSong;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
@@ -92,6 +93,12 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
 
             CreateMap<InAppTransaction, CrreateInAppTransactionRequestModel>().ReverseMap();
             CreateMap<InAppTransaction, UpdateInAppTransactionRequestModel>().ReverseMap();
+            #endregion
+
+            #region FavouriteSong
+            CreateMap<FavouriteSong, FavouriteSongViewModel>().ReverseMap();
+            CreateMap<FavouriteSong, CreateFavouriteSongRequestModel>().ReverseMap();
+            CreateMap<FavouriteSongViewModel, CreateFavouriteSongRequestModel>().ReverseMap();
             #endregion
 
         }
