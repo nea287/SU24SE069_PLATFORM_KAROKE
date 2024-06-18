@@ -1,4 +1,5 @@
-﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
         public string UserName { get; set; } = null!;
         public string Password { get; set; } = null!;
         public string Email { get; set; } = null!; 
-        public int? Gender { get; set; }
+        public AccountGender? Gender { get; set; }
         ///public bool IsVerified { get; set; }
-        public int Role { get; set; }
+        public AccountRole Role { get; set; }
         public int Star { get; set; }
         //public bool? IsOnline { get; set; } = false;
         public string? Fullname { get; set; }
@@ -23,6 +24,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
         public string? PhoneNumber { get; set; }
         public Guid? CharacterItemId { get; set; }
         public Guid? RoomItemId { get; set; }
-        public int AccountStatus { get; set; }
+        public AccountStatus AccountStatus { get; set; }
     }
 }

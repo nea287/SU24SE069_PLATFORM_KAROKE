@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
     public class UpdateAccountByMailRequestModel
     {
         public string Password { get; set; } = null!;
-        public int Gender { get; set; }
+        public AccountGender Gender { get; set; }
         //public string AccountName { get; set; } = null!;
         public int Star { get; set; }
         public string? Fullname { get; set; }

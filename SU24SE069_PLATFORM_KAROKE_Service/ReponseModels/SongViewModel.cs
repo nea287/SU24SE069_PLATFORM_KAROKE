@@ -23,7 +23,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public string? SongName { get; set; }
         public string? SongDescription { get; set; }
         public string? SongUrl { get; set; }
-        public int? SongStatus { get; set; }
+        public SongStatus? SongStatus { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string? SongCode { get; set; }

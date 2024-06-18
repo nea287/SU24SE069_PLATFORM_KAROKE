@@ -877,7 +877,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.Property<string>("Category")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("category");
 
                     b.Property<DateTime>("CreatedDate")

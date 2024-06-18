@@ -880,7 +880,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasMaxLength(150)
                     .HasColumnName("author");
 
-                entity.Property(e => e.Category).HasColumnName("category");
+                entity.Property(e => e.Category)
+                    .HasMaxLength(150)
+                    .IsUnicode(false)
+                    .HasColumnName("category");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")

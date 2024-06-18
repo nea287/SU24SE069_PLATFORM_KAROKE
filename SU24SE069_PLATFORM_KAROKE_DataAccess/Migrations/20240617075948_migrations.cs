@@ -161,7 +161,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     public_date = table.Column<DateTime>(type: "datetime", nullable: true),
                     creator_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     price = table.Column<decimal>(type: "money", nullable: false),
-                    category = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    category = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     author = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     singer = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
                 },

@@ -183,6 +183,12 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         CANCELED,
     }
 
+    public enum RecordingType
+    {
+        SINGLE,
+        MULTIPLE
+    }
+
 
 
 }

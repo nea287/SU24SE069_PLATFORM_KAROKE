@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item
         public string ItemCode { get; set; } = null!;
         public string ItemName { get; set; } = null!;
         public string ItemDescription { get; set; } = null!;
-        public int ItemType { get; set; }
+        public ItemType ItemType { get; set; }
         public decimal ItemPrice { get; set; }
         //public int ItemStatus { get; set; }
         public bool CanExpire { get; set; }

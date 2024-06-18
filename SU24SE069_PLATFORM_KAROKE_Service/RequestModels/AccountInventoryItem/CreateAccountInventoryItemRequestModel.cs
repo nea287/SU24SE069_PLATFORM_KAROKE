@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem
 {
     public class CreateAccountInventoryItemRequestModel
     {
-        public int ItemStatus { get; set; }
+        public ItemStatus ItemStatus { get; set; }
         // DateTime ActivateDate { get; set; }
         public DateTime ExpirationDate { get; set; }
         public int Quantity { get; set; }
