@@ -89,7 +89,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnName("room_item_id");
 
                     b.Property<int>("Star")
-                        .HasColumnType("int")
+                        .HasColumnType("money")
                         .HasColumnName("star");
 
                     b.Property<string>("UserName")

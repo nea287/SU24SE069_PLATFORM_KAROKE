@@ -19,7 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     email = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
                     gender = table.Column<int>(type: "int", nullable: false),
                     role = table.Column<int>(type: "int", nullable: false),
-                    star = table.Column<int>(type: "int", nullable: false),
+                    star = table.Column<int>(type: "money", nullable: false),
                     is_online = table.Column<bool>(type: "bit", nullable: false),
                     fullname = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     yob = table.Column<int>(type: "int", nullable: true),

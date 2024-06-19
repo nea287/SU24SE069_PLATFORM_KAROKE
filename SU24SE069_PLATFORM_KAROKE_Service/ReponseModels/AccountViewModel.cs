@@ -45,7 +45,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels
         public AccountGender? Gender { get; set; }
         //public string? AccountName { get; set; } 
         public AccountRole? Role { get; set; }
-        public int? Star { get; set; }
+        public decimal? Star { get; set; }
         public bool? IsOnline { get; set; }
         public string? Fullname { get; set; }
         public int? Yob { get; set; }
