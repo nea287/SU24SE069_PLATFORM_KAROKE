@@ -67,6 +67,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<IMoneyTransactionService, MoneyTransactionService>();
             #endregion
 
+            #region KaraokeRoom
+            services.AddScoped<IKaraokeRoomRepository, KaraokeRoomRepository>();
+            services.AddScoped<IKaraokeRoomService, KaraokeRoomService>();
+            #endregion
+
         }
     }
 }

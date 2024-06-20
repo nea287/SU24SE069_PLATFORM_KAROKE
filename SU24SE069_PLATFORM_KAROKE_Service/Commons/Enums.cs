@@ -143,6 +143,14 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         MemberId,
     }
 
+    public enum KaraokeRoomOrderFilter
+    {
+        RoomId,
+        RoomLog,
+        CreateTime,
+        CreatorId,
+    }
+
     #endregion
     public enum AccountRole
     {

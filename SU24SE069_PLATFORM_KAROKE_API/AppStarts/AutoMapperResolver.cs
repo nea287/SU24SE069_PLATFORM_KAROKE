@@ -11,6 +11,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.FavouriteSong;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.KaraokeRoom;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Package;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
@@ -121,6 +122,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ReverseMap();
 
             CreateMap<MoneyTransaction, MoneyTransactionRequestModel>().ReverseMap();
+            #endregion
+
+            #region KaraokeRoom
+            CreateMap<KaraokeRoom, KaraokeRoomViewModel>().ReverseMap();
+            CreateMap<KaraokeRoom, KaraokeRoomRequestModel>().ReverseMap();
             #endregion
 
         }
