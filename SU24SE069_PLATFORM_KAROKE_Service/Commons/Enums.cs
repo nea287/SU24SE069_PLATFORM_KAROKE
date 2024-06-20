@@ -72,13 +72,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
     }
 
-    public enum ItemType
-    {
-        CHARACTER,
-        ROOM,
-        DEFAULT,
-    }
-
     public enum RecordingOrderFilter
     {
         RecordingId,
@@ -124,6 +117,19 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         MemberId,
         SongId
     }
+
+    public enum PackageOrderFilter
+    {
+        PackageId,
+        PackageName,
+        Description,
+        MoneyAmount,
+        StarNumber,
+        Status,
+        CreatedDate,
+        CreatorId,
+    }
+
     #endregion
     public enum AccountRole
     {
@@ -175,6 +181,12 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         ENABLE = 1,
         PENDING = 2,
     }
+    public enum ItemType
+    {
+        CHARACTER,
+        ROOM,
+        DEFAULT,
+    }
 
     public enum InAppTransactionType
     {
@@ -192,6 +204,13 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     {
         SINGLE,
         MULTIPLE
+    }
+
+    public enum PackageStatus
+    {
+        INACTIVE = 0,
+        ACTIVE = 1,
+
     }
 
 

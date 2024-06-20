@@ -3,6 +3,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
@@ -10,6 +11,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.FavouriteSong;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Package;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
@@ -102,6 +104,13 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<FavouriteSong, FavouriteSongViewModel>().ReverseMap();
             CreateMap<FavouriteSong, CreateFavouriteSongRequestModel>().ReverseMap();
             CreateMap<FavouriteSongViewModel, CreateFavouriteSongRequestModel>().ReverseMap();
+            #endregion
+
+            #region Package
+            CreateMap<Package, PackageViewModel>()
+                .ForMember(x => x.Status, dest => dest.MapFrom(src => (PackageStatus)src.Status))
+                .ReverseMap();
+            CreateMap<Package, PackageRequestModel>().ReverseMap();
             #endregion
 
         }
