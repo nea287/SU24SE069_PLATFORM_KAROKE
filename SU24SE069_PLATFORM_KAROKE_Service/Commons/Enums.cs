@@ -130,6 +130,19 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         CreatorId,
     }
 
+    public enum MoneyTransactionOrderFilter
+    {
+        MoneyTransactionId,
+        PaymentType,
+        PaymentCode,
+        MoneyAmount,
+        Currency,
+        Status,
+        CreatedDate,
+        PackageId,
+        MemberId,
+    }
+
     #endregion
     public enum AccountRole
     {
@@ -213,6 +226,17 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
     }
 
+    public enum PaymentType
+    {
+        MOMO = 1,
+    }
+
+    public enum PaymentStatus
+    {
+        PENDING,
+        COMPLETE,
+        CANCELLED,
+    }
 
 
 

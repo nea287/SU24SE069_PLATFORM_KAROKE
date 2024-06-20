@@ -11,6 +11,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.FavouriteSong;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Package;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording;
@@ -69,7 +70,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
 
             #region AccountInventoryItem
             CreateMap<AccountInventoryItem, AccountInventoryItemViewModel>()
-                .ForMember(x => x.ItemStatus, dest =>dest.MapFrom(opt => (ItemStatus)opt.ItemStatus))
+                .ForMember(x => x.ItemStatus, dest => dest.MapFrom(opt => (ItemStatus)opt.ItemStatus))
                 .ReverseMap();
 
             CreateMap<AccountInventoryItem, CreateAccountInventoryItemRequestModel>().ReverseMap();
@@ -111,6 +112,15 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.Status, dest => dest.MapFrom(src => (PackageStatus)src.Status))
                 .ReverseMap();
             CreateMap<Package, PackageRequestModel>().ReverseMap();
+            #endregion
+
+            #region MoneyTransaction
+            CreateMap<MoneyTransaction, MoneyTransactionViewModel>()
+                .ForMember(x => x.Status, dest => dest.MapFrom(src => (PaymentStatus)src.Status))
+                .ForMember(x => x.PaymentType, dest => dest.MapFrom(src => (PaymentType)src.PaymentType))
+                .ReverseMap();
+
+            CreateMap<MoneyTransaction, MoneyTransactionRequestModel>().ReverseMap();
             #endregion
 
         }

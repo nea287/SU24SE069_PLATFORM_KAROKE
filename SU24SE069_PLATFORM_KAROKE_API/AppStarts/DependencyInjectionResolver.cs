@@ -62,6 +62,10 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<IPackageService, PackageService>();
             #endregion
 
+            #region Money Transaction
+            services.AddScoped<IMoneyTransactionRepository, MoneyTransactionRepository>();
+            services.AddScoped<IMoneyTransactionService, MoneyTransactionService>();
+            #endregion
 
         }
     }
