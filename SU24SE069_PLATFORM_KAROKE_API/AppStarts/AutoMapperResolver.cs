@@ -10,6 +10,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.FavouriteSong;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PostRate;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.VoiceAudio;
@@ -82,7 +83,15 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
 
             #region Post
+            CreateMap<Post, PostViewModel>()                
+                .ReverseMap();
             CreateMap<Post, CreatePostRequestModel>().ReverseMap();
+            #endregion
+
+            #region PostRate
+            CreateMap<PostRate, PostRateViewModel>()
+                .ReverseMap();
+            CreateMap<PostRate, CreatePostRateRequestModel>().ReverseMap();
             #endregion
 
             #region InAppTransaction

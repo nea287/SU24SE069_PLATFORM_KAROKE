@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -93,6 +94,51 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         OwnerId,
         KaraokeRoomId,
 
+    }
+
+    public enum PostOrderFilter
+    {
+        PostId, 
+        Caption, 
+        UploadTime, 
+        UpdateTime,
+        MemberId,
+        RecordingId, 
+    }
+
+    public enum PostRateOrderFilter
+    { 
+        RateId, 
+        MemberId, 
+        PostId, 
+        VoteType,
+        Category, 
+        Comment, 
+    }
+
+    public enum PostShareOrderFilter
+    {
+        PostShareId, 
+        Caption, 
+        ShareTime, 
+        UpdateTime, 
+        MemberId, 
+        PostId, 
+    }
+
+    public enum ReportOrderFilter
+    {
+        ReportId,
+        ReporterId,
+        ReportedAccountId,
+        ReportCategory,
+        Status,
+        Reason,
+        CreateTime,
+        ReportType,
+        CommentId,
+        PostId,
+        RoomId,
     }
 
     public enum AccountInventoryItemOrderFilter

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 
@@ -11,9 +12,10 @@ using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 {
     [DbContext(typeof(PLATFORM_KARAOKEContext))]
-    partial class PLATFORM_KARAOKEContextModelSnapshot : ModelSnapshot
+    [Migration("20240619070013_test")]
+    partial class test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
