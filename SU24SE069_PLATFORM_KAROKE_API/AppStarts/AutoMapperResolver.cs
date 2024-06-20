@@ -5,6 +5,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.FavouriteSong;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
@@ -27,6 +28,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.AccountStatus, dest => dest.MapFrom(src => (AccountStatus)src.AccountStatus))
                 .ReverseMap();
             CreateMap<Account, CreateAccountRequestModel>().ReverseMap();
+            CreateMap<Account, CreateAccount1RequestModel>().ReverseMap();
+            CreateMap<AccountViewModel, CreateAccount1RequestModel>().ReverseMap();
             CreateMap<AccountViewModel, CreateAccountRequestModel>().ReverseMap();
             CreateMap<Account, UpdateAccountByMailRequestModel>().ReverseMap();
             #endregion

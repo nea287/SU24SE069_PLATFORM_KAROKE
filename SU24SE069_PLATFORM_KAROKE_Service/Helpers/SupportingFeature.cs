@@ -34,11 +34,11 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers
             using (SmtpClient client = new SmtpClient())
             {
                 client.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-                client.Authenticate("tho.kieu@reso.vn", "1phanngocnga");
+                client.Authenticate("tho.kieu@reso.vn", "1Phanngockieutho@");
 
                 using (MimeMessage message = new MimeMessage())
                 {
-                    message.From.Add(new MailboxAddress("TimeSharing", "timesharing.fpt@gmail.com"));
+                    message.From.Add(new MailboxAddress("KOK", "kokkaraokework.fpt@gmail.com"));
                     message.To.Add(new MailboxAddress("", receiver));
 
                     BodyBuilder builder = new BodyBuilder();

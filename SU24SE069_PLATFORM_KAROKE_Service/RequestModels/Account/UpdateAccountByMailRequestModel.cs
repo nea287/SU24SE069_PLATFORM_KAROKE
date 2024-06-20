@@ -21,7 +21,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
         public int? Yob { get; set; }
         [RegularExpression(Constraints.VALIDATE_NEGATIVE, ErrorMessage = Constraints.INFORMATION_INVALID)]
         public string? IdentityCardNumber { get; set; }
-        [RegularExpression(Constraints.VALIDATE_NEGATIVE, ErrorMessage = Constraints.INFORMATION_INVALID]
+        [RegularExpression(Constraints.VALIDATE_NEGATIVE, ErrorMessage = Constraints.INFORMATION_INVALID)]
         public string? PhoneNumber { get; set; }
     }
 }

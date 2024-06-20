@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
@@ -23,6 +26,23 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             var rs = await _accountService.Login(request.email, request.password);
 
             return rs.Result.HasValue? (rs.Result.Value? Ok(rs) : BadRequest(rs)): BadRequest(rs);
+        }
+
+
+        [HttpPost("SendVerificationCode/{email}")]
+        public IActionResult SendVerificationCode(string email)
+        {
+            var rs = _accountService.SendVerificationCode(email);
+
+            return rs ? Ok(rs) : BadRequest(rs);
+        }
+
+        [HttpPost("SignUp/{verificationCode}")]
+        public async Task<IActionResult> SignUp([FromBody] CreateAccount1RequestModel request, string verificationCode)
+        {
+            var rs = await _accountService.SignUp(request, verificationCode);
+
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
     }
 }
