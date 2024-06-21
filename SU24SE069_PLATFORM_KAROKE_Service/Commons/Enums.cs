@@ -178,6 +178,14 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         SupportRequestId,
     }
 
+    public enum LoginActivityOrderFilter
+    {
+        LoginId,
+        LoginTime,
+        LoginDevice,
+        MemberId,
+    }
+
     #endregion
     public enum AccountRole
     {

@@ -88,6 +88,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<IConversationService, ConversationService>();
             #endregion
 
+            #region LoginActivity
+            services.AddScoped<ILoginActivityRepository, LoginActivityRepository>();
+            services.AddScoped<ILoginActivityService, LoginActivityService>();
+            #endregion
+
         }
     }
 }
