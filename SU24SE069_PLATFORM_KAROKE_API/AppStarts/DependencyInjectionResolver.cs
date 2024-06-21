@@ -93,6 +93,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<ILoginActivityService, LoginActivityService>();
             #endregion
 
+            #region Message
+            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IMessageService, MessageService>();
+            #endregion
+
         }
     }
 }

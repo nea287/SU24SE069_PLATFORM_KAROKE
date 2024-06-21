@@ -14,6 +14,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.KaraokeRoom;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.LoginActivity;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Message;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Package;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
@@ -157,6 +158,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region LoginActivity
             CreateMap<LoginActivity, LoginActivityViewModel>().ReverseMap();
             CreateMap<LoginActivity, LoginActivityRequestModel>().ReverseMap();
+            #endregion
+
+            #region Message
+            CreateMap<Message, MessageViewModel>().ReverseMap();
+            CreateMap<Message, MessageRequestModel>().ReverseMap();
             #endregion
 
         }

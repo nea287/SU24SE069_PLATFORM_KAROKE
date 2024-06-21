@@ -80,7 +80,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         CreatedDate,
         UpdatedDate,
         Score,
-        SongType,
         SongId,
         HostId,
         OwnerId,
@@ -109,7 +108,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         TransactionType,
         MemberId,
         ItemId,
-        SongType,
         SongId,
     }
     public enum FavouriteSongOrderFilter
@@ -184,6 +182,15 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         LoginTime,
         LoginDevice,
         MemberId,
+    }
+
+    public enum MessageOrderFilter
+    {
+        MessageId,
+        Content,
+        TimeStamp,
+        SenderId,
+        ConversationId,
     }
 
     #endregion
