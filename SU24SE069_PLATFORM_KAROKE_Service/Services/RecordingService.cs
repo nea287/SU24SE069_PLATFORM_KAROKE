@@ -43,14 +43,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 data.CreatedDate = DateTime.Now;
                 data.UpdatedDate = DateTime.Now;
 
-                if (!data.Posts.IsNullOrEmpty())
-                {
-                    
-                    data.Posts = data.Posts
-                        .Select(item => { item.UpdateTime = DateTime.Now; item.UploadTime = DateTime.Now; return item; })
-                        .ToList();
-                }
-                else if (!data.VoiceAudios.IsNullOrEmpty())
+
+                if (!data.VoiceAudios.IsNullOrEmpty())
                 {
                     data.VoiceAudios = data.VoiceAudios
                         .Select(item => {item.UploadTime = DateTime.Now; return item; })
