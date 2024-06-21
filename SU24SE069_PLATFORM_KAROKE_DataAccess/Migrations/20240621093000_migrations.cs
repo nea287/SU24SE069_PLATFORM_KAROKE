@@ -19,7 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     email = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
                     gender = table.Column<int>(type: "int", nullable: false),
                     role = table.Column<int>(type: "int", nullable: false),
-                    star = table.Column<int>(type: "money", nullable: false),
+                    star = table.Column<decimal>(type: "money", nullable: false),
                     is_online = table.Column<bool>(type: "bit", nullable: false),
                     fullname = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     yob = table.Column<int>(type: "int", nullable: true),
@@ -257,7 +257,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 columns: table => new
                 {
                     member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -485,23 +485,23 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 name: "PostRate",
                 columns: table => new
                 {
-                    RateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    rate_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
+                    comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     post_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    vote_type = table.Column<int>(type: "int", nullable: false),
-                    Category = table.Column<int>(type: "int", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    score = table.Column<int>(type: "int", nullable: true),
+                    category = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__PostRate__C176FD426D6D26E0", x => x.RateId);
+                    table.PrimaryKey("PK_PostRate_rate_id", x => x.rate_id);
                     table.ForeignKey(
-                        name: "FK__PostVote__member__18EBB532",
+                        name: "FK_PostRate_Account",
                         column: x => x.member_id,
                         principalTable: "Account",
                         principalColumn: "account_id");
                     table.ForeignKey(
-                        name: "FK__PostVote__post_i__19DFD96B",
+                        name: "FK_PostRate_Post",
                         column: x => x.post_id,
                         principalTable: "Post",
                         principalColumn: "post_id");
@@ -553,11 +553,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Report", x => x.report_id);
                     table.ForeignKey(
-                        name: "FK__Report__comment___208CD6FA",
-                        column: x => x.comment_id,
-                        principalTable: "PostRate",
-                        principalColumn: "RateId");
-                    table.ForeignKey(
                         name: "FK__Report__post_id__2180FB33",
                         column: x => x.post_id,
                         principalTable: "Post",
@@ -588,12 +583,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 name: "IX_Account_room_item_id",
                 table: "Account",
                 column: "room_item_id");
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__Account__46A222CCB95F54B5",
-                table: "Account",
-                column: "account_id",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "UQ__Account__7C9273C4BE4FEFD8",
@@ -687,12 +676,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "UQ__Item__52020FDCCC7458B7",
-                table: "Item",
-                column: "item_id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_KaraokeRoom_creator_id",
                 table: "KaraokeRoom",
                 column: "creator_id");
@@ -782,12 +765,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 name: "IX_PostRate_post_id",
                 table: "PostRate",
                 column: "post_id");
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__PostRate__E79576863EE120FB",
-                table: "PostRate",
-                column: "RateId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostShare_member_id",
@@ -888,13 +865,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 table: "Song",
                 column: "song_code",
                 unique: true,
-                filter: "[song_code] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__Song__A535AE1D1351FFFF",
-                table: "Song",
-                column: "song_id",
-                unique: true);
+                filter: "([song_code] IS NOT NULL)");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SupportRequest_sender_id",
@@ -967,6 +938,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 name: "MoneyTransaction");
 
             migrationBuilder.DropTable(
+                name: "PostRate");
+
+            migrationBuilder.DropTable(
                 name: "PostShare");
 
             migrationBuilder.DropTable(
@@ -985,13 +959,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 name: "Package");
 
             migrationBuilder.DropTable(
-                name: "PostRate");
+                name: "Post");
 
             migrationBuilder.DropTable(
                 name: "SupportRequest");
-
-            migrationBuilder.DropTable(
-                name: "Post");
 
             migrationBuilder.DropTable(
                 name: "Recording");

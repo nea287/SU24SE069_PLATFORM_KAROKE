@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 
@@ -11,11 +10,10 @@ using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 
 namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 {
-    [DbContext(typeof(PLATFORM_KARAOKEContext))]
-    [Migration("20240617075948_migrations")]
-    partial class migrations
+    [DbContext(typeof(KokDBContext))]
+    partial class KokDBContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,12 +29,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("account_id")
                         .HasDefaultValueSql("(newid())");
-
-                    b.Property<string>("AccountName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("account_name");
 
                     b.Property<int?>("AccountStatus")
                         .HasColumnType("int")
@@ -96,8 +88,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("room_item_id");
 
-                    b.Property<int>("Star")
-                        .HasColumnType("int")
+                    b.Property<decimal>("Star")
+                        .HasColumnType("money")
                         .HasColumnName("star");
 
                     b.Property<string>("UserName")
@@ -113,12 +105,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("AccountId");
 
-                    b.HasIndex("CharacterItemId");
+                    b.HasIndex(new[] { "CharacterItemId" }, "IX_Account_character_item_id");
 
-                    b.HasIndex("RoomItemId");
-
-                    b.HasIndex(new[] { "AccountId" }, "UQ__Account__46A222CCB95F54B5")
-                        .IsUnique();
+                    b.HasIndex(new[] { "RoomItemId" }, "IX_Account_room_item_id");
 
                     b.HasIndex(new[] { "UserName" }, "UQ__Account__7C9273C4BE4FEFD8")
                         .IsUnique();
@@ -163,9 +152,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("AccountInventoryItemId");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex(new[] { "ItemId" }, "IX_AccountInventoryItem_item_id");
 
-                    b.HasIndex("MemberId");
+                    b.HasIndex(new[] { "MemberId" }, "IX_AccountInventoryItem_member_id");
 
                     b.HasIndex(new[] { "AccountInventoryItemId" }, "UQ__AccountI__3C30841ED7833689")
                         .IsUnique();
@@ -199,11 +188,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("ConversationId");
 
-                    b.HasIndex("MemberId1");
+                    b.HasIndex(new[] { "MemberId1" }, "IX_Conversation_member_id_1");
 
-                    b.HasIndex("MemberId2");
+                    b.HasIndex(new[] { "MemberId2" }, "IX_Conversation_member_id_2");
 
-                    b.HasIndex("SupportRequestId");
+                    b.HasIndex(new[] { "SupportRequestId" }, "IX_Conversation_support_request_id");
 
                     b.HasIndex(new[] { "ConversationId" }, "UQ__Conversa__311E7E9B9619D04A")
                         .IsUnique();
@@ -220,10 +209,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     b.Property<Guid>("SongId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("song_id");
-
-                    b.Property<int>("SongType")
-                        .HasColumnType("int")
-                        .HasColumnName("song_type");
 
                     b.HasKey("MemberId", "SongId")
                         .HasName("PK__Favourit__68C8DFD514CDDEC7");
@@ -250,7 +235,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     b.HasKey("SenderId", "ReceiverId")
                         .HasName("PK__Friend__39A74E2FEA2EB197");
 
-                    b.HasIndex("ReceiverId");
+                    b.HasIndex(new[] { "ReceiverId" }, "IX_Friend_receiver_id");
 
                     b.ToTable("Friend", (string)null);
                 });
@@ -279,10 +264,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("song_id");
 
-                    b.Property<int>("SongType")
-                        .HasColumnType("int")
-                        .HasColumnName("song_type");
-
                     b.Property<decimal>("StarAmount")
                         .HasColumnType("money")
                         .HasColumnName("star_amount");
@@ -297,11 +278,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("InAppTransactionId");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex(new[] { "ItemId" }, "IX_InAppTransaction_item_id");
 
-                    b.HasIndex("MemberId");
+                    b.HasIndex(new[] { "MemberId" }, "IX_InAppTransaction_member_id");
 
-                    b.HasIndex("SongId");
+                    b.HasIndex(new[] { "SongId" }, "IX_InAppTransaction_song_id");
 
                     b.HasIndex(new[] { "InAppTransactionId" }, "UQ__InAppTra__783D788F3120721B")
                         .IsUnique();
@@ -372,12 +353,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("ItemId");
 
-                    b.HasIndex("CreatorId");
+                    b.HasIndex(new[] { "CreatorId" }, "IX_Item_creator_id");
 
                     b.HasIndex(new[] { "ItemCode" }, "UQ__Item__4A67201E86BAC7DD")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "ItemId" }, "UQ__Item__52020FDCCC7458B7")
                         .IsUnique();
 
                     b.ToTable("Item", (string)null);
@@ -407,7 +385,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     b.HasKey("RoomId")
                         .HasName("PK__KaraokeR__19675A8A6BA327E4");
 
-                    b.HasIndex("CreatorId");
+                    b.HasIndex(new[] { "CreatorId" }, "IX_KaraokeRoom_creator_id");
 
                     b.HasIndex(new[] { "RoomId" }, "UQ__KaraokeR__19675A8BC5A9ED1B")
                         .IsUnique();
@@ -439,7 +417,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     b.HasKey("LoginId")
                         .HasName("PK__LoginAct__C2C971DB811BF7A3");
 
-                    b.HasIndex("MemberId");
+                    b.HasIndex(new[] { "MemberId" }, "IX_LoginActivity_member_id");
 
                     b.HasIndex(new[] { "LoginId" }, "UQ__LoginAct__C2C971DA5DBB7ACA")
                         .IsUnique();
@@ -474,9 +452,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("MessageId");
 
-                    b.HasIndex("ConversationId");
+                    b.HasIndex(new[] { "ConversationId" }, "IX_Message_conversation_id");
 
-                    b.HasIndex("SenderId");
+                    b.HasIndex(new[] { "SenderId" }, "IX_Message_sender_id");
 
                     b.HasIndex(new[] { "MessageId" }, "UQ__Message__0BBF6EE78703A3BB")
                         .IsUnique();
@@ -530,9 +508,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("MoneyTransactionId");
 
-                    b.HasIndex("MemberId");
+                    b.HasIndex(new[] { "MemberId" }, "IX_MoneyTransaction_member_id");
 
-                    b.HasIndex("PackageId");
+                    b.HasIndex(new[] { "PackageId" }, "IX_MoneyTransaction_package_id");
 
                     b.HasIndex(new[] { "MoneyTransactionId" }, "UQ__MoneyTra__EC443D7DCAA4141D")
                         .IsUnique();
@@ -582,7 +560,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("PackageId");
 
-                    b.HasIndex("CreatorId");
+                    b.HasIndex(new[] { "CreatorId" }, "IX_Package_creator_id");
 
                     b.HasIndex(new[] { "PackageId" }, "UQ__Package__63846AE9D3373BE0")
                         .IsUnique();
@@ -620,9 +598,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("PostId");
 
-                    b.HasIndex("MemberId");
+                    b.HasIndex(new[] { "MemberId" }, "IX_Post_member_id");
 
-                    b.HasIndex("RecordingId");
+                    b.HasIndex(new[] { "RecordingId" }, "IX_Post_recording_id");
 
                     b.HasIndex(new[] { "PostId" }, "UQ__Post__3ED78767E3F1F3DF")
                         .IsUnique();
@@ -634,14 +612,17 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 {
                     b.Property<Guid>("RateId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("rate_id")
+                        .HasDefaultValueSql("(newid())");
 
                     b.Property<int>("Category")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("category");
 
                     b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("comment");
 
                     b.Property<Guid>("MemberId")
                         .HasColumnType("uniqueidentifier")
@@ -651,19 +632,16 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("post_id");
 
-                    b.Property<int>("VoteType")
+                    b.Property<int?>("Score")
                         .HasColumnType("int")
-                        .HasColumnName("vote_type");
+                        .HasColumnName("score");
 
                     b.HasKey("RateId")
-                        .HasName("PK__PostRate__C176FD426D6D26E0");
+                        .HasName("PK_PostRate_rate_id");
 
                     b.HasIndex("MemberId");
 
                     b.HasIndex("PostId");
-
-                    b.HasIndex(new[] { "RateId" }, "UQ__PostRate__E79576863EE120FB")
-                        .IsUnique();
 
                     b.ToTable("PostRate", (string)null);
                 });
@@ -698,9 +676,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("PostShareId");
 
-                    b.HasIndex("MemberId");
+                    b.HasIndex(new[] { "MemberId" }, "IX_PostShare_member_id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex(new[] { "PostId" }, "IX_PostShare_post_id");
 
                     b.HasIndex(new[] { "PostShareId" }, "UQ__PostShar__6F03FC20AE6B0180")
                         .IsUnique();
@@ -728,15 +706,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("song_id");
 
-                    b.Property<int>("SongType")
-                        .HasColumnType("int")
-                        .HasColumnName("song_type");
-
                     b.HasKey("PurchasedSongId");
 
-                    b.HasIndex("MemberId");
+                    b.HasIndex(new[] { "MemberId" }, "IX_PurchasedSong_member_id");
 
-                    b.HasIndex("SongId");
+                    b.HasIndex(new[] { "SongId" }, "IX_PurchasedSong_song_id");
 
                     b.HasIndex(new[] { "PurchasedSongId" }, "UQ__Purchase__12FEA5F379BFEF7C")
                         .IsUnique();
@@ -792,13 +766,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("RecordingId");
 
-                    b.HasIndex("HostId");
+                    b.HasIndex(new[] { "HostId" }, "IX_Recording_host_id");
 
-                    b.HasIndex("KaraokeRoomId");
+                    b.HasIndex(new[] { "KaraokeRoomId" }, "IX_Recording_karaoke_room_id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex(new[] { "OwnerId" }, "IX_Recording_owner_id");
 
-                    b.HasIndex("SongId");
+                    b.HasIndex(new[] { "SongId" }, "IX_Recording_song_id");
 
                     b.HasIndex(new[] { "RecordingId" }, "UQ__Recordin__0C5B24E46D5CE3E3")
                         .IsUnique();
@@ -857,15 +831,15 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("ReportId");
 
-                    b.HasIndex("CommentId");
+                    b.HasIndex(new[] { "CommentId" }, "IX_Report_comment_id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex(new[] { "PostId" }, "IX_Report_post_id");
 
-                    b.HasIndex("ReportedAccountId");
+                    b.HasIndex(new[] { "ReportedAccountId" }, "IX_Report_reported_account_id");
 
-                    b.HasIndex("ReporterId");
+                    b.HasIndex(new[] { "ReporterId" }, "IX_Report_reporter_id");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex(new[] { "RoomId" }, "IX_Report_room_id");
 
                     b.HasIndex(new[] { "ReportId" }, "UQ__Report__779B7C5917900A24")
                         .IsUnique();
@@ -889,7 +863,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.Property<string>("Category")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
                         .HasColumnName("category");
 
                     b.Property<DateTime>("CreatedDate")
@@ -945,14 +920,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasKey("SongId");
 
-                    b.HasIndex("CreatorId");
+                    b.HasIndex(new[] { "CreatorId" }, "IX_Song_creator_id");
 
                     b.HasIndex(new[] { "SongCode" }, "UQ__Song__43F33A39E8877F76")
                         .IsUnique()
-                        .HasFilter("[song_code] IS NOT NULL");
-
-                    b.HasIndex(new[] { "SongId" }, "UQ__Song__A535AE1D1351FFFF")
-                        .IsUnique();
+                        .HasFilter("([song_code] IS NOT NULL)");
 
                     b.ToTable("Song", (string)null);
                 });
@@ -989,7 +961,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     b.HasKey("RequestId")
                         .HasName("PK__SupportR__18D3B90FC2899572");
 
-                    b.HasIndex("SenderId");
+                    b.HasIndex(new[] { "SenderId" }, "IX_SupportRequest_sender_id");
 
                     b.HasIndex(new[] { "RequestId" }, "UQ__SupportR__18D3B90EB565E032")
                         .IsUnique();
@@ -1041,9 +1013,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     b.HasKey("VoiceId")
                         .HasName("PK__VoiceAud__128AF381A07F9D92");
 
-                    b.HasIndex("MemberId");
+                    b.HasIndex(new[] { "MemberId" }, "IX_VoiceAudio_member_id");
 
-                    b.HasIndex("RecordingId");
+                    b.HasIndex(new[] { "RecordingId" }, "IX_VoiceAudio_recording_id");
 
                     b.HasIndex(new[] { "VoiceId" }, "UQ__VoiceAud__128AF3808BA35F61")
                         .IsUnique();
@@ -1285,13 +1257,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .WithMany("PostRates")
                         .HasForeignKey("MemberId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostVote__member__18EBB532");
+                        .HasConstraintName("FK_PostRate_Account");
 
                     b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Post", "Post")
                         .WithMany("PostRates")
                         .HasForeignKey("PostId")
                         .IsRequired()
-                        .HasConstraintName("FK__PostVote__post_i__19DFD96B");
+                        .HasConstraintName("FK_PostRate_Post");
 
                     b.Navigation("Member");
 
@@ -1373,12 +1345,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
             modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Report", b =>
                 {
-                    b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostRate", "Comment")
-                        .WithMany("Reports")
-                        .HasForeignKey("CommentId")
-                        .IsRequired()
-                        .HasConstraintName("FK__Report__comment___208CD6FA");
-
                     b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Post", "Post")
                         .WithMany("Reports")
                         .HasForeignKey("PostId")
@@ -1402,8 +1368,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasForeignKey("RoomId")
                         .IsRequired()
                         .HasConstraintName("FK__Report__room_id__245D67DE");
-
-                    b.Navigation("Comment");
 
                     b.Navigation("Post");
 
@@ -1543,11 +1507,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.Navigation("PostShares");
 
-                    b.Navigation("Reports");
-                });
-
-            modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostRate", b =>
-                {
                     b.Navigation("Reports");
                 });
 

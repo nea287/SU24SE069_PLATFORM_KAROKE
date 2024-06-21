@@ -279,6 +279,12 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
     }
 
+    public enum ConversationType
+    {
+        DEFAULT,
+        SUPPORT,
+    }
+
 
 
 }
