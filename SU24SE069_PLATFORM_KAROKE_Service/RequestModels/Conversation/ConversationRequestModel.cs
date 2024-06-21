@@ -15,7 +15,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Conversation
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public Guid MemberId2 { get; set; }
         public ConversationType ConversationType { get; set; } = ConversationType.DEFAULT;
-        [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public Guid SupportRequestId { get; set; }
+        public Guid? SupportRequestId { get; set; }
     }
 }

@@ -169,6 +169,15 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         SenderId,
     }
 
+    public enum ConversationOrderFilter
+    {
+        ConversationId,
+        MemberId1,
+        MemberId2,
+        ConversationType,
+        SupportRequestId,
+    }
+
     #endregion
     public enum AccountRole
     {

@@ -379,7 +379,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     member_id_1 = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     member_id_2 = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     conversation_type = table.Column<int>(type: "int", nullable: false),
-                    support_request_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    support_request_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {

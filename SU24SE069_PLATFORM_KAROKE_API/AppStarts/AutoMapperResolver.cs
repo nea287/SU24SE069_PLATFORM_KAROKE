@@ -8,6 +8,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Conversation;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.FavouriteSong;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
@@ -142,6 +143,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.Category, dest => dest.MapFrom(src => (SupportRequestCategory)src.Category))
                 .ReverseMap();
             CreateMap<SupportRequest, SupportRequestRequestModel>().ReverseMap();
+            #endregion
+
+            #region Conversation
+            CreateMap<Conversation, ConversationViewModel>()
+                .ForMember(x => x.ConversationType, dest => dest.MapFrom(src => (ConversationType)src.ConversationType))
+                .ReverseMap();
+
+            CreateMap<Conversation, ConversationRequestModel>().ReverseMap();
             #endregion
 
         }
