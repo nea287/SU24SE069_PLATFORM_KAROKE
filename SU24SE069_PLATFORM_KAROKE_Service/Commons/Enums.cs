@@ -151,6 +151,24 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         CreatorId,
     }
 
+    public enum PurchasedSongOrderFilter
+    {
+        PurchasedSongId,
+        PurchaseDate,
+        MemberId,
+        SongId,
+    }
+
+    public enum SupportRequestOrderFilter
+    {
+        RequestId,
+        Problem,
+        CreateTime,
+        Category,
+        Status,
+        SenderId,
+    }
+
     #endregion
     public enum AccountRole
     {
@@ -244,6 +262,21 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         PENDING,
         COMPLETE,
         CANCELLED,
+    }
+
+    public enum SupportRequestCategory
+    {
+        TECHNICAL,
+        PROBLEM,
+
+    }
+
+    public enum SupportRequestStatus
+    {
+        CANCELED,
+        PROCESSING,
+        PROCESSED,
+
     }
 
 

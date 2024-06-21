@@ -15,8 +15,10 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.KaraokeRoom;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Package;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PurchasedSong;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.SupportRequest;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.VoiceAudio;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
@@ -127,6 +129,19 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region KaraokeRoom
             CreateMap<KaraokeRoom, KaraokeRoomViewModel>().ReverseMap();
             CreateMap<KaraokeRoom, KaraokeRoomRequestModel>().ReverseMap();
+            #endregion
+
+            #region PurchasedSong
+            CreateMap<PurchasedSong, PurchasedSongViewModel>().ReverseMap();
+            CreateMap<PurchasedSong, PurchasedSongRequestModel>().ReverseMap();
+            #endregion
+
+            #region SupportRequest
+            CreateMap<SupportRequest, SupportRequestViewModel>()
+                .ForMember(x => x.Status, dest => dest.MapFrom(src => (SupportRequestStatus)src.Status))
+                .ForMember(x => x.Category, dest => dest.MapFrom(src => (SupportRequestCategory)src.Category))
+                .ReverseMap();
+            CreateMap<SupportRequest, SupportRequestRequestModel>().ReverseMap();
             #endregion
 
         }

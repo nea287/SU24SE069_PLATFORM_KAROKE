@@ -712,10 +712,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("song_id");
 
-                    b.Property<int>("SongType")
-                        .HasColumnType("int")
-                        .HasColumnName("song_type");
-
                     b.HasKey("PurchasedSongId");
 
                     b.HasIndex("MemberId");

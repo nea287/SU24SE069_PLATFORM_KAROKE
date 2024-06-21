@@ -719,7 +719,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.SongId).HasColumnName("song_id");
 
-                entity.Property(e => e.SongType).HasColumnName("song_type");
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.PurchasedSongs)

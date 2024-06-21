@@ -2,6 +2,7 @@
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services;
 using SU24SE069_PLATFORM_KAROKE_DAO.DAO;
 using SU24SE069_PLATFORM_KAROKE_DAO.IDAO;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
@@ -70,6 +71,16 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region KaraokeRoom
             services.AddScoped<IKaraokeRoomRepository, KaraokeRoomRepository>();
             services.AddScoped<IKaraokeRoomService, KaraokeRoomService>();
+            #endregion
+
+            #region PurchasedSong
+            services.AddScoped<IPurchasedSongRepository, PurchasedSongRepository>();
+            services.AddScoped<IPurchasedSongService, PurchasedSongService>();
+            #endregion
+
+            #region SupportRequest
+            services.AddScoped<ISupportRequestRepository, SupportRequestRepository>();
+            services.AddScoped<ISupportRequestService, SupportRequestService>();
             #endregion
 
         }

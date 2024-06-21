@@ -313,7 +313,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 {
                     purchased_song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
                     purchase_date = table.Column<DateTime>(type: "datetime", nullable: false),
-                    song_type = table.Column<int>(type: "int", nullable: false),
                     member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
