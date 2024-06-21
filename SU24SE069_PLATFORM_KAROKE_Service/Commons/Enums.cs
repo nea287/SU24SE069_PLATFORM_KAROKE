@@ -23,7 +23,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         Email,
         Gender,
         AccountName,
-        IsVerified,
         Role,
         Star,
         IsOnline,
@@ -33,6 +32,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         IdentityCardNumber,
         PhoneNumber,
         CreatedTime,
+        AccountStatus,
     }
     public enum SongOrderFilter
     {
@@ -40,14 +40,11 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         SongName,
         SongDescription,
         SongUrl,
-        Source,
         SongStatus,
         CreatedDate,
         UpdatedDate,
         SongCode,
         PublicDate,
-        SongType,
-        Tempo,
         CreatorId,
         Price,
     }
@@ -83,7 +80,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         CreatedDate,
         UpdatedDate,
         Score,
-        SongType,
         SongId,
         HostId,
         OwnerId,
@@ -101,6 +97,102 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         ItemId,
         MemberId
     }
+
+    public enum InAppTransactionOrderFilter
+    {
+
+        InAppTransactionId,
+        StarAmount,
+        Status,
+        CreatedDate,
+        TransactionType,
+        MemberId,
+        ItemId,
+        SongId,
+    }
+    public enum FavouriteSongOrderFilter
+    {
+        MemberId,
+        SongId
+    }
+
+    public enum PackageOrderFilter
+    {
+        PackageId,
+        PackageName,
+        Description,
+        MoneyAmount,
+        StarNumber,
+        Status,
+        CreatedDate,
+        CreatorId,
+    }
+
+    public enum MoneyTransactionOrderFilter
+    {
+        MoneyTransactionId,
+        PaymentType,
+        PaymentCode,
+        MoneyAmount,
+        Currency,
+        Status,
+        CreatedDate,
+        PackageId,
+        MemberId,
+    }
+
+    public enum KaraokeRoomOrderFilter
+    {
+        RoomId,
+        RoomLog,
+        CreateTime,
+        CreatorId,
+    }
+
+    public enum PurchasedSongOrderFilter
+    {
+        PurchasedSongId,
+        PurchaseDate,
+        MemberId,
+        SongId,
+    }
+
+    public enum SupportRequestOrderFilter
+    {
+        RequestId,
+        Problem,
+        CreateTime,
+        Category,
+        Status,
+        SenderId,
+    }
+
+    public enum ConversationOrderFilter
+    {
+        ConversationId,
+        MemberId1,
+        MemberId2,
+        ConversationType,
+        SupportRequestId,
+    }
+
+    public enum LoginActivityOrderFilter
+    {
+        LoginId,
+        LoginTime,
+        LoginDevice,
+        MemberId,
+    }
+
+    public enum MessageOrderFilter
+    {
+        MessageId,
+        Content,
+        TimeStamp,
+        SenderId,
+        ConversationId,
+    }
+
     #endregion
     public enum AccountRole
     {
@@ -115,6 +207,13 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         OTHERS = 3,
     }
 
+    public enum AccountStatus
+    {
+        NOT_VERIFY = 0,
+        ACTIVE = 1,
+        INACTIVE = 2,
+    }
+
     public enum SongStatus
     {
         DISABLE = 0,
@@ -126,13 +225,90 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         INTERNAL = 1,
         EXTERNAL = 2,
     }
+    public enum SongCategory
+    {
+        VPOP = 0,
+        POP = 1,
+        KPOP = 2,
+        ROCK = 3,
+    }
 
+    public enum FriendStatus
+    {
+        OFFLINE = 0,
+        ONLINE = 1,
+    }
     public enum ItemStatus
     {
         DISABLE = 0,
         ENABLE = 1,
         PENDING = 2,
     }
+    public enum ItemType
+    {
+        CHARACTER,
+        ROOM,
+        DEFAULT,
+    }
+
+    public enum InAppTransactionType
+    {
+        BUY_ITEM = 1,
+    }
+
+    public enum InAppTransactionStatus
+    {
+        PENDING,
+        COMPLETE,
+        CANCELED,
+    }
+
+    public enum RecordingType
+    {
+        SINGLE,
+        MULTIPLE
+    }
+
+    public enum PackageStatus
+    {
+        INACTIVE = 0,
+        ACTIVE = 1,
+
+    }
+
+    public enum PaymentType
+    {
+        MOMO = 1,
+    }
+
+    public enum PaymentStatus
+    {
+        PENDING,
+        COMPLETE,
+        CANCELLED,
+    }
+
+    public enum SupportRequestCategory
+    {
+        TECHNICAL,
+        PROBLEM,
+
+    }
+
+    public enum SupportRequestStatus
+    {
+        CANCELED,
+        PROCESSING,
+        PROCESSED,
+
+    }
+
+    public enum ConversationType
+    {
+        DEFAULT,
+        SUPPORT,
+    }
+
 
 
 }

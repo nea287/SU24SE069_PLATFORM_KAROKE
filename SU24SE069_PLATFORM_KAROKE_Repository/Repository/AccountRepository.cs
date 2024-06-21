@@ -66,7 +66,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             try
             {
                 result = FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()) 
-                            && x.IsVerified == true).Result;
+                            && x.AccountStatus == 1).Result;
             }catch(Exception ex)
             {
                 throw new Exception(ex?.Message);
@@ -98,8 +98,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
         #region Validate
         public bool ExistedAccount(string? email = null, string? username = null)
             => this.Any(x =>
-                        x.Email.ToLower().Equals(email.ToLower())
-                        || x.UserName.ToLower().Equals(username.ToLower(), StringComparison.Ordinal));
+                        x.Email.ToLower().Equals(email??"null".ToLower())
+                        || x.UserName.ToLower().Equals(username??"null".ToLower(), StringComparison.Ordinal));
 
         #endregion
     }

@@ -9,5 +9,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
 {
     public interface IKaraokeRoomRepository : IBaseRepository<KaraokeRoom>
     {
+        public Task<bool> CreateRoom(KaraokeRoom request);
+        public Task<bool> UpdateRoom(KaraokeRoom room);
+        public bool ExistedRoom(string? roomLog = null, Guid? id = null);
+        public Task<KaraokeRoom> GetRoom(Guid id);
     }
 }

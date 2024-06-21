@@ -11,12 +11,8 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
-using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 {
@@ -195,7 +191,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     data.Email = data.Email.ToLower();
                     data.UserName = data.UserName.ToLower();
                     data.IsOnline = false;
-                    data.IsVerified = true;
+                    data.AccountStatus = (int)AccountStatus.ACTIVE;
                     data.CreatedTime = DateTime.Now;
 
                     data.Password = BCrypt.Net.BCrypt.HashPassword(data.Password, 12);
@@ -249,6 +245,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     data.Role = data1.Role;
                     data.AccountId = data1.AccountId;
                     data.CreatedTime = data1.CreatedTime;
+                    data.AccountStatus = (int)AccountStatus.ACTIVE;
 
                     data.Password = BCrypt.Net.BCrypt.HashPassword(request.Password, 12);
 
@@ -308,7 +305,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     };
                 }
 
-                data.IsVerified = false;
+                data.AccountStatus = (int)AccountStatus.INACTIVE;
 
                 if(!await _accountRepository.UpdateAccount(data))
                 {
@@ -331,7 +328,120 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 result = true,
             };
         }
+        public bool SendVerificationCode(string receiverMail)
+        {
+            try
+            {
+                string code = SupportingFeature.Instance.GenerateCode();
+                SupportingFeature.Instance.SendEmail(receiverMail, code, "Mã xác thực");
+
+                SetDataMemory(code, "verification-code", 5);
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<ResponseResult<AccountViewModel>> SignUp(CreateAccount1RequestModel request , string verificationCode)
+        {
+            AccountViewModel result = new AccountViewModel();
+
+            if (verificationCode != GetDataFromMemory("verification-code"))
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.INVALID_VERIFICATION_CODE,
+                    result = false,
+                };
+            }
+
+            try
+            {
+                lock (_accountRepository)
+                {
+                    if (_accountRepository.ExistedAccount(email: request.Email))
+                    {
+                        return new ResponseResult<AccountViewModel>()
+                        {
+                            Message = Constraints.INFORMATION_EXISTED,
+                            result = false,
+                        };
+                    }
+
+                    var data = _mapper.Map<Account>(request);
+
+                    data.Email = data.Email.ToLower();
+                    data.UserName = data.UserName.ToLower();
+                    data.IsOnline = false;
+                    data.AccountStatus = (int)AccountStatus.ACTIVE;
+                    data.CreatedTime = DateTime.Now;
+                    data.Role = (int)AccountRole.MEMBER;
+                    data.Star = 0;
+                    data.AccountStatus = (int)AccountStatus.ACTIVE;
+
+                    data.Password = BCrypt.Net.BCrypt.HashPassword(data.Password, 12);
+
+                    if (!_accountRepository.CreateAccount(data).Result)
+                    {
+                        _accountRepository.DetachEntity(data);
+                        throw new Exception();
+                    }
+
+                    result = _mapper.Map<AccountViewModel>(data);
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.CREATE_FAILED,
+                    result = false,
+                };
+            }
+
+            return new ResponseResult<AccountViewModel>()
+            {
+                Message = Constraints.CREATE_SUCCESS,
+                result = true,
+                Value = result
+            };
+        }
+        #endregion
+
+        #region Cookie
+        public void SetDataMemory(string value, string nameValue, int minutes)
+        {
+            _memoryCache.Set(nameValue, value, new TimeSpan(0, minutes, 0));
+        }
+
+        public string GetDataFromMemory(string nameValue)
+        {
+            return string.Concat(_memoryCache.Get(nameValue));
+        }
+        #endregion
+
+        #region Redis
+
+        public void SetCache(string value, string nameValue, int minutes)
+        {
+            DistributedCacheEntryOptions options = new DistributedCacheEntryOptions()
+            .SetAbsoluteExpiration(DateTime.Now.AddMinutes(minutes))
+            .SetSlidingExpiration(TimeSpan.FromMinutes(minutes));
+
+            var dataToCache = Encoding.UTF8.GetBytes(value);
+            _cache.Set(nameValue, dataToCache, options);
+        }
+
+        public string? GetCache(string nameValue)
+        {
+            var data = _cache.Get(nameValue);
+
+            return data != null ? Encoding.UTF8.GetString(data) : null;
+        }
         #endregion
     }
 }
-//0.48 48.764

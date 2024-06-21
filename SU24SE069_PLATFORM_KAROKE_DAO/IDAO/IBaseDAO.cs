@@ -27,6 +27,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.IDAO
         public Task UpdateById(TEntity entity, int id);
         public Task UpdateGuid(TEntity entity, Guid id);
         public void UpdateRange(IQueryable<TEntity> entities);
+        public Task Update(TEntity entity);
         public IQueryable<TEntity> GetAll(
         Expression<Func<TEntity, bool>>? filter = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
@@ -51,5 +52,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.IDAO
         public void AttrachEntity(TEntity entity);
         public void MotifyEntity(TEntity entity);
         public void DetachEntity(TEntity entity);
+        public TEntity? FindEntity(params object[] data);
     }
 }

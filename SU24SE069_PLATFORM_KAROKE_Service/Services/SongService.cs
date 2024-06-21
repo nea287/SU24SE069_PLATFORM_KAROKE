@@ -123,7 +123,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 lock (_songRepository)
                 {
-                    if (_songRepository.ExistedSong(request.SongCode))
+                    string songCode = "SONG" + string.Concat(_songRepository.Count() + 1);
+                    if (_songRepository.ExistedSong(songCode))
                     {
                         return new ResponseResult<SongViewModel>()
                         {
@@ -134,6 +135,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     var data = _mapper.Map<Song>(request);
 
+                    data.SongCode = songCode;
                     data.SongStatus = (int)SongStatus.ENABLE;
                     data.CreatedDate = DateTime.Now;
                     data.UpdatedDate = DateTime.Now;

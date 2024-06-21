@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SU24SE069_PLATFORM_KAROKE_DAO\SU24SE069_PLATFORM_KAROKE_DAO.csproj" />
   </ItemGroup>
 

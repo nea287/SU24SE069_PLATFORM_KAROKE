@@ -524,5 +524,32 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task Update(TEntity entity)
+        {
+            try
+            {
+                await BaseDAO<TEntity>.Instance.Update(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public TEntity? FindEntity(params object[] data)
+        {
+            TEntity? entity;
+            try
+            {
+                entity = BaseDAO<TEntity>.Instance.FindEntity(data);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            return entity;
+        }
     }
 }

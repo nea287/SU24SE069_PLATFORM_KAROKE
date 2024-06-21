@@ -18,10 +18,10 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
             {
                 if (entity.GetType().GetProperty(item.Name) == null) continue;
 
-                if (item.PropertyType != typeof(string))
-                {
-                    if (typeof(ICollection<>).IsAssignableFrom(item.PropertyType.GetGenericTypeDefinition())) continue;
-                }
+                //if (item.PropertyType != typeof(string))
+                //{
+                //    if (typeof(ICollection<>).IsAssignableFrom(item.PropertyType.GetGenericTypeDefinition())) continue;
+                //}
 
 
                 var propertyVal = entity.GetType().GetProperty(item.Name).GetValue(entity, null);
@@ -37,7 +37,14 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
                 {
                     var array = (IList)propertyVal;
                     source = source.Where($"{item.Name}.Any(a=> @0.Contains(a))", array);
+
                 }
+                //else if (item.CustomAttributes.Any(a => a.AttributeType.IsEnum))
+                //{
+                //    int value = (int)propertyVal;
+                //    source = source.Where($"{item.Name} = \"{value}\"");
+
+                //}
                 else if (item.CustomAttributes.Any(a => a.AttributeType == typeof(SortAttribute)))
                 {
                     string[] sort = propertyVal.ToString().Split(", ");

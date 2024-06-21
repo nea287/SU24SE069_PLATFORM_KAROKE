@@ -19,6 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         public const string UPDATE_FAILED = "Cập nhật thông tin thất bại!";
         public const string INFORMATION = "Thông tin: ";
         public const string INFORMATION_EXISTED = "Thông tin đã tồn tại!";
+
         #endregion
 
         #region Login
@@ -33,6 +34,16 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         #endregion
         #region Authenticate
         public const string INVALID_VERIFICATION_CODE = "mã xác thực không hợp lệ!";
+        #endregion
+
+        #region Validate data
+        public const string EMPTY_INPUT_INFORMATION = "Vui lòng nhập thông tin!";
+        public const string STAR_INVALID = "Vui lòng nhập số tiền hợp lệ!";
+        public const string INFORMATION_INVALID = "Vui lòng nhập thông tin hợp lệ!";
+        public const string VALIDATE_NEGATIVE = @"^[0-9]+$";
+        public const string VALIDATE_AMOUNT = @"^\d+(\.\d+)?$";
+        public const string VALIDATE_RANGE_0_TO_100 = "Vui lòng nhập điểm từ 0 đến 100";
+        public const string VALIDATE_ENDDATE = "Vui lòng nhập thời gian kết thúc lớn hơn thời gian bắt đầu!";
         #endregion
     }
 }

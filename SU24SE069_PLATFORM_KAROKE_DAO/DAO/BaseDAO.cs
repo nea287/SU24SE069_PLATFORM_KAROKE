@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SU24SE069_PLATFORM_KAROKE_DAO.IDAO;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using System;
@@ -16,7 +17,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.DAO
         private static BaseDAO<TEntity> instance = null;
         private static readonly object InstanceClock = new object();
 
-        private readonly PLATFORM_KARAOKEContext _context;
+        private readonly KokDBContext _context;
         private DbSet<TEntity> Table { get; set; }
 
         public static BaseDAO<TEntity> Instance
@@ -27,7 +28,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.DAO
                 {
                     if (instance == null)
                     {
-                        PLATFORM_KARAOKEContext context = new PLATFORM_KARAOKEContext();
+                        KokDBContext context = new KokDBContext();
                         instance = new BaseDAO<TEntity>(context);
                     }
                     return instance;
@@ -35,7 +36,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.DAO
             }
         }
 
-        public BaseDAO(PLATFORM_KARAOKEContext context)
+        public BaseDAO(KokDBContext context)
         {
             _context = context;
             Table = context.Set<TEntity>();
@@ -183,6 +184,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.DAO
             Table.Update(entity);
         }
 
+        public async Task Update(TEntity entity)
+        {
+            _context.Entry(entity).CurrentValues.SetValues(entity);
+            Table.Update(entity);
+        }
+
         public void UpdateRange(IQueryable<TEntity> entities)
         {
             Table.UpdateRange(entities);
@@ -265,6 +272,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.DAO
         public async Task SaveChagesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public TEntity? FindEntity(params object[] data)
+        {
+            return Table.Find(data);
         }
     }
 }

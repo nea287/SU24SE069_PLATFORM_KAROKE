@@ -10,7 +10,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.DAO
 {
     public class AccountDAO : BaseDAO<Account>, IAccountDAO
     {
-        public AccountDAO(PLATFORM_KARAOKEContext context) : base(context)
+        public AccountDAO(KokDBContext context) : base(context)
         {
         }
     }
