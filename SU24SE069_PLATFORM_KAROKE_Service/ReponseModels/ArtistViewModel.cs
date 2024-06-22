@@ -12,6 +12,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public Guid? ArtistId { get; set; }
         public string? ArtistName { get; set; }
 
-        public ICollection<SongViewModel>? Songs { get; set; }
+        public ICollection<SongArtistViewModel>? SongArtists { get; set; }
     }
 }

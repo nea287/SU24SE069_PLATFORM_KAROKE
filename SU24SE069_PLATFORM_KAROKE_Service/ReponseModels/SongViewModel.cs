@@ -30,15 +30,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public DateTime? PublicDate { get; set; }
         public Guid? CreatorId { get; set; }
         public decimal? Price { get; set; }
-        public string? Category { get; set; }
-        public string? Author { get; set; } 
-        public string? Singer { get; set; }
 
 
-        //public ICollection<FavouriteSong> FavouriteSongs { get; set; }
-        //public ICollection<InAppTransaction> InAppTransactions { get; set; }
-        //public ICollection<PurchasedSong> PurchasedSongs { get; set; }
-        //public ICollection<Recording> Recordings { get; set; }
+        public ICollection<FavouriteSongViewModel>? FavouriteSongs { get; set; }
+        public ICollection<InAppTransactionViewModel>? InAppTransactions { get; set; }
+        public ICollection<PurchasedSongViewModel>? PurchasedSongs { get; set; }
+        public ICollection<RecordingViewModel>? Recordings { get; set; }
+        public ICollection<SongArtistViewModel>? SongArtists { get; set; }
+        public ICollection<SongGenreViewModel>? SongGenres { get; set; }
+        public ICollection<SongSingerViewModel>? SongSingers { get; set; }
 
     }
 }

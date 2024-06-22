@@ -281,6 +281,82 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             });
 
 
+            modelBuilder.Entity<SongArtist>(entity =>
+            {
+                entity.HasKey(e => new { e.SongId, e.ArtistId })
+                    .HasName("PK_SongArtist");
+
+                entity.ToTable("SongArtist");
+
+                entity.Property(e => e.SongId).HasColumnName("song_id");
+
+                entity.Property(e => e.ArtistId).HasColumnName("artist_id");
+
+
+                entity.HasOne(d => d.Artist)
+                    .WithMany(p => p.SongArtists)
+                    .HasForeignKey(d => d.ArtistId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SongArtist_Artist");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.SongArtists)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SongArtist_Song");
+            });
+            
+            modelBuilder.Entity<SongGenre>(entity =>
+            {
+                entity.HasKey(e => new { e.SongId, e.GenreId })
+                    .HasName("PK_SongGenre");
+
+                entity.ToTable("SongGenre");
+
+                entity.Property(e => e.SongId).HasColumnName("song_id");
+
+                entity.Property(e => e.GenreId).HasColumnName("genre_id");
+
+
+                entity.HasOne(d => d.Genre)
+                    .WithMany(p => p.SongGenres)
+                    .HasForeignKey(d => d.GenreId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SongGenre_Genre");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.SongGenres)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SongGenre_Song");
+            });
+            
+            modelBuilder.Entity<SongSinger>(entity =>
+            {
+                entity.HasKey(e => new { e.SongId, e.SingerId })
+                    .HasName("PK_SongSinger");
+
+                entity.ToTable("SongSinger");
+
+                entity.Property(e => e.SongId).HasColumnName("song_id");
+
+                entity.Property(e => e.SingerId).HasColumnName("singer_id");
+
+
+                entity.HasOne(d => d.Singer)
+                    .WithMany(p => p.SongSingers)
+                    .HasForeignKey(d => d.SingerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SongSinger_Singer");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.SongSingers)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SongSinger_Song");
+            });
+
+
             modelBuilder.Entity<Conversation>(entity =>
             {
                 entity.ToTable("Conversation");
@@ -1015,57 +1091,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasForeignKey(d => d.CreatorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Song__creator_id__25518C17");
-
-                entity.HasMany(d => d.Artists)
-                    .WithMany(p => p.Songs)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "SongArtist",
-                        l => l.HasOne<Artist>().WithMany().HasForeignKey("ArtistId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_SongArtist_Artist"),
-                        r => r.HasOne<Song>().WithMany().HasForeignKey("SongId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_SongArtist_Song"),
-                        j =>
-                        {
-                            j.HasKey("SongId", "ArtistId");
-
-                            j.ToTable("SongArtist");
-
-                            j.IndexerProperty<Guid>("SongId").HasColumnName("song_id");
-
-                            j.IndexerProperty<Guid>("ArtistId").HasColumnName("artist_id");
-                        });
-
-                entity.HasMany(d => d.Genres)
-                    .WithMany(p => p.Songs)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "SongGenre",
-                        l => l.HasOne<Genre>().WithMany().HasForeignKey("GenreId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_SongGenre_Genre"),
-                        r => r.HasOne<Song>().WithMany().HasForeignKey("SongId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_SongGenre_Song"),
-                        j =>
-                        {
-                            j.HasKey("SongId", "GenreId");
-
-                            j.ToTable("SongGenre");
-
-                            j.IndexerProperty<Guid>("SongId").HasColumnName("song_id");
-
-                            j.IndexerProperty<Guid>("GenreId").HasColumnName("genre_id");
-                        });
-
-                entity.HasMany(d => d.Singers)
-                    .WithMany(p => p.Songs)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "SongSinger",
-                        l => l.HasOne<Singer>().WithMany().HasForeignKey("SingerId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_SongSinger_Singer"),
-                        r => r.HasOne<Song>().WithMany().HasForeignKey("SongId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_SongSinger_Song"),
-                        j =>
-                        {
-                            j.HasKey("SongId", "SingerId");
-
-                            j.ToTable("SongSinger");
-
-                            j.IndexerProperty<Guid>("SongId").HasColumnName("song_id");
-
-                            j.IndexerProperty<Guid>("SingerId").HasColumnName("singer_id");
-                        });
 
             });
 
