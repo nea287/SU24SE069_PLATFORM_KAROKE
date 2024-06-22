@@ -199,6 +199,13 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         SingerName
     }
 
+    public enum ArtistOrderFilter
+    {
+        ArtistId,
+        ArtistName
+    }
+
+
     #endregion
     public enum AccountRole
     {
