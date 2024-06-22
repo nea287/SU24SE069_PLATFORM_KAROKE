@@ -11,6 +11,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Artist;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Conversation;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.FavouriteSong;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Genre;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.KaraokeRoom;
@@ -175,6 +176,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region Artist
             CreateMap<Artist, ArtistViewModel>().ReverseMap();
             CreateMap<Artist, ArtistRequestModel>().ReverseMap();
+            #endregion
+
+            #region Genre
+            CreateMap<Genre, GenreViewModel>().ReverseMap();
+            CreateMap<Genre, GenreRequestModel>().ReverseMap();
             #endregion
         }
     }

@@ -108,6 +108,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<IArtistRepository, ArtistRepository>();
             services.AddScoped<IArtistService, ArtistService>();
             #endregion
+
+            #region Genre
+            services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IGenreService, GenreService>();
+            #endregion
         }
     }
 }
