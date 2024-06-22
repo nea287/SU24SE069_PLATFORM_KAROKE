@@ -39,7 +39,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual DbSet<SupportRequest> SupportRequests { get; set; } = null!;
         public virtual DbSet<VoiceAudio> VoiceAudios { get; set; } = null!;
         public virtual DbSet<FavouriteSong> FavouriteSongs { get; set; } = null!;
-
+        public virtual DbSet<Artist> Artists { get; set; } = null!;
+        public virtual DbSet<Genre> Genres { get; set; } = null!;
+        public virtual DbSet<Singer> Singers { get; set; } = null!;
 
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -83,7 +85,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
                 .Build();
-            var strConn = config.GetConnectionString("Database");
+            var strConn = config.GetConnectionString("localDatabase");
             return strConn;
         }
 
@@ -168,6 +170,45 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasForeignKey(d => d.RoomItemId)
                     .HasConstraintName("FK__Account__room_it__7D439ABD");
 
+            });
+
+            modelBuilder.Entity<Artist>(entity =>
+            {
+                entity.ToTable("Artist");
+
+                entity.Property(e => e.ArtistId)
+                    .HasColumnName("artist_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.ArtistName)
+                    .HasMaxLength(150)
+                    .HasColumnName("artist_name");
+            });
+
+            modelBuilder.Entity<Genre>(entity =>
+            {
+                entity.ToTable("Genre");
+
+                entity.Property(e => e.GenreId)
+                    .HasColumnName("genre_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.GenreName)
+                    .HasMaxLength(150)
+                    .HasColumnName("genre_name");
+            });
+
+            modelBuilder.Entity<Singer>(entity =>
+            {
+                entity.ToTable("Singer");
+
+                entity.Property(e => e.SingerId)
+                    .HasColumnName("singer_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.SingerName)
+                    .HasMaxLength(150)
+                    .HasColumnName("singer_name");
             });
 
             modelBuilder.Entity<AccountInventoryItem>(entity =>
@@ -932,14 +973,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("song_id")
                     .HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Author)
-                    .HasMaxLength(150)
-                    .HasColumnName("author");
-
-                entity.Property(e => e.Category)
-                    .HasMaxLength(150)
-                    .HasColumnName("category");
-
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("created_date");
@@ -953,10 +986,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.PublicDate)
                     .HasColumnType("datetime")
                     .HasColumnName("public_date");
-
-                entity.Property(e => e.Singer)
-                    .HasMaxLength(150)
-                    .HasColumnName("singer");
 
                 entity.Property(e => e.SongCode)
                     .HasMaxLength(150)
@@ -986,6 +1015,58 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasForeignKey(d => d.CreatorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Song__creator_id__25518C17");
+
+                entity.HasMany(d => d.Artists)
+                    .WithMany(p => p.Songs)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "SongArtist",
+                        l => l.HasOne<Artist>().WithMany().HasForeignKey("ArtistId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_SongArtist_Artist"),
+                        r => r.HasOne<Song>().WithMany().HasForeignKey("SongId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_SongArtist_Song"),
+                        j =>
+                        {
+                            j.HasKey("SongId", "ArtistId");
+
+                            j.ToTable("SongArtist");
+
+                            j.IndexerProperty<Guid>("SongId").HasColumnName("song_id");
+
+                            j.IndexerProperty<Guid>("ArtistId").HasColumnName("artist_id");
+                        });
+
+                entity.HasMany(d => d.Genres)
+                    .WithMany(p => p.Songs)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "SongGenre",
+                        l => l.HasOne<Genre>().WithMany().HasForeignKey("GenreId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_SongGenre_Genre"),
+                        r => r.HasOne<Song>().WithMany().HasForeignKey("SongId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_SongGenre_Song"),
+                        j =>
+                        {
+                            j.HasKey("SongId", "GenreId");
+
+                            j.ToTable("SongGenre");
+
+                            j.IndexerProperty<Guid>("SongId").HasColumnName("song_id");
+
+                            j.IndexerProperty<Guid>("GenreId").HasColumnName("genre_id");
+                        });
+
+                entity.HasMany(d => d.Singers)
+                    .WithMany(p => p.Songs)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "SongSinger",
+                        l => l.HasOne<Singer>().WithMany().HasForeignKey("SingerId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_SongSinger_Singer"),
+                        r => r.HasOne<Song>().WithMany().HasForeignKey("SongId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_SongSinger_Song"),
+                        j =>
+                        {
+                            j.HasKey("SongId", "SingerId");
+
+                            j.ToTable("SongSinger");
+
+                            j.IndexerProperty<Guid>("SongId").HasColumnName("song_id");
+
+                            j.IndexerProperty<Guid>("SingerId").HasColumnName("singer_id");
+                        });
+
             });
 
             modelBuilder.Entity<SupportRequest>(entity =>

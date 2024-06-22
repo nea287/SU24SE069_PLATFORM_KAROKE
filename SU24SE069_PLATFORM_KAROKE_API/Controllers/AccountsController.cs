@@ -24,30 +24,31 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         {
             _service = service;
         }
-        //[Authorize(Policy = "RequireStaffRole")]
+        //[Authorize(Policy = Constraints.ADMIN_STAFF_ROLE)]
         [HttpPost]
         public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequestModel request)
         {
             ResponseResult<AccountViewModel> result = await _service.CreateAccount(request);
-            if(result.Value is null)
+            if (result.Value is null)
             {
                 return BadRequest(result);
             }
             return Ok(result);
         }
-            
+
 
         [HttpGet("{accountId:guid}")]
-        public async Task<IActionResult> GetAccount(Guid accountId) 
+        public async Task<IActionResult> GetAccount(Guid accountId)
         {
             var rs = await _service.GetAccount(accountId);
 
-            return rs.Value is null? NotFound(rs) : Ok(rs);
+            return rs.Value is null ? NotFound(rs) : Ok(rs);
         }
 
-    [HttpGet]
+        //[Authorize(Policy = Constraints.ADMIN_STAFF_ROLE)]
+        [HttpGet]
         public IActionResult GetAccounts([FromQuery] AccountViewModel filter,
-            [FromQuery] PagingRequest paging, [FromQuery] AccountOrderFilter orderFilter = AccountOrderFilter.CreatedTime)
+                [FromQuery] PagingRequest paging, [FromQuery] AccountOrderFilter orderFilter = AccountOrderFilter.CreatedTime)
         {
             var rs = _service.GetAccounts(filter, paging, orderFilter);
 
@@ -59,10 +60,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         {
             var rs = await _service.UpdateAccountByEmail(email, request);
 
-            return rs.result.HasValue? (rs.result.Value? Ok(rs) : BadRequest(rs)) : NotFound(rs);
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
 
         }
 
+        //[Authorize(Policy = Constraints.ADMIN_STAFF_ROLE)]
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteAccount(Guid id)
         {

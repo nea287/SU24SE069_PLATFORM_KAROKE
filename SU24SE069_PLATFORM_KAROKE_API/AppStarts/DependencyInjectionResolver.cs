@@ -6,6 +6,7 @@ using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
+using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.Services;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
@@ -98,6 +99,10 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<IMessageService, MessageService>();
             #endregion
 
+            #region Singer
+            services.AddScoped<ISingerRepository, SingerRepository>();
+            services.AddScoped<ISingerService, SingerService>();
+            #endregion
         }
     }
 }

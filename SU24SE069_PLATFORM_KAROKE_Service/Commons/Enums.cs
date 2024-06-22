@@ -193,6 +193,12 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         ConversationId,
     }
 
+    public enum SingerOrderFilter
+    {
+        SingerId,
+        SingerName
+    }
+
     #endregion
     public enum AccountRole
     {

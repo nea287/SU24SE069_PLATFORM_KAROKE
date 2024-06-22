@@ -45,5 +45,13 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         public const string VALIDATE_RANGE_0_TO_100 = "Vui lòng nhập điểm từ 0 đến 100";
         public const string VALIDATE_ENDDATE = "Vui lòng nhập thời gian kết thúc lớn hơn thời gian bắt đầu!";
         #endregion
+
+        #region Authorize
+        public const string ADMIN_STAFF_ROLE = "RequiredAdminOrStaff";
+        public const string STAFF_MEMBER_ROLE = "RequireStaffOrMember";
+        public const string STAFF_ROLE = "STAFF";
+        public const string MEMBER_ROLE = "MEMBER";
+        public const string ADMIN_ROLE = "ADMIN";
+        #endregion
     }
 }
