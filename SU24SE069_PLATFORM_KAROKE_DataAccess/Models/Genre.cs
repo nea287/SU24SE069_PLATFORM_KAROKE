@@ -10,12 +10,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
     {
         public Genre()
         {
-            Songs = new HashSet<Song>();
+            SongGenres = new HashSet<SongGenre>();
         }
 
         public Guid GenreId { get; set; }
         public string GenreName { get; set; } = null!;
 
-        public virtual ICollection<Song> Songs { get; set; }
+        public virtual ICollection<SongGenre> SongGenres { get; set; }
     }
 }

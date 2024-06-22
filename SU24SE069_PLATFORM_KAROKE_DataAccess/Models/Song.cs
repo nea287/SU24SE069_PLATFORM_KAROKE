@@ -10,10 +10,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             InAppTransactions = new HashSet<InAppTransaction>();
             PurchasedSongs = new HashSet<PurchasedSong>();
             Recordings = new HashSet<Recording>();
-            Artists = new HashSet<Artist>();
-            Genres = new HashSet<Genre>();
-            Members = new HashSet<Account>();
-            Singers = new HashSet<Singer>();
+            //Artists = new HashSet<Artist>();
+            SongGenres = new HashSet<SongGenre>();
+            // Members = new HashSet<Account>();
+            SongSingers = new HashSet<SongSinger>();
+            SongArtists = new HashSet<SongArtist>();
+            FavouriteSongs = new HashSet<FavouriteSong>();
         }
 
         public Guid SongId { get; set; }
@@ -31,11 +33,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual Account Creator { get; set; } = null!;
         public virtual ICollection<InAppTransaction> InAppTransactions { get; set; }
         public virtual ICollection<FavouriteSong> FavouriteSongs { get; set; }
+        public virtual ICollection<SongArtist> SongArtists { get; set; }    
         public virtual ICollection<PurchasedSong> PurchasedSongs { get; set; }
         public virtual ICollection<Recording> Recordings { get; set; }
-        public virtual ICollection<Artist> Artists { get; set; }
-        public virtual ICollection<Genre> Genres { get; set; }
-        public virtual ICollection<Account> Members { get; set; }
-        public virtual ICollection<Singer> Singers { get; set; }
+        //public virtual ICollection<Artist> Artists { get; set; }
+        public virtual ICollection<SongGenre> SongGenres { get; set; }
+        //public virtual ICollection<Account> Members { get; set; }
+        public virtual ICollection<SongSinger> SongSingers { get; set; }
     }
 }

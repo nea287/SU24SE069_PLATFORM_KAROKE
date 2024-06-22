@@ -13,6 +13,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public Guid? SingerId { get; set; }
         public string? SingerName { get; set; } 
 
-        public ICollection<SongViewModel>? Songs { get; set; }
+        public ICollection<SongSingerViewModel>? SongSingers { get; set; }
     }
 }

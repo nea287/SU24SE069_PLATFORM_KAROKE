@@ -10,12 +10,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
     {
         public Singer()
         {
-            Songs = new HashSet<Song>();
+            SongSingers = new HashSet<SongSinger>();
         }
 
         public Guid SingerId { get; set; }
         public string SingerName { get; set; } = null!;
 
-        public virtual ICollection<Song> Songs { get; set; }
+        public virtual ICollection<SongSinger> SongSingers { get; set; }
     }
  }

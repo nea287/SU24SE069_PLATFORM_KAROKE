@@ -1,4 +1,5 @@
 ﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,10 +22,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song
         [RegularExpression(Constraints.VALIDATE_AMOUNT, ErrorMessage = Constraints.STAR_INVALID)]
         public decimal Price { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public string Category { get; set; } = null!;
+        public ICollection<SongGenreRequestModel> SongGenres { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public string Author { get; set; } = null!;
+        public ICollection<SongArtistRequestModel> SongArtists { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public string Singer { get; set; } = null!;
+        public ICollection<SongSingerRequestModel> SongSingers { get; set; }
     }
 }
