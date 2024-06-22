@@ -29,6 +29,15 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
 
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetTransaction(Guid id)
+        {
+            var rs = await _service.GetTransaction(id);
+
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : NotFound(rs)) : BadRequest(rs);
+        }
+        
+
         [HttpPost]
         public async Task<IActionResult> CreateInAppTransaction([FromBody] CrreateInAppTransactionRequestModel request)
         {

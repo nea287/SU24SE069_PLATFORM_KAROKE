@@ -20,6 +20,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Package;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PurchasedSong;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Singer;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.SupportRequest;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.VoiceAudio;
@@ -163,6 +164,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region Message
             CreateMap<Message, MessageViewModel>().ReverseMap();
             CreateMap<Message, MessageRequestModel>().ReverseMap();
+            #endregion
+
+            #region Singer
+            CreateMap<Singer, SingerViewModel>().ReverseMap();
+            CreateMap<Singer, SingerRequestModel>().ReverseMap();
             #endregion
 
         }

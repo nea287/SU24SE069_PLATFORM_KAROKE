@@ -61,6 +61,38 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
+        public async Task<ResponseResult<InAppTransactionViewModel>> GetTransaction(Guid id)
+        {
+            InAppTransaction data = new InAppTransaction();
+            try
+            {
+                data = await _repository.GetByIdGuid(id);
+
+                if(data is null)
+                {
+                    return new ResponseResult<InAppTransactionViewModel>()
+                    {
+                        Message = Constraints.NOT_FOUND,
+                        result = false,
+                    };
+                }
+            }catch(Exception ex)
+            {
+                return new ResponseResult<InAppTransactionViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                    result = false
+                };
+            }
+
+            return new ResponseResult<InAppTransactionViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Value = _mapper.Map<InAppTransactionViewModel>(data),
+                result = true,
+            };
+        }
+
         public async Task<DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>> GetTransactions(InAppTransactionViewModel filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter)
         {
             (int, IQueryable<InAppTransactionViewModel>) result;
