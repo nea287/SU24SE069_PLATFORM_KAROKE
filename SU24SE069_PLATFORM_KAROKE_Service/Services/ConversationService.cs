@@ -9,6 +9,7 @@ using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Conversation;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.LiveChat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,13 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
     public class ConversationService : IConversationService
     {
         private readonly IConversationRepository _repository;
+        private readonly IChatHubRepository _hubRepository;
         private readonly IMapper _mapper;
 
-        public ConversationService(IConversationRepository repository, IMapper mapper)
+        public ConversationService(IConversationRepository repository, IChatHubRepository hubRepository, IMapper mapper)
         {
             _repository = repository;
+            _hubRepository = hubRepository;
             _mapper = mapper;
         }
         public async Task<ResponseResult<ConversationViewModel>> CreateConversation(ConversationRequestModel request)
@@ -102,6 +105,44 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 },
                 Results = result.Item2.ToList()
             };
+        }
+
+        public async Task<bool> SendPrivateMessage(ChatConversationRequestModel request)
+        {
+            try
+            {
+                await _hubRepository.SendPrivateMessage(request.Message.ReceiverId, request.Message.SenderName, request.Message.Message);
+
+                var rs = _mapper.Map<Conversation>(request);
+
+                if (!rs.Messages.Any())
+                {
+                    foreach(var e in rs.Messages)
+                    {
+                        e.SenderId = rs.MemberId1;
+                        e.TimeStamp = DateTime.Now;
+                        e.Content = request.Message.Message;
+                    }
+                }
+
+                if (!await _repository.CreateConversation(rs))
+                {
+                    _repository.DetachEntity(rs);
+                    throw new Exception();
+                }
+
+            }catch(Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+
+        }
+
+        public Task<bool> SendPublicMessage(string user, string message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

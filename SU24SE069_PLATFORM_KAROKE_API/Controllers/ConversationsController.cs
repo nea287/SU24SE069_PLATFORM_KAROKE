@@ -35,5 +35,13 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
+
+        [HttpPost("send-private-message")]
+        public async Task<IActionResult> SendPrivateMessage([FromBody] ChatConversationRequestModel request)
+        {
+            var rs = await _service.SendPrivateMessage(request);
+
+            return rs ? Ok(rs) : BadRequest(false);
+        }
     }
 }

@@ -8,15 +8,12 @@ using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Message
 {
-    public class MessageRequestModel
+    public class ChatMessageRequestModel
     {
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public string Content { get; set; } = null!;
         //public DateTime TimeStamp { get; set; }
-        [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public Guid SenderId { get; set; }
-        [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public Guid ConversationId { get; set; }
-        
+        //public Guid SenderId { get; set; }
+        //public Guid ConversationId { get; set; }
     }
 }
