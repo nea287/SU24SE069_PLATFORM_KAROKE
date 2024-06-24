@@ -113,6 +113,10 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<IGenreRepository, GenreRepository>();
             services.AddScoped<IGenreService, GenreService>();
             #endregion
+
+            #region LiveChat
+            services.AddScoped<IChatHubRepository, ChatHubRepository>();
+            #endregion
         }
     }
 }

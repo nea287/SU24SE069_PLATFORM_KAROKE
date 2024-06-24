@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SU24SE069_PLATFORM_KAROKE_API.AppStarts;
+using SU24SE069_PLATFORM_KAROKE_DAO.DAO;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -127,6 +128,9 @@ builder.Services.AddAuthorization(options =>
     });
 });
 #endregion
+#region SignalR
+builder.Services.AddSignalR();
+#endregion
 #region CORS 
 builder.Services.AddCors(options =>
 {
@@ -163,6 +167,12 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllers();
+//app.MapControllers();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<ChatHubDAO>("/chatHub");
+    endpoints.MapControllers();
+});
 
 app.Run();

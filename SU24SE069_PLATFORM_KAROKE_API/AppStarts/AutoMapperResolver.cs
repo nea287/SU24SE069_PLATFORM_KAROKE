@@ -165,6 +165,9 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ReverseMap();
 
             CreateMap<Conversation, ConversationRequestModel>().ReverseMap();
+            CreateMap<Conversation, ChatConversationRequestModel>()
+                .ForMember(x => x.Message, dest => dest.Ignore())
+                .ReverseMap();
             #endregion
 
             #region LoginActivity

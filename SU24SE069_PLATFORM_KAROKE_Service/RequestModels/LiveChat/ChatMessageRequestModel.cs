@@ -2,21 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Message
+namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.LiveChat
 {
-    public class MessageRequestModel
+    public class ChatMessageRequestModel
     {
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public string Content { get; set; } = null!;
-        //public DateTime TimeStamp { get; set; }
+        public string SenderName { get; set; } = null!;
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public Guid SenderId { get; set; }
+        public string Message { get; set; } = null!;
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public Guid ConversationId { get; set; }
-        
+        public string ReceiverId { get; set; } = null!;
+
     }
 }
