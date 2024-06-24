@@ -117,12 +117,13 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                 if (!rs.Messages.Any())
                 {
-                    foreach(var e in rs.Messages)
-                    {
-                        e.SenderId = rs.MemberId1;
-                        e.TimeStamp = DateTime.Now;
-                        e.Content = request.Message.Message;
-                    }
+
+                    rs.Messages = rs.Messages
+                         .Select(message => { message.TimeStamp = DateTime.Now; 
+                             message.SenderId = rs.MemberId1; 
+                             message.Content = request.Message.Message; 
+                             return message; })
+                         .ToList();
                 }
 
                 if (!await _repository.CreateConversation(rs))
