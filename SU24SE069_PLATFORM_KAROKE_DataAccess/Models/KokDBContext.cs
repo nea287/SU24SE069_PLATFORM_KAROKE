@@ -20,8 +20,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<AccountInventoryItem> AccountInventoryItems { get; set; } = null!;
+        public virtual DbSet<Artist> Artists { get; set; } = null!;
         public virtual DbSet<Conversation> Conversations { get; set; } = null!;
         public virtual DbSet<Friend> Friends { get; set; } = null!;
+        public virtual DbSet<Genre> Genres { get; set; } = null!;
         public virtual DbSet<InAppTransaction> InAppTransactions { get; set; } = null!;
         public virtual DbSet<Item> Items { get; set; } = null!;
         public virtual DbSet<KaraokeRoom> KaraokeRooms { get; set; } = null!;
@@ -30,18 +32,16 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual DbSet<MoneyTransaction> MoneyTransactions { get; set; } = null!;
         public virtual DbSet<Package> Packages { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
-        public virtual DbSet<PostRate> PostRates { get; set; } = null!;
+        public virtual DbSet<PostComment> PostComments { get; set; } = null!;
+        public virtual DbSet<PostRating> PostRatings { get; set; } = null!;
         public virtual DbSet<PostShare> PostShares { get; set; } = null!;
         public virtual DbSet<PurchasedSong> PurchasedSongs { get; set; } = null!;
         public virtual DbSet<Recording> Recordings { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
+        public virtual DbSet<Singer> Singers { get; set; } = null!;
         public virtual DbSet<Song> Songs { get; set; } = null!;
         public virtual DbSet<SupportRequest> SupportRequests { get; set; } = null!;
         public virtual DbSet<VoiceAudio> VoiceAudios { get; set; } = null!;
-        public virtual DbSet<FavouriteSong> FavouriteSongs { get; set; } = null!;
-        public virtual DbSet<Artist> Artists { get; set; } = null!;
-        public virtual DbSet<Genre> Genres { get; set; } = null!;
-        public virtual DbSet<Singer> Singers { get; set; } = null!;
 
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -95,16 +95,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             modelBuilder.Entity<Account>(entity =>
             {
                 entity.ToTable("Account");
-
-                entity.HasIndex(e => e.CharacterItemId, "IX_Account_character_item_id");
-
-                entity.HasIndex(e => e.RoomItemId, "IX_Account_room_item_id");
-
-                entity.HasIndex(e => e.UserName, "UQ__Account__7C9273C4BE4FEFD8")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.Email, "UQ__Account__AB6E6164AF554E58")
-                    .IsUnique();
 
                 entity.Property(e => e.AccountId)
                     .HasColumnName("account_id")
@@ -172,55 +162,34 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
             });
 
-            modelBuilder.Entity<Artist>(entity =>
+            modelBuilder.Entity<FavouriteSong>(entity =>
             {
-                entity.ToTable("Artist");
+                entity.HasKey(e => new { e.MemberId, e.SongId })
+                    .HasName("PK__Favourit__68C8DFD514CDDEC7");
 
-                entity.Property(e => e.ArtistId)
-                    .HasColumnName("artist_id")
-                    .HasDefaultValueSql("(newid())");
+                entity.ToTable("FavouriteSong");
 
-                entity.Property(e => e.ArtistName)
-                    .HasMaxLength(150)
-                    .HasColumnName("artist_name");
-            });
+                entity.Property(e => e.MemberId).HasColumnName("member_id");
 
-            modelBuilder.Entity<Genre>(entity =>
-            {
-                entity.ToTable("Genre");
+                entity.Property(e => e.SongId).HasColumnName("song_id");
 
-                entity.Property(e => e.GenreId)
-                    .HasColumnName("genre_id")
-                    .HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.GenreName)
-                    .HasMaxLength(150)
-                    .HasColumnName("genre_name");
-            });
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.FavouriteSongs)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Favourite__membe__02FC7413");
 
-            modelBuilder.Entity<Singer>(entity =>
-            {
-                entity.ToTable("Singer");
-
-                entity.Property(e => e.SingerId)
-                    .HasColumnName("singer_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.SingerName)
-                    .HasMaxLength(150)
-                    .HasColumnName("singer_name");
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.FavouriteSongs)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Favourite__song___03F0984C");
             });
 
             modelBuilder.Entity<AccountInventoryItem>(entity =>
             {
                 entity.ToTable("AccountInventoryItem");
-
-                entity.HasIndex(e => e.ItemId, "IX_AccountInventoryItem_item_id");
-
-                entity.HasIndex(e => e.MemberId, "IX_AccountInventoryItem_member_id");
-
-                entity.HasIndex(e => e.AccountInventoryItemId, "UQ__AccountI__3C30841ED7833689")
-                    .IsUnique();
 
                 entity.Property(e => e.AccountInventoryItemId)
                     .HasColumnName("account_inventory_item_id")
@@ -255,784 +224,17 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasConstraintName("FK__AccountIn__membe__7F2BE32F");
             });
 
-            modelBuilder.Entity<FavouriteSong>(entity =>
+            modelBuilder.Entity<Artist>(entity =>
             {
-                entity.HasKey(e => new { e.MemberId, e.SongId })
-                    .HasName("PK__Favourit__68C8DFD514CDDEC7");
+                entity.ToTable("Artist");
 
-                entity.ToTable("FavouriteSong");
-
-                entity.Property(e => e.MemberId).HasColumnName("member_id");
-
-                entity.Property(e => e.SongId).HasColumnName("song_id");
-
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.FavouriteSongs)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Favourite__membe__02FC7413");
-
-                entity.HasOne(d => d.Song)
-                    .WithMany(p => p.FavouriteSongs)
-                    .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Favourite__song___03F0984C");
-            });
-
-
-            modelBuilder.Entity<SongArtist>(entity =>
-            {
-                entity.HasKey(e => new { e.SongId, e.ArtistId })
-                    .HasName("PK_SongArtist");
-
-                entity.ToTable("SongArtist");
-
-                entity.Property(e => e.SongId).HasColumnName("song_id");
-
-                entity.Property(e => e.ArtistId).HasColumnName("artist_id");
-
-
-                entity.HasOne(d => d.Artist)
-                    .WithMany(p => p.SongArtists)
-                    .HasForeignKey(d => d.ArtistId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SongArtist_Artist");
-
-                entity.HasOne(d => d.Song)
-                    .WithMany(p => p.SongArtists)
-                    .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SongArtist_Song");
-            });
-            
-            modelBuilder.Entity<SongGenre>(entity =>
-            {
-                entity.HasKey(e => new { e.SongId, e.GenreId })
-                    .HasName("PK_SongGenre");
-
-                entity.ToTable("SongGenre");
-
-                entity.Property(e => e.SongId).HasColumnName("song_id");
-
-                entity.Property(e => e.GenreId).HasColumnName("genre_id");
-
-
-                entity.HasOne(d => d.Genre)
-                    .WithMany(p => p.SongGenres)
-                    .HasForeignKey(d => d.GenreId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SongGenre_Genre");
-
-                entity.HasOne(d => d.Song)
-                    .WithMany(p => p.SongGenres)
-                    .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SongGenre_Song");
-            });
-            
-            modelBuilder.Entity<SongSinger>(entity =>
-            {
-                entity.HasKey(e => new { e.SongId, e.SingerId })
-                    .HasName("PK_SongSinger");
-
-                entity.ToTable("SongSinger");
-
-                entity.Property(e => e.SongId).HasColumnName("song_id");
-
-                entity.Property(e => e.SingerId).HasColumnName("singer_id");
-
-
-                entity.HasOne(d => d.Singer)
-                    .WithMany(p => p.SongSingers)
-                    .HasForeignKey(d => d.SingerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SongSinger_Singer");
-
-                entity.HasOne(d => d.Song)
-                    .WithMany(p => p.SongSingers)
-                    .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SongSinger_Song");
-            });
-
-
-            modelBuilder.Entity<Conversation>(entity =>
-            {
-                entity.ToTable("Conversation");
-
-                entity.HasIndex(e => e.MemberId1, "IX_Conversation_member_id_1");
-
-                entity.HasIndex(e => e.MemberId2, "IX_Conversation_member_id_2");
-
-                entity.HasIndex(e => e.SupportRequestId, "IX_Conversation_support_request_id");
-
-                entity.HasIndex(e => e.ConversationId, "UQ__Conversa__311E7E9B9619D04A")
-                    .IsUnique();
-
-                entity.Property(e => e.ConversationId)
-                    .HasColumnName("conversation_id")
+                entity.Property(e => e.ArtistId)
+                    .HasColumnName("artist_id")
                     .HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.ConversationType).HasColumnName("conversation_type");
-
-                entity.Property(e => e.MemberId1).HasColumnName("member_id_1");
-
-                entity.Property(e => e.MemberId2).HasColumnName("member_id_2");
-
-                entity.Property(e => e.SupportRequestId).HasColumnName("support_request_id");
-
-                entity.HasOne(d => d.MemberId1Navigation)
-                    .WithMany(p => p.ConversationMemberId1Navigations)
-                    .HasForeignKey(d => d.MemberId1)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Conversat__membe__00200768");
-
-                entity.HasOne(d => d.MemberId2Navigation)
-                    .WithMany(p => p.ConversationMemberId2Navigations)
-                    .HasForeignKey(d => d.MemberId2)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Conversat__membe__01142BA1");
-
-                entity.HasOne(d => d.SupportRequest)
-                    .WithMany(p => p.Conversations)
-                    .HasForeignKey(d => d.SupportRequestId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Conversat__suppo__02084FDA");
-            });
-
-            modelBuilder.Entity<Friend>(entity =>
-            {
-                entity.HasKey(e => new { e.SenderId, e.ReceiverId })
-                    .HasName("PK__Friend__39A74E2FEA2EB197");
-
-                entity.ToTable("Friend");
-
-                entity.HasIndex(e => e.ReceiverId, "IX_Friend_receiver_id");
-
-                entity.Property(e => e.SenderId).HasColumnName("sender_id");
-
-                entity.Property(e => e.ReceiverId).HasColumnName("receiver_id");
-
-                entity.Property(e => e.Status).HasColumnName("status");
-
-                entity.HasOne(d => d.Receiver)
-                    .WithMany(p => p.FriendReceivers)
-                    .HasForeignKey(d => d.ReceiverId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Friend__receiver__04E4BC85");
-
-                entity.HasOne(d => d.Sender)
-                    .WithMany(p => p.FriendSenders)
-                    .HasForeignKey(d => d.SenderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Friend__sender_i__05D8E0BE");
-            });
-
-            modelBuilder.Entity<InAppTransaction>(entity =>
-            {
-                entity.ToTable("InAppTransaction");
-
-                entity.HasIndex(e => e.ItemId, "IX_InAppTransaction_item_id");
-
-                entity.HasIndex(e => e.MemberId, "IX_InAppTransaction_member_id");
-
-                entity.HasIndex(e => e.SongId, "IX_InAppTransaction_song_id");
-
-                entity.HasIndex(e => e.InAppTransactionId, "UQ__InAppTra__783D788F3120721B")
-                    .IsUnique();
-
-                entity.Property(e => e.InAppTransactionId)
-                    .HasColumnName("in_app_transaction_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("created_date");
-
-                entity.Property(e => e.ItemId).HasColumnName("item_id");
-
-                entity.Property(e => e.MemberId).HasColumnName("member_id");
-
-                entity.Property(e => e.SongId).HasColumnName("song_id");
-
-                entity.Property(e => e.StarAmount)
-                    .HasColumnType("money")
-                    .HasColumnName("star_amount");
-
-                entity.Property(e => e.Status).HasColumnName("status");
-
-                entity.Property(e => e.TransactionType).HasColumnName("transaction_type");
-
-                entity.HasOne(d => d.Item)
-                    .WithMany(p => p.InAppTransactions)
-                    .HasForeignKey(d => d.ItemId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__InAppTran__item___06CD04F7");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.InAppTransactions)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__InAppTran__membe__07C12930");
-
-                entity.HasOne(d => d.Song)
-                    .WithMany(p => p.InAppTransactions)
-                    .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__InAppTran__song___08B54D69");
-            });
-
-            modelBuilder.Entity<Item>(entity =>
-            {
-                entity.ToTable("Item");
-
-                entity.HasIndex(e => e.CreatorId, "IX_Item_creator_id");
-
-                entity.HasIndex(e => e.ItemCode, "UQ__Item__4A67201E86BAC7DD")
-                    .IsUnique();
-
-                entity.Property(e => e.ItemId)
-                    .HasColumnName("item_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.CanExpire).HasColumnName("can_expire");
-
-                entity.Property(e => e.CanStack).HasColumnName("can_stack");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("created_date");
-
-                entity.Property(e => e.CreatorId).HasColumnName("creator_id");
-
-                entity.Property(e => e.ItemCode)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasColumnName("item_code");
-
-                entity.Property(e => e.ItemDescription)
-                    .HasMaxLength(250)
-                    .HasColumnName("item_description");
-
-                entity.Property(e => e.ItemName)
-                    .HasMaxLength(50)
-                    .HasColumnName("item_name");
-
-                entity.Property(e => e.ItemPrice)
-                    .HasColumnType("money")
-                    .HasColumnName("item_price");
-
-                entity.Property(e => e.ItemStatus).HasColumnName("item_status");
-
-                entity.Property(e => e.ItemType).HasColumnName("item_type");
-
-                entity.Property(e => e.PrefabCode)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("prefab_code");
-
-                entity.HasOne(d => d.Creator)
-                    .WithMany(p => p.Items)
-                    .HasForeignKey(d => d.CreatorId)
-                    .HasConstraintName("FK__Item__creator_id__0A9D95DB");
-            });
-
-            modelBuilder.Entity<KaraokeRoom>(entity =>
-            {
-                entity.HasKey(e => e.RoomId)
-                    .HasName("PK__KaraokeR__19675A8A6BA327E4");
-
-                entity.ToTable("KaraokeRoom");
-
-                entity.HasIndex(e => e.CreatorId, "IX_KaraokeRoom_creator_id");
-
-                entity.HasIndex(e => e.RoomId, "UQ__KaraokeR__19675A8BC5A9ED1B")
-                    .IsUnique();
-
-                entity.Property(e => e.RoomId)
-                    .HasColumnName("room_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.CreateTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("create_time");
-
-                entity.Property(e => e.CreatorId).HasColumnName("creator_id");
-
-                entity.Property(e => e.RoomLog)
-                    .HasColumnType("text")
-                    .HasColumnName("room_log");
-
-                entity.HasOne(d => d.Creator)
-                    .WithMany(p => p.KaraokeRooms)
-                    .HasForeignKey(d => d.CreatorId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__KaraokeRo__creat__0B91BA14");
-            });
-
-            modelBuilder.Entity<LoginActivity>(entity =>
-            {
-                entity.HasKey(e => e.LoginId)
-                    .HasName("PK__LoginAct__C2C971DB811BF7A3");
-
-                entity.ToTable("LoginActivity");
-
-                entity.HasIndex(e => e.MemberId, "IX_LoginActivity_member_id");
-
-                entity.HasIndex(e => e.LoginId, "UQ__LoginAct__C2C971DA5DBB7ACA")
-                    .IsUnique();
-
-                entity.Property(e => e.LoginId)
-                    .HasColumnName("login_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.LoginDevice)
+                entity.Property(e => e.ArtistName)
                     .HasMaxLength(150)
-                    .HasColumnName("login_device");
-
-                entity.Property(e => e.LoginTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("login_time");
-
-                entity.Property(e => e.MemberId).HasColumnName("member_id");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.LoginActivities)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__LoginActi__membe__0C85DE4D");
-            });
-
-            modelBuilder.Entity<Message>(entity =>
-            {
-                entity.ToTable("Message");
-
-                entity.HasIndex(e => e.ConversationId, "IX_Message_conversation_id");
-
-                entity.HasIndex(e => e.SenderId, "IX_Message_sender_id");
-
-                entity.HasIndex(e => e.MessageId, "UQ__Message__0BBF6EE78703A3BB")
-                    .IsUnique();
-
-                entity.Property(e => e.MessageId)
-                    .HasColumnName("message_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.Content)
-                    .HasColumnType("text")
-                    .HasColumnName("content");
-
-                entity.Property(e => e.ConversationId).HasColumnName("conversation_id");
-
-                entity.Property(e => e.SenderId).HasColumnName("sender_id");
-
-                entity.Property(e => e.TimeStamp)
-                    .HasColumnType("datetime")
-                    .HasColumnName("time_stamp");
-
-                entity.HasOne(d => d.Conversation)
-                    .WithMany(p => p.Messages)
-                    .HasForeignKey(d => d.ConversationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Message__convers__0E6E26BF");
-
-                entity.HasOne(d => d.Sender)
-                    .WithMany(p => p.Messages)
-                    .HasForeignKey(d => d.SenderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Message__sender___0F624AF8");
-            });
-
-            modelBuilder.Entity<MoneyTransaction>(entity =>
-            {
-                entity.ToTable("MoneyTransaction");
-
-                entity.HasIndex(e => e.MemberId, "IX_MoneyTransaction_member_id");
-
-                entity.HasIndex(e => e.PackageId, "IX_MoneyTransaction_package_id");
-
-                entity.HasIndex(e => e.MoneyTransactionId, "UQ__MoneyTra__EC443D7DCAA4141D")
-                    .IsUnique();
-
-                entity.Property(e => e.MoneyTransactionId)
-                    .HasColumnName("money_transaction_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("created_date");
-
-                entity.Property(e => e.Currency)
-                    .HasColumnType("text")
-                    .HasColumnName("currency");
-
-                entity.Property(e => e.MemberId).HasColumnName("member_id");
-
-                entity.Property(e => e.MoneyAmount)
-                    .HasColumnType("money")
-                    .HasColumnName("money_amount");
-
-                entity.Property(e => e.PackageId).HasColumnName("package_id");
-
-                entity.Property(e => e.PaymentCode)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("payment_code");
-
-                entity.Property(e => e.PaymentType).HasColumnName("payment_type");
-
-                entity.Property(e => e.Status).HasColumnName("status");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.MoneyTransactions)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__MoneyTran__membe__10566F31");
-
-                entity.HasOne(d => d.Package)
-                    .WithMany(p => p.MoneyTransactions)
-                    .HasForeignKey(d => d.PackageId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__MoneyTran__packa__114A936A");
-            });
-
-            modelBuilder.Entity<Package>(entity =>
-            {
-                entity.ToTable("Package");
-
-                entity.HasIndex(e => e.CreatorId, "IX_Package_creator_id");
-
-                entity.HasIndex(e => e.PackageId, "UQ__Package__63846AE9D3373BE0")
-                    .IsUnique();
-
-                entity.Property(e => e.PackageId)
-                    .HasColumnName("package_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("created_date");
-
-                entity.Property(e => e.CreatorId).HasColumnName("creator_id");
-
-                entity.Property(e => e.Description)
-                    .HasMaxLength(500)
-                    .HasColumnName("description");
-
-                entity.Property(e => e.MoneyAmount)
-                    .HasColumnType("money")
-                    .HasColumnName("money_amount");
-
-                entity.Property(e => e.PackageName)
-                    .HasMaxLength(250)
-                    .HasColumnName("package_name");
-
-                entity.Property(e => e.StarNumber).HasColumnName("star_number");
-
-                entity.Property(e => e.Status).HasColumnName("status");
-
-                entity.HasOne(d => d.Creator)
-                    .WithMany(p => p.Packages)
-                    .HasForeignKey(d => d.CreatorId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Package__creator__123EB7A3");
-            });
-
-            modelBuilder.Entity<Post>(entity =>
-            {
-                entity.ToTable("Post");
-
-                entity.HasIndex(e => e.MemberId, "IX_Post_member_id");
-
-                entity.HasIndex(e => e.RecordingId, "IX_Post_recording_id");
-
-                entity.HasIndex(e => e.PostId, "UQ__Post__3ED78767E3F1F3DF")
-                    .IsUnique();
-
-                entity.Property(e => e.PostId)
-                    .HasColumnName("post_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.Caption)
-                    .HasColumnType("text")
-                    .HasColumnName("caption");
-
-                entity.Property(e => e.MemberId).HasColumnName("member_id");
-
-                entity.Property(e => e.RecordingId).HasColumnName("recording_id");
-
-                entity.Property(e => e.UpdateTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("update_time");
-
-                entity.Property(e => e.UploadTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("upload_time");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.Posts)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Post__member_id__1332DBDC");
-
-                entity.HasOne(d => d.Recording)
-                    .WithMany(p => p.Posts)
-                    .HasForeignKey(d => d.RecordingId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Post__recording___14270015");
-            });
-
-            modelBuilder.Entity<PostRate>(entity =>
-            {
-                entity.HasKey(e => e.RateId)
-                    .HasName("PK_PostRate_rate_id");
-
-                entity.ToTable("PostRate");
-
-                entity.Property(e => e.RateId)
-                    .HasColumnName("rate_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.Category).HasColumnName("category");
-
-                entity.Property(e => e.Comment).HasColumnName("comment");
-
-                entity.Property(e => e.MemberId).HasColumnName("member_id");
-
-                entity.Property(e => e.PostId).HasColumnName("post_id");
-
-                entity.Property(e => e.Score).HasColumnName("score");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.PostRates)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PostRate_Account");
-
-                entity.HasOne(d => d.Post)
-                    .WithMany(p => p.PostRates)
-                    .HasForeignKey(d => d.PostId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PostRate_Post");
-            });
-
-            modelBuilder.Entity<PostShare>(entity =>
-            {
-                entity.ToTable("PostShare");
-
-                entity.HasIndex(e => e.MemberId, "IX_PostShare_member_id");
-
-                entity.HasIndex(e => e.PostId, "IX_PostShare_post_id");
-
-                entity.HasIndex(e => e.PostShareId, "UQ__PostShar__6F03FC20AE6B0180")
-                    .IsUnique();
-
-                entity.Property(e => e.PostShareId)
-                    .HasColumnName("post_share_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.Caption)
-                    .HasColumnType("text")
-                    .HasColumnName("caption");
-
-                entity.Property(e => e.MemberId).HasColumnName("member_id");
-
-                entity.Property(e => e.PostId).HasColumnName("post_id");
-
-                entity.Property(e => e.ShareTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("share_time");
-
-                entity.Property(e => e.UpdateTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("update_time");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.PostShares)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PostShare__membe__17036CC0");
-
-                entity.HasOne(d => d.Post)
-                    .WithMany(p => p.PostShares)
-                    .HasForeignKey(d => d.PostId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PostShare__post___17F790F9");
-            });
-
-            modelBuilder.Entity<PurchasedSong>(entity =>
-            {
-                entity.ToTable("PurchasedSong");
-
-                entity.HasIndex(e => e.MemberId, "IX_PurchasedSong_member_id");
-
-                entity.HasIndex(e => e.SongId, "IX_PurchasedSong_song_id");
-
-                entity.HasIndex(e => e.PurchasedSongId, "UQ__Purchase__12FEA5F379BFEF7C")
-                    .IsUnique();
-
-                entity.Property(e => e.PurchasedSongId)
-                    .HasColumnName("purchased_song_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.MemberId).HasColumnName("member_id");
-
-                entity.Property(e => e.PurchaseDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("purchase_date");
-
-                entity.Property(e => e.SongId).HasColumnName("song_id");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.PurchasedSongs)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Purchased__membe__1AD3FDA4");
-
-                entity.HasOne(d => d.Song)
-                    .WithMany(p => p.PurchasedSongs)
-                    .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Purchased__song___1BC821DD");
-            });
-
-            modelBuilder.Entity<Recording>(entity =>
-            {
-                entity.ToTable("Recording");
-
-                entity.HasIndex(e => e.HostId, "IX_Recording_host_id");
-
-                entity.HasIndex(e => e.KaraokeRoomId, "IX_Recording_karaoke_room_id");
-
-                entity.HasIndex(e => e.OwnerId, "IX_Recording_owner_id");
-
-                entity.HasIndex(e => e.SongId, "IX_Recording_song_id");
-
-                entity.HasIndex(e => e.RecordingId, "UQ__Recordin__0C5B24E46D5CE3E3")
-                    .IsUnique();
-
-                entity.Property(e => e.RecordingId)
-                    .HasColumnName("recording_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("created_date");
-
-                entity.Property(e => e.HostId).HasColumnName("host_id");
-
-                entity.Property(e => e.KaraokeRoomId).HasColumnName("karaoke_room_id");
-
-                entity.Property(e => e.OwnerId).HasColumnName("owner_id");
-
-                entity.Property(e => e.RecordingName)
-                    .HasMaxLength(150)
-                    .HasColumnName("recording_name");
-
-                entity.Property(e => e.RecordingType).HasColumnName("recording_type");
-
-                entity.Property(e => e.Score).HasColumnName("score");
-
-                entity.Property(e => e.SongId).HasColumnName("song_id");
-
-                entity.Property(e => e.UpdatedDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("updated_date");
-
-                entity.HasOne(d => d.Host)
-                    .WithMany(p => p.RecordingHosts)
-                    .HasForeignKey(d => d.HostId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Recording__host___1CBC4616");
-
-                entity.HasOne(d => d.KaraokeRoom)
-                    .WithMany(p => p.Recordings)
-                    .HasForeignKey(d => d.KaraokeRoomId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Recording__karao__1DB06A4F");
-
-                entity.HasOne(d => d.Owner)
-                    .WithMany(p => p.RecordingOwners)
-                    .HasForeignKey(d => d.OwnerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Recording__owner__1EA48E88");
-
-                entity.HasOne(d => d.Song)
-                    .WithMany(p => p.Recordings)
-                    .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Recording__song___1F98B2C1");
-            });
-
-            modelBuilder.Entity<Report>(entity =>
-            {
-                entity.ToTable("Report");
-
-                entity.HasIndex(e => e.CommentId, "IX_Report_comment_id");
-
-                entity.HasIndex(e => e.PostId, "IX_Report_post_id");
-
-                entity.HasIndex(e => e.ReportedAccountId, "IX_Report_reported_account_id");
-
-                entity.HasIndex(e => e.ReporterId, "IX_Report_reporter_id");
-
-                entity.HasIndex(e => e.RoomId, "IX_Report_room_id");
-
-                entity.HasIndex(e => e.ReportId, "UQ__Report__779B7C5917900A24")
-                    .IsUnique();
-
-                entity.Property(e => e.ReportId)
-                    .HasColumnName("report_id")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.CommentId).HasColumnName("comment_id");
-
-                entity.Property(e => e.CreateTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("create_time");
-
-                entity.Property(e => e.PostId).HasColumnName("post_id");
-
-                entity.Property(e => e.Reason)
-                    .HasMaxLength(500)
-                    .HasColumnName("reason");
-
-                entity.Property(e => e.ReportCategory).HasColumnName("report_category");
-
-                entity.Property(e => e.ReportType).HasColumnName("report_type");
-
-                entity.Property(e => e.ReportedAccountId).HasColumnName("reported_account_id");
-
-                entity.Property(e => e.ReporterId).HasColumnName("reporter_id");
-
-                entity.Property(e => e.RoomId).HasColumnName("room_id");
-
-                entity.Property(e => e.Status).HasColumnName("status");
-
-                entity.HasOne(d => d.Post)
-                    .WithMany(p => p.Reports)
-                    .HasForeignKey(d => d.PostId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Report__post_id__2180FB33");
-
-                entity.HasOne(d => d.ReportedAccount)
-                    .WithMany(p => p.ReportReportedAccounts)
-                    .HasForeignKey(d => d.ReportedAccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Report__reported__22751F6C");
-
-                entity.HasOne(d => d.Reporter)
-                    .WithMany(p => p.ReportReporters)
-                    .HasForeignKey(d => d.ReporterId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Report__reporter__236943A5");
-
-                entity.HasOne(d => d.Room)
-                    .WithMany(p => p.Reports)
-                    .HasForeignKey(d => d.RoomId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Report__room_id__245D67DE");
+                    .HasColumnName("artist_name");
             });
 
             modelBuilder.Entity<Song>(entity =>
@@ -1094,17 +296,760 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
             });
 
+
+            modelBuilder.Entity<Conversation>(entity =>
+            {
+                entity.ToTable("Conversation");
+
+                entity.Property(e => e.ConversationId)
+                    .HasColumnName("conversation_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.ConversationType).HasColumnName("conversation_type");
+
+                entity.Property(e => e.MemberId1).HasColumnName("member_id_1");
+
+                entity.Property(e => e.MemberId2).HasColumnName("member_id_2");
+
+                entity.Property(e => e.SupportRequestId).HasColumnName("support_request_id");
+
+                entity.HasOne(d => d.MemberId1Navigation)
+                    .WithMany(p => p.ConversationMemberId1Navigations)
+                    .HasForeignKey(d => d.MemberId1)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Conversat__membe__00200768");
+
+                entity.HasOne(d => d.MemberId2Navigation)
+                    .WithMany(p => p.ConversationMemberId2Navigations)
+                    .HasForeignKey(d => d.MemberId2)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Conversat__membe__01142BA1");
+
+                entity.HasOne(d => d.SupportRequest)
+                    .WithMany(p => p.Conversations)
+                    .HasForeignKey(d => d.SupportRequestId)
+                    .HasConstraintName("FK__Conversat__suppo__02084FDA");
+            });
+
+            modelBuilder.Entity<Friend>(entity =>
+            {
+                entity.HasKey(e => new { e.SenderId, e.ReceiverId })
+                    .HasName("PK__Friend__39A74E2FEA2EB197");
+
+                entity.ToTable("Friend");
+
+                entity.Property(e => e.SenderId).HasColumnName("sender_id");
+
+                entity.Property(e => e.ReceiverId).HasColumnName("receiver_id");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Receiver)
+                    .WithMany(p => p.FriendReceivers)
+                    .HasForeignKey(d => d.ReceiverId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Friend__receiver__04E4BC85");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.FriendSenders)
+                    .HasForeignKey(d => d.SenderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Friend__sender_i__05D8E0BE");
+            });
+            modelBuilder.Entity<Genre>(entity =>
+            {
+                entity.ToTable("Genre");
+
+                entity.Property(e => e.GenreId)
+                    .HasColumnName("genre_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.GenreName)
+                    .HasMaxLength(150)
+                    .HasColumnName("genre_name");
+            });
+
+
+            modelBuilder.Entity<InAppTransaction>(entity =>
+            {
+                entity.ToTable("InAppTransaction");
+
+                entity.Property(e => e.InAppTransactionId)
+                    .HasColumnName("in_app_transaction_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_date");
+
+                entity.Property(e => e.ItemId).HasColumnName("item_id");
+
+                entity.Property(e => e.MemberId).HasColumnName("member_id");
+
+                entity.Property(e => e.SongId).HasColumnName("song_id");
+
+                entity.Property(e => e.StarAmount)
+                    .HasColumnType("money")
+                    .HasColumnName("star_amount");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.TransactionType).HasColumnName("transaction_type");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany(p => p.InAppTransactions)
+                    .HasForeignKey(d => d.ItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__InAppTran__item___06CD04F7");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.InAppTransactions)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__InAppTran__membe__07C12930");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.InAppTransactions)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__InAppTran__song___08B54D69");
+            });
+
+            modelBuilder.Entity<Item>(entity =>
+            {
+                entity.ToTable("Item");
+
+                entity.Property(e => e.ItemId)
+                    .HasColumnName("item_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.CanExpire).HasColumnName("can_expire");
+
+                entity.Property(e => e.CanStack).HasColumnName("can_stack");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_date");
+
+                entity.Property(e => e.CreatorId).HasColumnName("creator_id");
+
+                entity.Property(e => e.ItemCode)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("item_code");
+
+                entity.Property(e => e.ItemDescription)
+                    .HasMaxLength(250)
+                    .HasColumnName("item_description");
+
+                entity.Property(e => e.ItemName)
+                    .HasMaxLength(50)
+                    .HasColumnName("item_name");
+
+                entity.Property(e => e.ItemPrice)
+                    .HasColumnType("money")
+                    .HasColumnName("item_price");
+
+                entity.Property(e => e.ItemStatus).HasColumnName("item_status");
+
+                entity.Property(e => e.ItemType).HasColumnName("item_type");
+
+                entity.Property(e => e.PrefabCode)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasColumnName("prefab_code");
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.Items)
+                    .HasForeignKey(d => d.CreatorId)
+                    .HasConstraintName("FK__Item__creator_id__0A9D95DB");
+            });
+
+            modelBuilder.Entity<KaraokeRoom>(entity =>
+            {
+                entity.HasKey(e => e.RoomId)
+                    .HasName("PK__KaraokeR__19675A8A6BA327E4");
+
+                entity.ToTable("KaraokeRoom");
+
+                entity.Property(e => e.RoomId)
+                    .HasColumnName("room_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("create_time");
+
+                entity.Property(e => e.CreatorId).HasColumnName("creator_id");
+
+                entity.Property(e => e.RoomLog)
+                    .HasColumnType("text")
+                    .HasColumnName("room_log");
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.KaraokeRooms)
+                    .HasForeignKey(d => d.CreatorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__KaraokeRo__creat__0B91BA14");
+            });
+
+            modelBuilder.Entity<LoginActivity>(entity =>
+            {
+                entity.HasKey(e => e.LoginId)
+                    .HasName("PK__LoginAct__C2C971DB811BF7A3");
+
+                entity.ToTable("LoginActivity");
+
+                entity.Property(e => e.LoginId)
+                    .HasColumnName("login_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.LoginDevice)
+                    .HasMaxLength(150)
+                    .HasColumnName("login_device");
+
+                entity.Property(e => e.LoginTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("login_time");
+
+                entity.Property(e => e.MemberId).HasColumnName("member_id");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.LoginActivities)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__LoginActi__membe__0C85DE4D");
+            });
+
+            modelBuilder.Entity<Message>(entity =>
+            {
+                entity.ToTable("Message");
+
+                entity.Property(e => e.MessageId)
+                    .HasColumnName("message_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Content)
+                    .HasColumnType("text")
+                    .HasColumnName("content");
+
+                entity.Property(e => e.ConversationId).HasColumnName("conversation_id");
+
+                entity.Property(e => e.SenderId).HasColumnName("sender_id");
+
+                entity.Property(e => e.TimeStamp)
+                    .HasColumnType("datetime")
+                    .HasColumnName("time_stamp");
+
+                entity.HasOne(d => d.Conversation)
+                    .WithMany(p => p.Messages)
+                    .HasForeignKey(d => d.ConversationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Message__convers__0E6E26BF");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.Messages)
+                    .HasForeignKey(d => d.SenderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Message__sender___0F624AF8");
+            });
+
+            modelBuilder.Entity<MoneyTransaction>(entity =>
+            {
+                entity.ToTable("MoneyTransaction");
+
+                entity.Property(e => e.MoneyTransactionId)
+                    .HasColumnName("money_transaction_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_date");
+
+                entity.Property(e => e.Currency)
+                    .HasColumnType("text")
+                    .HasColumnName("currency");
+
+                entity.Property(e => e.MemberId).HasColumnName("member_id");
+
+                entity.Property(e => e.MoneyAmount)
+                    .HasColumnType("money")
+                    .HasColumnName("money_amount");
+
+                entity.Property(e => e.PackageId).HasColumnName("package_id");
+
+                entity.Property(e => e.PaymentCode)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("payment_code");
+
+                entity.Property(e => e.PaymentType).HasColumnName("payment_type");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.MoneyTransactions)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__MoneyTran__membe__10566F31");
+
+                entity.HasOne(d => d.Package)
+                    .WithMany(p => p.MoneyTransactions)
+                    .HasForeignKey(d => d.PackageId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__MoneyTran__packa__114A936A");
+            });
+
+            modelBuilder.Entity<Package>(entity =>
+            {
+                entity.ToTable("Package");
+
+                entity.Property(e => e.PackageId)
+                    .HasColumnName("package_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_date");
+
+                entity.Property(e => e.CreatorId).HasColumnName("creator_id");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(500)
+                    .HasColumnName("description");
+
+                entity.Property(e => e.MoneyAmount)
+                    .HasColumnType("money")
+                    .HasColumnName("money_amount");
+
+                entity.Property(e => e.PackageName)
+                    .HasMaxLength(250)
+                    .HasColumnName("package_name");
+
+                entity.Property(e => e.StarNumber).HasColumnName("star_number");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.Packages)
+                    .HasForeignKey(d => d.CreatorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Package__creator__123EB7A3");
+            });
+
+            modelBuilder.Entity<Post>(entity =>
+            {
+                entity.ToTable("Post");
+
+                entity.Property(e => e.PostId)
+                    .HasColumnName("post_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Caption)
+                    .HasColumnType("text")
+                    .HasColumnName("caption");
+
+                entity.Property(e => e.MemberId).HasColumnName("member_id");
+
+                entity.Property(e => e.OriginPostId).HasColumnName("origin_post_id");
+
+                entity.Property(e => e.PostType).HasColumnName("post_type");
+
+                entity.Property(e => e.RecordingId).HasColumnName("recording_id");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.UpdateTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("update_time");
+
+                entity.Property(e => e.UploadTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("upload_time");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.Posts)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Post__member_id__1332DBDC");
+
+                entity.HasOne(d => d.OriginPost)
+                    .WithMany(p => p.InverseOriginPost)
+                    .HasForeignKey(d => d.OriginPostId)
+                    .HasConstraintName("FK_Post_Post");
+
+                entity.HasOne(d => d.Recording)
+                    .WithMany(p => p.Posts)
+                    .HasForeignKey(d => d.RecordingId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Post__recording___14270015");
+            });
+
+            modelBuilder.Entity<PostComment>(entity =>
+            {
+                entity.HasKey(e => e.CommentId)
+                    .HasName("DF_post_comment_id");
+
+                entity.Property(e => e.CommentId)
+                    .HasColumnName("comment_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.ToTable("PostComment");
+
+                entity.Property(e => e.CommentId)
+                    .HasColumnName("comment_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Comment).HasColumnName("comment");
+
+                entity.Property(e => e.CommentType).HasColumnName("comment_type");
+
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("create_time");
+
+                entity.Property(e => e.MemberId).HasColumnName("member_id");
+
+                entity.Property(e => e.ParentCommentId).HasColumnName("parent_comment_id");
+
+                entity.Property(e => e.PostId).HasColumnName("post_id");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.PostComments)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PostComment_Account");
+
+            });
+
+            modelBuilder.Entity<PostRating>(entity =>
+            {
+                entity.HasKey(e => new { e.MemberId, e.PostId });
+
+                entity.ToTable("PostRating");
+
+                entity.Property(e => e.MemberId).HasColumnName("member_id");
+
+                entity.Property(e => e.PostId).HasColumnName("post_id");
+
+                entity.Property(e => e.Score).HasColumnName("score");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.PostRatings)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PostRating_Account");
+
+                entity.HasOne(d => d.Post)
+                    .WithMany(p => p.PostRatings)
+                    .HasForeignKey(d => d.PostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PostRating_Post");
+            });
+
+            modelBuilder.Entity<PostShare>(entity =>
+            {
+                entity.ToTable("PostShare");
+
+                entity.Property(e => e.PostShareId)
+                    .HasColumnName("post_share_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Caption)
+                    .HasColumnType("text")
+                    .HasColumnName("caption");
+
+                entity.Property(e => e.MemberId).HasColumnName("member_id");
+
+                entity.Property(e => e.PostId).HasColumnName("post_id");
+
+                entity.Property(e => e.ShareTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("share_time");
+
+                entity.Property(e => e.UpdateTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("update_time");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.PostShares)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PostShare__membe__17036CC0");
+
+                entity.HasOne(d => d.Post)
+                    .WithMany(p => p.PostShares)
+                    .HasForeignKey(d => d.PostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PostShare__post___17F790F9");
+            });
+
+            modelBuilder.Entity<PurchasedSong>(entity =>
+            {
+                entity.ToTable("PurchasedSong");
+
+                entity.Property(e => e.PurchasedSongId)
+                    .HasColumnName("purchased_song_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.MemberId).HasColumnName("member_id");
+
+                entity.Property(e => e.PurchaseDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("purchase_date");
+
+                entity.Property(e => e.SongId).HasColumnName("song_id");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.PurchasedSongs)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Purchased__membe__1AD3FDA4");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.PurchasedSongs)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Purchased__song___1BC821DD");
+            });
+
+            modelBuilder.Entity<Recording>(entity =>
+            {
+                entity.ToTable("Recording");
+
+                entity.Property(e => e.RecordingId)
+                    .HasColumnName("recording_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_date");
+
+                entity.Property(e => e.HostId).HasColumnName("host_id");
+
+                entity.Property(e => e.KaraokeRoomId).HasColumnName("karaoke_room_id");
+
+                entity.Property(e => e.OwnerId).HasColumnName("owner_id");
+
+                entity.Property(e => e.RecordingName)
+                    .HasMaxLength(150)
+                    .HasColumnName("recording_name");
+
+                entity.Property(e => e.RecordingType).HasColumnName("recording_type");
+
+                entity.Property(e => e.Score).HasColumnName("score");
+
+                entity.Property(e => e.SongId).HasColumnName("song_id");
+
+                entity.Property(e => e.UpdatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("updated_date");
+
+                entity.HasOne(d => d.Host)
+                    .WithMany(p => p.RecordingHosts)
+                    .HasForeignKey(d => d.HostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Recording__host___1CBC4616");
+
+                entity.HasOne(d => d.KaraokeRoom)
+                    .WithMany(p => p.Recordings)
+                    .HasForeignKey(d => d.KaraokeRoomId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Recording__karao__1DB06A4F");
+
+                entity.HasOne(d => d.Owner)
+                    .WithMany(p => p.RecordingOwners)
+                    .HasForeignKey(d => d.OwnerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Recording__owner__1EA48E88");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.Recordings)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Recording__song___1F98B2C1");
+            });
+
+            modelBuilder.Entity<Report>(entity =>
+            {
+                entity.ToTable("Report");
+
+                entity.Property(e => e.ReportId)
+                    .HasColumnName("report_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.CommentId).HasColumnName("comment_id");
+
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("create_time");
+
+                entity.Property(e => e.PostId).HasColumnName("post_id");
+
+                entity.Property(e => e.Reason)
+                    .HasMaxLength(500)
+                    .HasColumnName("reason");
+
+                entity.Property(e => e.ReportCategory).HasColumnName("report_category");
+
+                entity.Property(e => e.ReportType).HasColumnName("report_type");
+
+                entity.Property(e => e.ReportedAccountId).HasColumnName("reported_account_id");
+
+                entity.Property(e => e.ReporterId).HasColumnName("reporter_id");
+
+                entity.Property(e => e.RoomId).HasColumnName("room_id");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Post)
+                    .WithMany(p => p.Reports)
+                    .HasForeignKey(d => d.PostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Report__post_id__2180FB33");
+
+                entity.HasOne(d => d.ReportedAccount)
+                    .WithMany(p => p.ReportReportedAccounts)
+                    .HasForeignKey(d => d.ReportedAccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Report__reported__22751F6C");
+
+                entity.HasOne(d => d.Reporter)
+                    .WithMany(p => p.ReportReporters)
+                    .HasForeignKey(d => d.ReporterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Report__reporter__236943A5");
+
+                entity.HasOne(d => d.Room)
+                    .WithMany(p => p.Reports)
+                    .HasForeignKey(d => d.RoomId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Report__room_id__245D67DE");
+            });
+
+            modelBuilder.Entity<Singer>(entity =>
+            {
+                entity.ToTable("Singer");
+
+                entity.Property(e => e.SingerId)
+                    .HasColumnName("singer_id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.SingerName)
+                    .HasMaxLength(150)
+                    .HasColumnName("singer_name");
+            });
+
+            modelBuilder.Entity<FavouriteSong>(entity =>
+            {
+                entity.HasKey(e => new { e.MemberId, e.SongId })
+                    .HasName("PK__Favourit__68C8DFD514CDDEC7");
+
+                entity.ToTable("FavouriteSong");
+
+                entity.Property(e => e.MemberId).HasColumnName("member_id");
+
+                entity.Property(e => e.SongId).HasColumnName("song_id");
+
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.FavouriteSongs)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Favourite__membe__02FC7413");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.FavouriteSongs)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Favourite__song___03F0984C");
+            });
+
+
+            modelBuilder.Entity<SongArtist>(entity =>
+            {
+                entity.HasKey(e => new { e.SongId, e.ArtistId })
+                    .HasName("PK_SongArtist");
+
+                entity.ToTable("SongArtist");
+
+                entity.Property(e => e.SongId).HasColumnName("song_id");
+
+                entity.Property(e => e.ArtistId).HasColumnName("artist_id");
+
+
+                entity.HasOne(d => d.Artist)
+                    .WithMany(p => p.SongArtists)
+                    .HasForeignKey(d => d.ArtistId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SongArtist_Artist");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.SongArtists)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SongArtist_Song");
+            });
+
+            modelBuilder.Entity<SongGenre>(entity =>
+            {
+                entity.HasKey(e => new { e.SongId, e.GenreId })
+                    .HasName("PK_SongGenre");
+
+                entity.ToTable("SongGenre");
+
+                entity.Property(e => e.SongId).HasColumnName("song_id");
+
+                entity.Property(e => e.GenreId).HasColumnName("genre_id");
+
+
+                entity.HasOne(d => d.Genre)
+                    .WithMany(p => p.SongGenres)
+                    .HasForeignKey(d => d.GenreId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SongGenre_Genre");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.SongGenres)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SongGenre_Song");
+            });
+
+            modelBuilder.Entity<SongSinger>(entity =>
+            {
+                entity.HasKey(e => new { e.SongId, e.SingerId })
+                    .HasName("PK_SongSinger");
+
+                entity.ToTable("SongSinger");
+
+                entity.Property(e => e.SongId).HasColumnName("song_id");
+
+                entity.Property(e => e.SingerId).HasColumnName("singer_id");
+
+
+                entity.HasOne(d => d.Singer)
+                    .WithMany(p => p.SongSingers)
+                    .HasForeignKey(d => d.SingerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SongSinger_Singer");
+
+                entity.HasOne(d => d.Song)
+                    .WithMany(p => p.SongSingers)
+                    .HasForeignKey(d => d.SongId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SongSinger_Song");
+            });
+
+
             modelBuilder.Entity<SupportRequest>(entity =>
             {
                 entity.HasKey(e => e.RequestId)
                     .HasName("PK__SupportR__18D3B90FC2899572");
 
                 entity.ToTable("SupportRequest");
-
-                entity.HasIndex(e => e.SenderId, "IX_SupportRequest_sender_id");
-
-                entity.HasIndex(e => e.RequestId, "UQ__SupportR__18D3B90EB565E032")
-                    .IsUnique();
 
                 entity.Property(e => e.RequestId)
                     .HasColumnName("request_id")
@@ -1137,13 +1082,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasName("PK__VoiceAud__128AF381A07F9D92");
 
                 entity.ToTable("VoiceAudio");
-
-                entity.HasIndex(e => e.MemberId, "IX_VoiceAudio_member_id");
-
-                entity.HasIndex(e => e.RecordingId, "IX_VoiceAudio_recording_id");
-
-                entity.HasIndex(e => e.VoiceId, "UQ__VoiceAud__128AF3808BA35F61")
-                    .IsUnique();
 
                 entity.Property(e => e.VoiceId)
                     .HasColumnName("voice_id")

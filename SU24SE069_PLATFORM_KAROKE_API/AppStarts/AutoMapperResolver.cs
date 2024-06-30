@@ -20,6 +20,8 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Message;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Package;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PostComment;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PostRating;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PurchasedSong;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Singer;
@@ -193,6 +195,31 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region Genre
             CreateMap<Genre, GenreViewModel>().ReverseMap();
             CreateMap<Genre, GenreRequestModel>().ReverseMap();
+            #endregion
+
+            #region PostComment
+            CreateMap<PostComment, PostCommentViewModel>()
+                .ForMember(x => x.Status, dest => dest.MapFrom(src => (PostCommentStatus)src.Status))
+                .ForMember(x => x.CommentType, dest => dest.MapFrom(src => (PostCommentType)src.CommentType))
+                .ReverseMap();
+
+            CreateMap<PostComment, CreatePostCommentRequestModel>().ReverseMap();
+            CreateMap<PostComment, UpdatePostComment>().ReverseMap();
+            #endregion
+
+            #region Post
+            CreateMap<Post, CreatePostRequestModel>().ReverseMap();
+            CreateMap<Post, PostViewModel>()
+                .ForMember(x => x.SongUrl, dest => dest.MapFrom(src => src.Recording.Song.SongUrl))
+                .ReverseMap();
+            #endregion
+
+            #region PostRating
+            CreateMap<PostRating, PostRatingViewModel>().ReverseMap();
+            CreateMap<PostRating, PostRatingRequestModel>().ReverseMap();
+            CreateMap<PostRating, UpdatePostRatingRequestModel>().ReverseMap();
+            CreateMap<PostRatingViewModel, UpdatePostRatingRequestModel>().ReverseMap();
+            CreateMap<PostRatingViewModel, PostRatingRequestModel>().ReverseMap();
             #endregion
         }
     }

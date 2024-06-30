@@ -7,7 +7,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
     {
         public Post()
         {
-            PostRates = new HashSet<PostRate>();
+            InverseOriginPost = new HashSet<Post>();
+            PostRatings = new HashSet<PostRating>();
             PostShares = new HashSet<PostShare>();
             Reports = new HashSet<Report>();
         }
@@ -18,10 +19,16 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public DateTime UpdateTime { get; set; }
         public Guid MemberId { get; set; }
         public Guid RecordingId { get; set; }
+        public int Status { get; set; }
+        public int PostType { get; set; }
+        public Guid? OriginPostId { get; set; }
 
         public virtual Account Member { get; set; } = null!;
+        public virtual Post? OriginPost { get; set; }
         public virtual Recording Recording { get; set; } = null!;
-        public virtual ICollection<PostRate> PostRates { get; set; }
+        public virtual PostComment? PostComment { get; set; }
+        public virtual ICollection<Post> InverseOriginPost { get; set; }
+        public virtual ICollection<PostRating> PostRatings { get; set; }
         public virtual ICollection<PostShare> PostShares { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
     }
