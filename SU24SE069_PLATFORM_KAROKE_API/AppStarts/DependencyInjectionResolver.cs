@@ -7,6 +7,7 @@ using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PostRating;
 using SU24SE069_PLATFORM_KAROKE_Service.Services;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
@@ -116,6 +117,21 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
 
             #region LiveChat
             services.AddScoped<IChatHubRepository, ChatHubRepository>();
+            #endregion
+
+            #region PostComment
+            services.AddScoped<IPostCommentRepository, PostCommentRepository>();  
+            services.AddScoped<IPostCommentService, PostCommentService>();
+            #endregion
+
+            #region Post
+            services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IPostService, PostService>();
+            #endregion
+
+            #region PostRating
+            services.AddScoped<IPostRatingRepository, PostRatingRepository>();
+            services.AddScoped<IPostRatingService, PostRatingService>();
             #endregion
         }
     }

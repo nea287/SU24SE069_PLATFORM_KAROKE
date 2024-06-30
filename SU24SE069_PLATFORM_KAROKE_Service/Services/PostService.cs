@@ -46,11 +46,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         .Select(item => { item.UpdateTime = DateTime.Now; item.ShareTime = DateTime.Now; return item; })
                         .ToList();
                 }
-                else if (!data.PostRates.IsNullOrEmpty())
-                {
-                    data.PostRates = data.PostRates
-                        .ToList();
-                }
+                //else if (!data.PostRates.IsNullOrEmpty())
+                //{
+                //    data.PostRates = data.PostRates
+                //        .ToList();
+                //}
                 else if (!data.Reports.IsNullOrEmpty())
                 {
 
@@ -125,11 +125,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 lock (_postRepository)
                 {
                     var data = _postRepository.GetAll(
-                                                /* includeProperties: String.Join(",",
-                                                 SupportingFeature.GetNameIncludedProperties<Post>())*/)
+                                                 includeProperties: String.Join(",",
+                                                 SupportingFeature.GetNameIncludedProperties<Post>()))
                         .AsQueryable()
-                        .ProjectTo<PostViewModel>(_mapper.ConfigurationProvider);
-                        //.DynamicFilter(filter);
+                        .ProjectTo<PostViewModel>(_mapper.ConfigurationProvider)
+                        .DynamicFilter(filter);
 
                     string? colName = Enum.GetName(typeof(PostOrderFilter), orderFilter);
 

@@ -15,6 +15,53 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
     }
 
+    public enum PostOrderFilter
+    {
+        PostId,
+        Caption,
+        UploadTime,
+        UpdateTime,
+        MemberId,
+        RecordingId,
+    }
+
+    public enum PostRateOrderFilter
+    {
+        RateId,
+        MemberId,
+        PostId,
+        VoteType,
+        Category,
+        Comment,
+    }
+
+    public enum PostShareOrderFilter
+    {
+        PostShareId,
+        Caption,
+        ShareTime,
+        UpdateTime,
+        MemberId,
+        PostId,
+    }
+
+    public enum ReportOrderFilter
+    {
+        ReportId,
+        ReporterId,
+        ReportedAccountId,
+        ReportCategory,
+        Status,
+        Reason,
+        CreateTime,
+        ReportType,
+        CommentId,
+        PostId,
+        RoomId,
+    }
+
+
+
     public enum AccountOrderFilter
     {
         AccountId,
@@ -85,6 +132,13 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         OwnerId,
         KaraokeRoomId,
 
+    }
+
+    public enum RatingOrderFilter
+    {
+        MemberId,
+        PostId,
+        Score,
     }
 
     public enum AccountInventoryItemOrderFilter
@@ -210,6 +264,18 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         GenreId,
         GenreName
     }
+
+    public enum PostCommentFilter
+    {
+        CommentId,
+        Comment,
+        CommentType,
+        Status,
+        ParentCommentId,
+        MemberId,
+        PostId,
+        CreateTime
+    }
     #endregion
     public enum AccountRole
     {
@@ -327,5 +393,15 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     }
 
 
+    public enum PostCommentType
+    {
+        PARENT,
+        CHILD,
+    }
 
+    public enum PostCommentStatus
+    {
+        DEACTIVE,
+        ACTIVE,
+    }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 {
@@ -13,8 +10,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             SongGenres = new HashSet<SongGenre>();
         }
 
-        public Guid GenreId { get; set; }
         public string GenreName { get; set; } = null!;
+        public Guid GenreId { get; set; }
 
         public virtual ICollection<SongGenre> SongGenres { get; set; }
     }

@@ -10,7 +10,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             AccountInventoryItems = new HashSet<AccountInventoryItem>();
             ConversationMemberId1Navigations = new HashSet<Conversation>();
             ConversationMemberId2Navigations = new HashSet<Conversation>();
-            FavouriteSongs = new HashSet<FavouriteSong>();
             FriendReceivers = new HashSet<Friend>();
             FriendSenders = new HashSet<Friend>();
             InAppTransactions = new HashSet<InAppTransaction>();
@@ -20,17 +19,19 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             Messages = new HashSet<Message>();
             MoneyTransactions = new HashSet<MoneyTransaction>();
             Packages = new HashSet<Package>();
+            PostComments = new HashSet<PostComment>();
+            PostRatings = new HashSet<PostRating>();
             PostShares = new HashSet<PostShare>();
-            PostRates = new HashSet<PostRate>();
             Posts = new HashSet<Post>();
             PurchasedSongs = new HashSet<PurchasedSong>();
             RecordingHosts = new HashSet<Recording>();
             RecordingOwners = new HashSet<Recording>();
             ReportReportedAccounts = new HashSet<Report>();
             ReportReporters = new HashSet<Report>();
-            Songs = new HashSet<Song>();
+            FavouriteSongs = new HashSet<FavouriteSong>();
             SupportRequests = new HashSet<SupportRequest>();
             VoiceAudios = new HashSet<VoiceAudio>();
+            Songs = new HashSet<Song>();
         }
 
         public Guid AccountId { get; set; }
@@ -38,7 +39,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public string Password { get; set; } = null!;
         public string Email { get; set; } = null!;
         public int Gender { get; set; }
-        //public string AccountName { get; set; } = null!;
         public int Role { get; set; }
         public decimal Star { get; set; }
         public bool IsOnline { get; set; }
@@ -56,7 +56,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual ICollection<AccountInventoryItem> AccountInventoryItems { get; set; }
         public virtual ICollection<Conversation> ConversationMemberId1Navigations { get; set; }
         public virtual ICollection<Conversation> ConversationMemberId2Navigations { get; set; }
-        public virtual ICollection<FavouriteSong> FavouriteSongs { get; set; }
         public virtual ICollection<Friend> FriendReceivers { get; set; }
         public virtual ICollection<Friend> FriendSenders { get; set; }
         public virtual ICollection<InAppTransaction> InAppTransactions { get; set; }
@@ -66,16 +65,19 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<MoneyTransaction> MoneyTransactions { get; set; }
         public virtual ICollection<Package> Packages { get; set; }
+        public virtual ICollection<PostComment> PostComments { get; set; }
+        public virtual ICollection<PostRating> PostRatings { get; set; }
         public virtual ICollection<PostShare> PostShares { get; set; }
-        public virtual ICollection<PostRate> PostRates { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<PurchasedSong> PurchasedSongs { get; set; }
         public virtual ICollection<Recording> RecordingHosts { get; set; }
         public virtual ICollection<Recording> RecordingOwners { get; set; }
         public virtual ICollection<Report> ReportReportedAccounts { get; set; }
         public virtual ICollection<Report> ReportReporters { get; set; }
-        public virtual ICollection<Song> Songs { get; set; }
+        public virtual ICollection<FavouriteSong> FavouriteSongs { get; set; }
         public virtual ICollection<SupportRequest> SupportRequests { get; set; }
         public virtual ICollection<VoiceAudio> VoiceAudios { get; set; }
+
+        public virtual ICollection<Song> Songs { get; set; }
     }
 }

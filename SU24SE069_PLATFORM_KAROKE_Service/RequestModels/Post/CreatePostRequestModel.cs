@@ -18,7 +18,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post
         public Guid MemberId { get; set; }
         public Guid RecordingId { get; set; }
         public ICollection<CreatePostShareRequestModel>? PostShares { get; set; }
-        public ICollection<CreatePostRateRequestModel>? PostRates { get; set; }
+        //public ICollection<CreatePostRateRequestModel>? PostRates { get; set; }
         public ICollection<CreateReportRequestModel>? Reports { get; set; }
     }
 }

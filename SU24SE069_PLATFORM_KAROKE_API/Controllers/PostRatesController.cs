@@ -13,42 +13,42 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
     [ApiController]
     public class PostRatesController : ControllerBase
     {
-        private readonly IPostRateService _postRateService;
+        //private readonly IPostRateService _postRateService;
 
-        public PostRatesController(IPostRateService postRateService)
-        {
-            _postRateService = postRateService;
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetPostRates([FromQuery] PostRateViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] PostRateOrderFilter orderFilter = PostRateOrderFilter.RateId) // filter = category ti' heh
-        {
-            var rs = await _postRateService.GetPostRates(filter, paging, orderFilter);
+        //public PostRatesController(IPostRateService postRateService)
+        //{
+        //    _postRateService = postRateService;
+        //}
+        //[HttpGet]
+        //public async Task<IActionResult> GetPostRates([FromQuery] PostRateViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] PostRateOrderFilter orderFilter = PostRateOrderFilter.RateId) // filter = category ti' heh
+        //{
+        //    var rs = await _postRateService.GetPostRates(filter, paging, orderFilter);
 
-            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
-        }
+        //    return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> CreatePostRate([FromBody] CreatePostRateRequestModel request)
-        {
-            var rs = await _postRateService.CreatePostRate(request);
+        //[HttpPost]
+        //public async Task<IActionResult> CreatePostRate([FromBody] CreatePostRateRequestModel request)
+        //{
+        //    var rs = await _postRateService.CreatePostRate(request);
 
-            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
-        }
+        //    return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+        //}
 
-        [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdatePostRate(Guid id)
-        {
-            var rs = await _postRateService.UpdatePostRate(id);
+        //[HttpPut("{id:guid}")]
+        //public async Task<IActionResult> UpdatePostRate(Guid id)
+        //{
+        //    var rs = await _postRateService.UpdatePostRate(id);
 
-            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
-        }
+        //    return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+        //}
 
-        [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> DeletePostRate(Guid id)
-        {
-            var rs = await _postRateService.Delete(id);
+        //[HttpDelete("{id:guid}")]
+        //public async Task<IActionResult> DeletePostRate(Guid id)
+        //{
+        //    var rs = await _postRateService.Delete(id);
 
-            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
-        }
+        //    return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+        //}
     }
 }
