@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
-    public class AccountInventoryItemRepository : BaseRepository<AccountInventoryItem>, IAccountInventoryItemRepository
+    public class AccountItemRepository : BaseRepository<AccountItem>, IAccountItemRepository
     {
-        public async Task<bool> CreateAccountInventory(AccountInventoryItem request)
+        public async Task<bool> CreateAccountInventory(AccountItem request)
         {
             try
             {
@@ -23,7 +23,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return true;
         }
 
-        public async Task<bool> UpdateAccountInventory(Guid id, AccountInventoryItem request)
+        public async Task<bool> UpdateAccountInventory(Guid id, AccountItem request)
         {
             try
             {

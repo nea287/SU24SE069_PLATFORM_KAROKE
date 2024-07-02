@@ -50,7 +50,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new DynamicModelResponse.DynamicModelsResponse<PurchasedSongViewModel>()
                 {

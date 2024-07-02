@@ -15,7 +15,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         //    Conversations = new HashSet<Conversation>();
         //}
 
-        public Guid? RequestId { get; set; }
+        public Guid? TicketId { get; set; }
         public string? Problem { get; set; }
         public DateTime? CreateTime { get; set; }
         public SupportRequestCategory? Category { get; set; }

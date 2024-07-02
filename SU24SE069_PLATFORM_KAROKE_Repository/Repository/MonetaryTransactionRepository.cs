@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
-    public class MoneyTransactionRepository : BaseRepository<MoneyTransaction>, IMoneyTransactionRepository
+    public class MonetaryTransactionRepository : BaseRepository<MonetaryTransaction>, IMonetaryTransactionRepository
     {
-        public async Task<bool> CreateMoneyTransaction(MoneyTransaction transaction)
+        public async Task<bool> CreateMoneyTransaction(MonetaryTransaction transaction)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return true;
         }
 
-        public async Task<bool> UpdateMoneyTransaction(MoneyTransaction transaction)
+        public async Task<bool> UpdateMoneyTransaction(MonetaryTransaction transaction)
         {
             try
             {

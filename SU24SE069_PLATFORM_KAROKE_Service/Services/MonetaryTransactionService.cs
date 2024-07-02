@@ -18,23 +18,23 @@ using System.Transactions;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
-    public class MoneyTransactionService : IMoneyTransactionService
+    public class MonetaryTransactionService : IMonetaryTransactionService
     {
         private readonly IMapper _mapper;
-        private readonly IMoneyTransactionRepository _repository;
+        private readonly IMonetaryTransactionRepository _repository;
 
-        public MoneyTransactionService(IMapper mapper, IMoneyTransactionRepository repository)
+        public MonetaryTransactionService(IMapper mapper, IMonetaryTransactionRepository repository)
         {
             _mapper = mapper;
             _repository = repository;
         }
-        public async Task<ResponseResult<MoneyTransactionViewModel>> CreateTransaction(MoneyTransactionRequestModel request)
+        public async Task<ResponseResult<MonetaryTransactionViewModel>> CreateTransaction(MonetaryTransactionRequestModel request)
         {
-            MoneyTransaction rs = new MoneyTransaction();
+            MonetaryTransaction rs = new MonetaryTransaction();
             try
             {
 
-                rs = _mapper.Map<MoneyTransaction>(request);
+                rs = _mapper.Map<MonetaryTransaction>(request);
 
                 rs.CreatedDate = DateTime.Now;
                 rs.Status = (int)PaymentStatus.PENDING;
@@ -46,38 +46,38 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return new ResponseResult<MoneyTransactionViewModel>()
+                return new ResponseResult<MonetaryTransactionViewModel>()
                 {
                     Message = Constraints.CREATE_FAILED,
                     result = false
                 };
             }
 
-            return new ResponseResult<MoneyTransactionViewModel>()
+            return new ResponseResult<MonetaryTransactionViewModel>()
             {
                 Message = Constraints.CREATE_SUCCESS,
                 result = true,
-                Value = _mapper.Map<MoneyTransactionViewModel>(rs)
+                Value = _mapper.Map<MonetaryTransactionViewModel>(rs)
             };
         }
 
-        public async Task<DynamicModelResponse.DynamicModelsResponse<MoneyTransactionViewModel>> GetTransactions(MoneyTransactionViewModel filter, PagingRequest paging, MoneyTransactionOrderFilter orderFilter)
+        public async Task<DynamicModelResponse.DynamicModelsResponse<MonetaryTransactionViewModel>> GetTransactions(MonetaryTransactionViewModel filter, PagingRequest paging, MonetaryTransactionOrderFilter orderFilter)
         {
-            (int, IQueryable<MoneyTransactionViewModel>) result;
+            (int, IQueryable<MonetaryTransactionViewModel>) result;
             try
             {
                 lock (_repository)
                 {
                     var data = _repository.GetAll(
                                                 includeProperties: String.Join(",",
-                                                SupportingFeature.GetNameIncludedProperties<MoneyTransaction>()))
+                                                SupportingFeature.GetNameIncludedProperties<MonetaryTransaction>()))
                         .AsQueryable()
-                        .ProjectTo<MoneyTransactionViewModel>(_mapper.ConfigurationProvider)
+                        .ProjectTo<MonetaryTransactionViewModel>(_mapper.ConfigurationProvider)
                         .DynamicFilter(filter);
 
-                    string? colName = Enum.GetName(typeof(MoneyTransactionOrderFilter), orderFilter);
+                    string? colName = Enum.GetName(typeof(MonetaryTransactionOrderFilter), orderFilter);
 
                     data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
 
@@ -87,15 +87,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return new DynamicModelResponse.DynamicModelsResponse<MoneyTransactionViewModel>()
+                return new DynamicModelResponse.DynamicModelsResponse<MonetaryTransactionViewModel>()
                 {
                     Message = Constraints.LOAD_FAILED,
                 };
             }
 
-            return new DynamicModelResponse.DynamicModelsResponse<MoneyTransactionViewModel>()
+            return new DynamicModelResponse.DynamicModelsResponse<MonetaryTransactionViewModel>()
             {
                 Message = Constraints.INFORMATION,
                 Metadata = new DynamicModelResponse.PagingMetadata()
@@ -108,9 +108,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public async Task<ResponseResult<MoneyTransactionViewModel>> UpdateStatusTransaction(Guid id, PaymentStatus status)
+        public async Task<ResponseResult<MonetaryTransactionViewModel>> UpdateStatusTransaction(Guid id, PaymentStatus status)
         {
-            MoneyTransaction rs = new MoneyTransaction();
+            MonetaryTransaction rs = new MonetaryTransaction();
             try
             {
                 rs = await _repository.GetByIdGuid(id);
@@ -118,7 +118,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 {
                     _repository.DetachEntity(rs);
 
-                    return new ResponseResult<MoneyTransactionViewModel>()
+                    return new ResponseResult<MonetaryTransactionViewModel>()
                     {
                         Message = Constraints.NOT_FOUND,
                         result = false,
@@ -137,9 +137,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return new ResponseResult<MoneyTransactionViewModel>()
+                return new ResponseResult<MonetaryTransactionViewModel>()
                 {
                     Message = Constraints.UPDATE_FAILED,
                     result = false,
@@ -147,11 +147,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             }
             finally { lock (_repository) { } }
 
-            return new ResponseResult<MoneyTransactionViewModel>()
+            return new ResponseResult<MonetaryTransactionViewModel>()
             {
                 Message = Constraints.UPDATE_SUCCESS,
                 result = true,
-                Value = _mapper.Map<MoneyTransactionViewModel>(rs)
+                Value = _mapper.Map<MonetaryTransactionViewModel>(rs)
             };
         }
     }

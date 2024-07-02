@@ -41,8 +41,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
 
             #region AccountInventoryItem
-            services.AddScoped<IAccountInventoryItemRepository, AccountInventoryItemRepository>();
-            services.AddScoped<IAccountInventoryItemService, AccountInventoryItemService>();
+            services.AddScoped<IAccountItemRepository, AccountItemRepository>();
+            services.AddScoped<IAccountItemService, AccountItemService>();
             #endregion
 
             #region Recording
@@ -66,8 +66,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
 
             #region Money Transaction
-            services.AddScoped<IMoneyTransactionRepository, MoneyTransactionRepository>();
-            services.AddScoped<IMoneyTransactionService, MoneyTransactionService>();
+            services.AddScoped<IMonetaryTransactionRepository, MonetaryTransactionRepository>();
+            services.AddScoped<IMonetaryTransactionService, MonetaryTransactionService>();
             #endregion
 
             #region KaraokeRoom

@@ -44,7 +44,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<InAppTransactionViewModel>()
                 {
@@ -76,7 +76,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         result = false,
                     };
                 }
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<InAppTransactionViewModel>()
                 {
@@ -117,7 +117,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>()
                 {
@@ -169,7 +169,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<InAppTransactionViewModel>()
                 {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 {
-    public partial class MoneyTransaction
+    public partial class MonetaryTransaction
     {
-        public Guid MoneyTransactionId { get; set; }
+        public Guid MonetaryTransactionId { get; set; }
         public int PaymentType { get; set; }
         public string PaymentCode { get; set; } = null!;
         public decimal MoneyAmount { get; set; }

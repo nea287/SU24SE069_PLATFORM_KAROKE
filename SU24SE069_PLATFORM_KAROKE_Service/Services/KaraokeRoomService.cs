@@ -52,7 +52,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     throw new Exception();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<KaraokeRoomViewModel>()
                 {
@@ -94,7 +94,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new DynamicModelResponse.DynamicModelsResponse<KaraokeRoomViewModel>()
                 {
@@ -143,7 +143,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     throw new Exception();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<KaraokeRoomViewModel>()
                 {

@@ -14,14 +14,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
     [ApiController]
     public class TransactionsController : ControllerBase
     {
-        private readonly IMoneyTransactionService _service;
+        private readonly IMonetaryTransactionService _service;
 
-        public TransactionsController(IMoneyTransactionService service)
+        public TransactionsController(IMonetaryTransactionService service)
         {
             _service = service;
         }
         [HttpGet]
-        public async Task<IActionResult> GetTransactions([FromQuery] MoneyTransactionViewModel filter, [FromQuery] PagingRequest paging, MoneyTransactionOrderFilter orderFilter = MoneyTransactionOrderFilter.CreatedDate)
+        public async Task<IActionResult> GetTransactions([FromQuery] MonetaryTransactionViewModel filter, [FromQuery] PagingRequest paging, MonetaryTransactionOrderFilter orderFilter = MonetaryTransactionOrderFilter.CreatedDate)
         {
             var rs = await _service.GetTransactions(filter, paging, orderFilter);
 
@@ -29,7 +29,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTransaction([FromBody] MoneyTransactionRequestModel request)
+        public async Task<IActionResult> CreateTransaction([FromBody] MonetaryTransactionRequestModel request)
         {
             var rs = await _service.CreateTransaction(request); 
            

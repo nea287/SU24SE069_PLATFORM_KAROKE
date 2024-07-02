@@ -80,6 +80,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         PhoneNumber,
         CreatedTime,
         AccountStatus,
+        UpBalance,
     }
     public enum SongOrderFilter
     {
@@ -110,12 +111,15 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         ItemName,
         ItemDescription,
         ItemType,
-        ItemPrice,
         ItemStatus,
         CanExpire,
         CanStack,
         CreatedDate,
         CreatorId,
+        ItemBuyPrice,
+        ItemSetPrice,
+        PrefabCode,
+
 
     }
 
@@ -156,13 +160,16 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     {
 
         InAppTransactionId,
-        StarAmount,
+        UpAmountBefore,
+        UpTotalAmount,
         Status,
         CreatedDate,
         TransactionType,
-        MemberId,
         ItemId,
         SongId,
+        MonetaryTransactionId,
+        ItemQuantity,
+        ItemPrice,
     }
     public enum FavouriteSongOrderFilter
     {
@@ -182,9 +189,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         CreatorId,
     }
 
-    public enum MoneyTransactionOrderFilter
+    public enum MonetaryTransactionOrderFilter
     {
-        MoneyTransactionId,
+        MonetaryTransactionId,
         PaymentType,
         PaymentCode,
         MoneyAmount,
@@ -213,7 +220,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
     public enum SupportRequestOrderFilter
     {
-        RequestId,
+        TicketId,
         Problem,
         CreateTime,
         Category,

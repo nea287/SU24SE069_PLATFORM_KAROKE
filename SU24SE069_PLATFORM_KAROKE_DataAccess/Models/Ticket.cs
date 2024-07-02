@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 {
-    public partial class SupportRequest
+    public partial class Ticket
     {
-        public SupportRequest()
+        public Ticket()
         {
             Conversations = new HashSet<Conversation>();
         }
 
-        public Guid RequestId { get; set; }
+        public Guid TicketId { get; set; }
         public string Problem { get; set; } = null!;
         public DateTime CreateTime { get; set; }
         public int Category { get; set; }

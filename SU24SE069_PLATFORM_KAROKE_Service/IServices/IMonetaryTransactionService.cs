@@ -12,11 +12,11 @@ using System.Transactions;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
 {
-    public interface IMoneyTransactionService
+    public interface IMonetaryTransactionService
     {
-        public Task<DynamicModelResponse.DynamicModelsResponse<MoneyTransactionViewModel>> GetTransactions(MoneyTransactionViewModel filter, PagingRequest paging, MoneyTransactionOrderFilter orderFilter);
-        public Task<ResponseResult<MoneyTransactionViewModel>> CreateTransaction(MoneyTransactionRequestModel request);
-        public Task<ResponseResult<MoneyTransactionViewModel>> UpdateStatusTransaction(Guid id, PaymentStatus status);
+        public Task<DynamicModelResponse.DynamicModelsResponse<MonetaryTransactionViewModel>> GetTransactions(MonetaryTransactionViewModel filter, PagingRequest paging, MonetaryTransactionOrderFilter orderFilter);
+        public Task<ResponseResult<MonetaryTransactionViewModel>> CreateTransaction(MonetaryTransactionRequestModel request);
+        public Task<ResponseResult<MonetaryTransactionViewModel>> UpdateStatusTransaction(Guid id, PaymentStatus status);
 
     }
 }

@@ -68,7 +68,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 await _postRepository.SaveChagesAsync();
                 result = _mapper.Map<PostViewModel>(data);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<PostViewModel>()
                 {
@@ -101,7 +101,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     throw new Exception();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<PostViewModel>()
                 {
@@ -139,7 +139,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                             Constraints.LimitPaging, Constraints.DefaultPaging);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new DynamicModelResponse.DynamicModelsResponse<PostViewModel>()
                 {
@@ -206,7 +206,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<PostViewModel>()
                 {

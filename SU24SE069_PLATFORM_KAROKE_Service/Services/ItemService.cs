@@ -57,7 +57,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         throw new Exception();
                     }
                 }
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<ItemViewModel>()
                 {
@@ -89,7 +89,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     }
                 }
 
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<ItemViewModel>()
                 {
@@ -114,7 +114,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 {
                     rs = _itemRepository.GetByIdGuid(id).Result;
                 }
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<ItemViewModel>()
                 {
@@ -153,7 +153,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new DynamicModelResponse.DynamicModelsResponse<ItemViewModel>()
                 {
@@ -206,7 +206,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     
                 }
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<ItemViewModel>()
                 {
