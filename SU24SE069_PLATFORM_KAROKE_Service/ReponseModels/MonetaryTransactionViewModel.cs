@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
 {
-    public class MoneyTransactionViewModel
+    public class MonetaryTransactionViewModel
     {
-        public Guid? MoneyTransactionId { get; set; }
+        public Guid? MonetaryTransactionId { get; set; }
         public PaymentType? PaymentType { get; set; }
         public string? PaymentCode { get; set; }
         public decimal? MoneyAmount { get; set; }

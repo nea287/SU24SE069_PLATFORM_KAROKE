@@ -31,10 +31,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         }
         public async Task<ResponseResult<SupportRequestViewModel>> CreateRequest(SupportRequestRequestModel model)
         {
-            SupportRequest rs = new SupportRequest();
+            Ticket rs = new Ticket();
             try
             {
-                rs = _mapper.Map<SupportRequest>(model);
+                rs = _mapper.Map<Ticket>(model);
 
                 rs.Status = (int)SupportRequestStatus.PROCESSING;
                 rs.CreateTime = DateTime.Now;
@@ -45,7 +45,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     throw new Exception();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<SupportRequestViewModel>()
                 {
@@ -72,7 +72,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 {
                     var data = _repository.GetAll(
                                                 includeProperties: String.Join(",",
-                                                SupportingFeature.GetNameIncludedProperties<SupportRequest>()))
+                                                SupportingFeature.GetNameIncludedProperties<Ticket>()))
                         .AsQueryable()
                         .ProjectTo<SupportRequestViewModel>(_mapper.ConfigurationProvider)
                         .DynamicFilter(filter);
@@ -87,7 +87,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new DynamicModelResponse.DynamicModelsResponse<SupportRequestViewModel>()
                 {
@@ -110,7 +110,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
         public async Task<ResponseResult<SupportRequestViewModel>> UpdateRequest(Guid id, SupportRequestStatus status)
         {
-            SupportRequest rs = new SupportRequest();
+            Ticket rs = new Ticket();
             try
             {
                 rs = await _repository.GetByIdGuid(id);
@@ -134,7 +134,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<SupportRequestViewModel>()
                 {

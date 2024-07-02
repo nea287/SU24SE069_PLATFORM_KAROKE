@@ -17,7 +17,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public Guid? ParentCommentId { get; set; }
         public Guid MemberId { get; set; }
         public Guid PostId { get; set; }
-        public DateTime CreateTime { get; set; }
+        public DateTime UploadTime { get; set; }
         public virtual Post CommentNavigation { get; set; } = null!;
         public virtual Account Member { get; set; } = null!;
         public virtual PostComment? ParentComment { get; set; }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction
 {
-    public class MoneyTransactionRequestModel
+    public class MonetaryTransactionRequestModel
     {
         public PaymentType PaymentType { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]

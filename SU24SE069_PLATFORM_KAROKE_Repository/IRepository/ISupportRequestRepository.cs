@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
 {
-    public interface ISupportRequestRepository : IBaseRepository<SupportRequest>
+    public interface ISupportRequestRepository : IBaseRepository<Ticket>
     {
-        public Task<bool> AddRequest(SupportRequest request);
-        public Task<bool> UpdateRequest(SupportRequest request);
+        public Task<bool> AddRequest(Ticket request);
+        public Task<bool> UpdateRequest(Ticket request);
     }
 }

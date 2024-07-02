@@ -34,7 +34,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             try
             {
                 cmt = _mapper.Map<PostComment>(requestModel);
-                cmt.CreateTime = DateTime.Now;
+                cmt.UploadTime = DateTime.Now;
                 cmt.Status = (int)PostCommentStatus.ACTIVE;
 
 
@@ -42,7 +42,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 {
                     throw new Exception();
                 }
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<PostCommentViewModel>()
                 {
@@ -84,7 +84,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     throw new Exception();
                 }
 
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<PostCommentViewModel>()
                 {
@@ -116,7 +116,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 result = data.PagingIQueryable(paging.page, paging.pageSize, Constraints.DefaultPaging, Constraints.DefaultPage);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new DynamicModelResponse.DynamicModelsResponse<PostCommentViewModel>()
                 {
@@ -161,7 +161,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     throw new Exception();
                 }
 
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<PostCommentViewModel>()
                 {

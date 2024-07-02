@@ -7,7 +7,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
     {
         public Package()
         {
-            MoneyTransactions = new HashSet<MoneyTransaction>();
+            MoneyTransactions = new HashSet<MonetaryTransaction>();
         }
 
         public Guid PackageId { get; set; }
@@ -20,6 +20,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public Guid CreatorId { get; set; }
 
         public virtual Account Creator { get; set; } = null!;
-        public virtual ICollection<MoneyTransaction> MoneyTransactions { get; set; }
+        public virtual ICollection<MonetaryTransaction> MoneyTransactions { get; set; }
     }
 }

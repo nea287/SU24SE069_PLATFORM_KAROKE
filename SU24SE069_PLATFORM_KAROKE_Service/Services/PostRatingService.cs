@@ -46,7 +46,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     throw new Exception();
                 }
 
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<PostRatingViewModel>()
                 {
@@ -80,7 +80,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 {
                     throw new Exception();
                 }
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<PostRatingViewModel>()
                 {
@@ -110,7 +110,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 result = SupportingFeature.Sorting(dat.AsEnumerable(), paging.OrderType, colName??"")
                                           .AsQueryable()
                                           .PagingIQueryable(paging.page, paging.pageSize, Constraints.DefaultPaging, Constraints.DefaultPage);
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new DynamicModelResponse.DynamicModelsResponse<PostRatingViewModel>()
                 {
@@ -156,7 +156,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     throw new Exception();
                 }
 
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<PostRatingViewModel>()
                 {

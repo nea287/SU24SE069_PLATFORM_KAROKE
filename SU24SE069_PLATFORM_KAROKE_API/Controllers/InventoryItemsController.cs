@@ -16,15 +16,15 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
     public class InventoryItemsController : ControllerBase
     {
-        private readonly IAccountInventoryItemService _inventoryService;
+        private readonly IAccountItemService _inventoryService;
 
-        public InventoryItemsController(IAccountInventoryItemService inventoryService)
+        public InventoryItemsController(IAccountItemService inventoryService)
         {
             _inventoryService = inventoryService;
         }
 
         [HttpGet]
-        public IActionResult GetInventoryItems([FromQuery] AccountInventoryItemViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] AccountInventoryItemOrderFilter orderFilter = AccountInventoryItemOrderFilter.ActivateDate)
+        public IActionResult GetInventoryItems([FromQuery] AccountItemViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] AccountInventoryItemOrderFilter orderFilter = AccountInventoryItemOrderFilter.ActivateDate)
         {
             var rs = _inventoryService.GetAccountInventories(filter, paging, orderFilter);
 

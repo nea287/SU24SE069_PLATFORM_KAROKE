@@ -69,7 +69,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 result = new UserLoginResponse()
                 {
@@ -109,7 +109,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 result = new ResponseResult<AccountViewModel>()
                 {
@@ -147,7 +147,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new DynamicModelResponse.DynamicModelsResponse<AccountViewModel>()
                 {
@@ -206,7 +206,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 };
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<AccountViewModel>()
                 {
@@ -273,7 +273,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<AccountViewModel>()
                 {
@@ -313,7 +313,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     throw new Exception();
                 }
 
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<AccountViewModel>()
                 {
@@ -338,7 +338,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 SetDataMemory(code, "verification-code", 5);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -379,7 +379,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     data.AccountStatus = (int)AccountStatus.ACTIVE;
                     data.CreatedTime = DateTime.Now;
                     data.Role = (int)AccountRole.MEMBER;
-                    data.Star = 0;
+                    data.UpBalance = 0;
                     data.AccountStatus = (int)AccountStatus.ACTIVE;
 
                     data.Password = BCrypt.Net.BCrypt.HashPassword(data.Password, 12);
@@ -394,7 +394,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 };
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<AccountViewModel>()
                 {

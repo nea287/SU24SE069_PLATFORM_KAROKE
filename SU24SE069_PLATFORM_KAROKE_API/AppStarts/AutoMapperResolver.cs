@@ -89,11 +89,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
 
             #region AccountInventoryItem
-            CreateMap<AccountInventoryItem, AccountInventoryItemViewModel>()
+            CreateMap<AccountItem, AccountItemViewModel>()
                 .ForMember(x => x.ItemStatus, dest => dest.MapFrom(opt => (ItemStatus)opt.ItemStatus))
                 .ReverseMap();
 
-            CreateMap<AccountInventoryItem, CreateAccountInventoryItemRequestModel>().ReverseMap();
+            CreateMap<AccountItem, CreateAccountInventoryItemRequestModel>().ReverseMap();
             #endregion
 
             #region Recording
@@ -135,12 +135,12 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
 
             #region MoneyTransaction
-            CreateMap<MoneyTransaction, MoneyTransactionViewModel>()
+            CreateMap<MonetaryTransaction, MonetaryTransactionViewModel>()
                 .ForMember(x => x.Status, dest => dest.MapFrom(src => (PaymentStatus)src.Status))
                 .ForMember(x => x.PaymentType, dest => dest.MapFrom(src => (PaymentType)src.PaymentType))
                 .ReverseMap();
 
-            CreateMap<MoneyTransaction, MoneyTransactionRequestModel>().ReverseMap();
+            CreateMap<MonetaryTransaction, MonetaryTransactionRequestModel>().ReverseMap();
             #endregion
 
             #region KaraokeRoom
@@ -154,11 +154,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
 
             #region SupportRequest
-            CreateMap<SupportRequest, SupportRequestViewModel>()
+            CreateMap<Ticket, SupportRequestViewModel>()
                 .ForMember(x => x.Status, dest => dest.MapFrom(src => (SupportRequestStatus)src.Status))
                 .ForMember(x => x.Category, dest => dest.MapFrom(src => (SupportRequestCategory)src.Category))
                 .ReverseMap();
-            CreateMap<SupportRequest, SupportRequestRequestModel>().ReverseMap();
+            CreateMap<Ticket, SupportRequestRequestModel>().ReverseMap();
             #endregion
 
             #region Conversation

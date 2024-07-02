@@ -55,7 +55,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 result = new ResponseResult<SongViewModel>()
                 {
@@ -93,7 +93,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new DynamicModelResponse.DynamicModelsResponse<SongViewModel>()
                 {
@@ -150,7 +150,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 };
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<SongViewModel>()
                 {
@@ -209,7 +209,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseResult<SongViewModel>()
                 {
@@ -235,7 +235,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 {
                     throw new Exception();
                 }
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return new ResponseResult<SongViewModel>()
                 {

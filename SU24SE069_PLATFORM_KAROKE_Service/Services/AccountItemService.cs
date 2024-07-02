@@ -18,24 +18,24 @@ using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
-    public class AccountInventoryItemService : IAccountInventoryItemService
+    public class AccountItemService : IAccountItemService
     {
         private readonly IMapper _mapper;
-        private readonly IAccountInventoryItemRepository _inventoryRepository;
+        private readonly IAccountItemRepository _inventoryRepository;
 
-        public AccountInventoryItemService(IMapper mapper, IAccountInventoryItemRepository inventoryRepository)
+        public AccountItemService(IMapper mapper, IAccountItemRepository inventoryRepository)
         {
             _mapper = mapper;
             _inventoryRepository = inventoryRepository;
         }
-        public async Task<ResponseResult<AccountInventoryItemViewModel>> CreateAccountInventory(CreateAccountInventoryItemRequestModel request)
+        public async Task<ResponseResult<AccountItemViewModel>> CreateAccountInventory(CreateAccountInventoryItemRequestModel request)
         {
-            AccountInventoryItem rs = new AccountInventoryItem();
+            AccountItem rs = new AccountItem();
             try
             {
                 lock (_inventoryRepository)
                 {
-                    rs = _mapper.Map<AccountInventoryItem>(request);    
+                    rs = _mapper.Map<AccountItem>(request);    
                     rs.ActivateDate = DateTime.Now;
 
                     if (!_inventoryRepository.CreateAccountInventory(rs).Result)
@@ -44,35 +44,35 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         throw new Exception();
                     }
                 }
-            }catch(Exception ex)
+            }catch(Exception)
             {
-                return new ResponseResult<AccountInventoryItemViewModel>()
+                return new ResponseResult<AccountItemViewModel>()
                 {
                     Message = Constraints.CREATE_FAILED,
                     result = false
                 };
             }
 
-            return new ResponseResult<AccountInventoryItemViewModel>()
+            return new ResponseResult<AccountItemViewModel>()
             {
                 Message = Constraints.CREATE_SUCCESS,
                 result = true,
-                Value = _mapper.Map<AccountInventoryItemViewModel>(rs)
+                Value = _mapper.Map<AccountItemViewModel>(rs)
             };
         }
 
-        public DynamicModelResponse.DynamicModelsResponse<AccountInventoryItemViewModel> GetAccountInventories(AccountInventoryItemViewModel filter, PagingRequest paging, AccountInventoryItemOrderFilter orderFilter)
+        public DynamicModelResponse.DynamicModelsResponse<AccountItemViewModel> GetAccountInventories(AccountItemViewModel filter, PagingRequest paging, AccountInventoryItemOrderFilter orderFilter)
         {
-            (int, IQueryable<AccountInventoryItemViewModel>) result;
+            (int, IQueryable<AccountItemViewModel>) result;
             try
             {
                 lock (_inventoryRepository)
                 {
                     var data = _inventoryRepository.GetAll(
                                                 includeProperties: String.Join(",",
-                                                SupportingFeature.GetNameIncludedProperties<AccountInventoryItem>()))
+                                                SupportingFeature.GetNameIncludedProperties<AccountItem>()))
                         .AsQueryable()
-                        .ProjectTo<AccountInventoryItemViewModel>(_mapper.ConfigurationProvider)
+                        .ProjectTo<AccountItemViewModel>(_mapper.ConfigurationProvider)
                         .DynamicFilter(filter);
 
                     string? colName = Enum.GetName(typeof(AccountInventoryItemOrderFilter), orderFilter);
@@ -85,15 +85,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return new DynamicModelResponse.DynamicModelsResponse<AccountInventoryItemViewModel>()
+                return new DynamicModelResponse.DynamicModelsResponse<AccountItemViewModel>()
                 {
                     Message = Constraints.LOAD_FAILED,
                 };
             }
 
-            return new DynamicModelResponse.DynamicModelsResponse<AccountInventoryItemViewModel>()
+            return new DynamicModelResponse.DynamicModelsResponse<AccountItemViewModel>()
             {
                 Message = Constraints.INFORMATION,
                 Metadata = new DynamicModelResponse.PagingMetadata()
@@ -106,9 +106,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public async  Task<ResponseResult<AccountInventoryItemViewModel>> UpdateAccountInventoryItem(Guid id, CreateAccountInventoryItemRequestModel request)
+        public async  Task<ResponseResult<AccountItemViewModel>> UpdateAccountInventoryItem(Guid id, CreateAccountInventoryItemRequestModel request)
         {
-            AccountInventoryItem rs = new AccountInventoryItem();
+            AccountItem rs = new AccountItem();
             try
             {
                 lock (_inventoryRepository)
@@ -116,17 +116,17 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     var data = _inventoryRepository.GetByIdGuid(id).Result;
                     if(data is null)
                     {
-                        return new ResponseResult<AccountInventoryItemViewModel>()
+                        return new ResponseResult<AccountItemViewModel>()
                         {
                             Message = Constraints.NOT_FOUND,
                             result = false,   
                         };
                     }
 
-                    rs = _mapper.Map<AccountInventoryItem>(request);
+                    rs = _mapper.Map<AccountItem>(request);
                     rs.ActivateDate = data.ActivateDate;
 
-                    rs.AccountInventoryItemId = id;
+                    rs.AccountItemId = id;
 
                     _inventoryRepository.DetachEntity(data);
                     _inventoryRepository.MotifyEntity(rs);
@@ -137,20 +137,20 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         throw new Exception();
                     }
                 }
-            }catch(Exception ex)
+            }catch(Exception)
             {
-                return new ResponseResult<AccountInventoryItemViewModel>()
+                return new ResponseResult<AccountItemViewModel>()
                 {
                     Message = Constraints.UPDATE_FAILED,
                     result = false,
                 };
             }
 
-            return new ResponseResult<AccountInventoryItemViewModel>()
+            return new ResponseResult<AccountItemViewModel>()
             {
                 Message = Constraints.UPDATE_SUCCESS,
                 result = true,
-                Value = _mapper.Map<AccountInventoryItemViewModel>(rs)
+                Value = _mapper.Map<AccountItemViewModel>(rs)
             };
         }
     }
