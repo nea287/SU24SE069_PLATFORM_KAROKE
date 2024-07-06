@@ -73,6 +73,13 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
         }
 
+        [HttpPut("active-account/{id:guid}")]
+        public async Task<IActionResult> ActiveAccount(Guid id)
+        {
+            var rs = await _service.ActiveAccount(id);
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
+
+        }
     }
 }
 

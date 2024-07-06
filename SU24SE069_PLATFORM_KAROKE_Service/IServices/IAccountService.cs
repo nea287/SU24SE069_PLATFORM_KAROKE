@@ -22,6 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices
         public Task<ResponseResult<AccountViewModel>> CreateAccount(CreateAccountRequestModel request);
         public Task<ResponseResult<AccountViewModel>> UpdateAccountByEmail(string email, UpdateAccountByMailRequestModel request);
         public Task<ResponseResult<AccountViewModel>> DeleteAccount(Guid id);
+        public Task<ResponseResult<AccountViewModel>> ActiveAccount(Guid id);
         public bool SendVerificationCode(string receiverMail);
 
 

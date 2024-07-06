@@ -16,6 +16,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public int RecordingType { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
+        public float StartTime { get; set; }    
+        public float EndTime { get; set; }
         public int Score { get; set; }
         public Guid SongId { get; set; }
         public Guid HostId { get; set; }

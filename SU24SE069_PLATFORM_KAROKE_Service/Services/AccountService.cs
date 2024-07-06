@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
+using Org.BouncyCastle.Asn1.Ocsp;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices;
@@ -441,6 +442,61 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             var data = _cache.Get(nameValue);
 
             return data != null ? Encoding.UTF8.GetString(data) : null;
+        }
+
+        public async Task<ResponseResult<AccountViewModel>> ActiveAccount(Guid id)
+        {
+            AccountViewModel result = new AccountViewModel();
+            try
+            {
+                var data = await _accountRepository.GetByIdGuid(id);
+
+                data.AccountStatus = (int)AccountStatus.ACTIVE;
+
+                _accountRepository.MotifyEntity(data);
+
+                if (data == null)
+                {
+                    _accountRepository.DetachEntity(data);
+                    return new ResponseResult<AccountViewModel>()
+                    {
+                        Message = Constraints.NOT_FOUND,
+                        result = false,
+                        Value = _mapper.Map<AccountViewModel>(data)
+                    };
+                }
+
+                if (!await _accountRepository.UpdateAccount(data))
+                {
+                    _accountRepository.DetachEntity(data);
+                    throw new Exception();
+                }
+
+                result = _mapper.Map<AccountViewModel>(data);
+
+
+
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false,
+                    Value = result
+                };
+            }
+            finally
+            {
+                lock (_accountRepository) { };
+            }
+
+            return new ResponseResult<AccountViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+                Value = result
+            };
         }
         #endregion
     }

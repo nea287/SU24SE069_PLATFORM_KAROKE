@@ -795,6 +795,14 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("created_date");
 
+                    b.Property<float>("StartTime")
+                        .HasColumnType("float")
+                        .HasColumnName("start_time");
+
+                    b.Property<float>("EndTime")
+                        .HasColumnType("float")
+                        .HasColumnName("end_time");
+
                     b.Property<Guid>("HostId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("host_id");
