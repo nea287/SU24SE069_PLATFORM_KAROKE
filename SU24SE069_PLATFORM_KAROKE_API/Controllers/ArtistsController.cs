@@ -1,4 +1,5 @@
 ﻿using Castle.Core.Internal;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
@@ -11,6 +12,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
     [Route("api/artists")]
     [ApiController]
+    [EnableCors("AllowAnyOrigins")]
     public class ArtistsController : ControllerBase
     {
         private readonly IArtistService _service;

@@ -322,7 +322,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     host_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     owner_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    karaoke_room_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    karaoke_room_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    start_time = table.Column<float>(type: "float", nullable: false),
+                    end_time = table.Column<float>(type: "float", nullable: false),
                 },
                 constraints: table =>
                 {

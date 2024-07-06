@@ -49,6 +49,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS01;Initial Catalog=Kok_Database;Uid=sa;Pwd=1234;TrustServerCertificate=true");
+                //optionsBuilder.UseSqlServer("Server=KOKDatabase.mssql.somee.com;Initial Catalog=Kok_Database;Uid=kok-admin;Pwd=11111111;TrustServerCertificate=true");
                 //optionsBuilder.UseSqlServer("Server=gible-db.database.windows.net;Initial Catalog=Kok-DB;Uid=gible-db-sa;Pwd=G!ble87654321;TrustServerCertificate=true");
             }
         }
@@ -860,6 +861,14 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("updated_date");
+
+                entity.Property(e => e.StartTime)
+                      .HasColumnType("float")
+                      .HasColumnName("start_time");
+
+                entity.Property(e => e.EndTime)
+                      .HasColumnType("float")
+                      .HasColumnName("end_time");
 
                 entity.HasOne(d => d.Host)
                     .WithMany(p => p.RecordingHosts)
