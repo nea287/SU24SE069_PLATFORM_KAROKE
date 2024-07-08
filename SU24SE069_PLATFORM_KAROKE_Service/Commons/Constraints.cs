@@ -53,5 +53,14 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         public const string MEMBER_ROLE = "MEMBER";
         public const string ADMIN_ROLE = "ADMIN";
         #endregion
+
+        #region Dashboard
+        public const string ONE_TO_TWELVE = "Vui lòng nhập từ 1 đến 12";
+        public const string VALIDATE_ONE_TO_TWELVE = @"^(1[0-2]?|[1-9])$";
+        public const string START_MONTH_END_MONTH = "Tháng kết thúc phải lớn hơn hoặc bằng tháng bắt đầu";
+        public const string OVER_100_YEARS = "Quá 100 năm";
+        public const string START_DATE_END_DATE = "Ngày bắt đầu phải lớn hơn hoặc bằng ngày kết thúc";
+        public const string START_YEAR_END_YEAR = "Năm bắt đầu phải lớn hơn hoặc bằng năm kết thúc";
+        #endregion
     }
 }
