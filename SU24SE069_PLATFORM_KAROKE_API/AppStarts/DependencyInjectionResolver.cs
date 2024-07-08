@@ -133,6 +133,12 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<IPostRatingRepository, PostRatingRepository>();
             services.AddScoped<IPostRatingService, PostRatingService>();
             #endregion
+
+            #region Dashboard
+            services.AddScoped<IDashboardGameRepository, DashboardGameRepository>();
+            services.AddScoped<IDashboardMonetaryRepository, DashboardMonetaryRepository>();
+            services.AddScoped<IDashboardService, DashboardService>();
+            #endregion
         }
     }
 }

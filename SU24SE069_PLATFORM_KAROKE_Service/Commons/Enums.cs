@@ -8,6 +8,21 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 {
 
     #region filter order
+    public enum Month
+    {
+        January = 1,
+        February,
+        March,
+        April,
+        May,
+        June,
+        July,
+        August,
+        September,
+        October,
+        November,
+        December,
+    }
     public enum SortOrder
     {
         Descending,
