@@ -29,8 +29,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             Dictionary<DateTime, decimal> result = new Dictionary<DateTime, decimal>();
             try
             {
-                request.StartDate = request.StartDate ?? DateTime.Now;
-                request.EndDate = request.EndDate ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
+                //request.StartDate = request.StartDate ?? DateTime.Now;
+                //request.EndDate = request.EndDate ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
 
                 result = await _gameRepository.GetDashboardByDate(request.Date, request.StartDate, request.EndDate)??throw new Exception();
 
@@ -58,7 +58,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 request.StartMonth = request.Month ?? DateTime.Now.Month;
                 request.EndMonth = request.Month?? DateTime.Now.Month;
 
-                result = await _gameRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth) ?? throw new Exception();
+                result = await _gameRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.Year) ?? throw new Exception();
 
             }
             catch (Exception)
@@ -110,7 +110,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 request.StartMonth = request.Month ?? DateTime.Now.Month;
                 request.EndMonth = request.Month ?? DateTime.Now.Month;
 
-                result = await _monetaryRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth) ?? throw new Exception();
+                result = await _monetaryRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.Year) ?? throw new Exception();
 
             }
             catch (Exception)
@@ -159,8 +159,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             Dictionary<DateTime, decimal> result = new Dictionary<DateTime, decimal>();
             try
             {
-                request.StartDate = request.StartDate ?? DateTime.Now;
-                request.EndDate = request.EndDate ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
+                //request.StartDate = request.StartDate ?? DateTime.Now;
+                //request.EndDate = request.EndDate ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
 
                 result = await _monetaryRepository.GetDashboardByDate(request.Date, request.StartDate, request.EndDate) ?? throw new Exception();
 

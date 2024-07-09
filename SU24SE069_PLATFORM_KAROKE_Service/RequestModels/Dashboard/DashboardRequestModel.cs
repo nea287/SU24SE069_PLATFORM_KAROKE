@@ -15,20 +15,20 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Dashboard
         [RegularExpression(Constraints.VALIDATE_ONE_TO_TWELVE, ErrorMessage = Constraints.ONE_TO_TWELVE)]
         public int? Month { get; set; }
         [RegularExpression(Constraints.VALIDATE_ONE_TO_TWELVE, ErrorMessage = Constraints.ONE_TO_TWELVE)]
-        public int? StartMonth { get; set; } = (int)SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons.Month.January;
+        public int StartMonth { get; set; } = (int)SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons.Month.January;
 
         [RegularExpression(Constraints.VALIDATE_ONE_TO_TWELVE, ErrorMessage = Constraints.ONE_TO_TWELVE)]
         [GreaterThanOrEqualByInt(nameof(StartMonth), ErrorMessage = Constraints.START_MONTH_END_MONTH)]
-        public int? EndMonth { get; set; } = (int)SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons.Month.December;
+        public int EndMonth { get; set; } = (int)SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons.Month.December;
         [InRangeOneHundred(ErrorMessage = Constraints.OVER_100_YEARS)]
-        public int? Year { get; set; } = DateTime.Now.Year;
+        public int Year { get; set; } = DateTime.Now.Year;
     }
 
     public class DateRequestModel
     {
-        public DateTime? StartDate { get; set; } = new DateTime(DateTime.Now.Year, 1, 1);
+        public DateTime StartDate { get; set; } = new DateTime(DateTime.Now.Year, 1, 1);
         [GreaterThanOrEqualDate(nameof(StartDate), ErrorMessage = Constraints.START_DATE_END_DATE)]
-        public DateTime? EndDate { get; set; } = new DateTime(DateTime.Now.Year, 12, 1, 23, 59, 59);
+        public DateTime EndDate { get; set; } = new DateTime(DateTime.Now.Year, 12, 1, 23, 59, 59);
         public DateTime? Date { get; set; }
     }
 
@@ -37,10 +37,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Dashboard
         [InRangeOneHundred(ErrorMessage = Constraints.OVER_100_YEARS)]
         public int? Year { get; set; }
         [InRangeOneHundred(ErrorMessage = Constraints.OVER_100_YEARS)]
-        public int? FromYear { get; set; } = DateTime.Now.Year - 50;
+        public int FromYear { get; set; } = DateTime.Now.Year - 50;
         [GreaterThanOrEqualByInt(nameof(FromYear), ErrorMessage = Constraints.START_YEAR_END_YEAR)]
         [InRangeOneHundred(ErrorMessage = Constraints.OVER_100_YEARS)]
-        public int? ToYear { get; set; } = DateTime.Now.Year + 50;
+        public int ToYear { get; set; } = DateTime.Now.Year + 50;
 
     }
 }
