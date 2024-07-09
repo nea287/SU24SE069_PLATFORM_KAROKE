@@ -110,7 +110,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 request.StartMonth = request.Month ?? DateTime.Now.Month;
                 request.EndMonth = request.Month ?? DateTime.Now.Month;
 
-                result = await _gameRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth) ?? throw new Exception();
+                result = await _monetaryRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth) ?? throw new Exception();
 
             }
             catch (Exception)
@@ -136,7 +136,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 request.FromYear = request.Year ?? DateTime.Now.Year;
                 request.ToYear = request.Year ?? DateTime.Now.Year;
 
-                result = await _gameRepository.GetDashboardByMonth(request.Year, request.FromYear, request.ToYear) ?? throw new Exception();
+                result = await _monetaryRepository.GetDashboardByMonth(request.Year, request.FromYear, request.ToYear) ?? throw new Exception();
 
             }
             catch (Exception)
@@ -162,7 +162,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 request.StartDate = request.StartDate ?? DateTime.Now;
                 request.EndDate = request.EndDate ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
 
-                result = await _gameRepository.GetDashboardByDate(request.Date, request.StartDate, request.EndDate) ?? throw new Exception();
+                result = await _monetaryRepository.GetDashboardByDate(request.Date, request.StartDate, request.EndDate) ?? throw new Exception();
 
             }
             catch (Exception)
