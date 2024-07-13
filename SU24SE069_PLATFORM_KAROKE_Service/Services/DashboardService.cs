@@ -50,26 +50,29 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public async Task<DashboardResponse<int>> GetDashboardGameByMonth(MonthRequestModel request)
+        public async Task<DashboardResponse<Month>> GetDashboardGameByMonth(MonthRequestModel request)
         {
-            Dictionary<int, decimal> result = new Dictionary<int, decimal>();
+            Dictionary<Month, decimal> result = new Dictionary<Month, decimal>();
             try
             {
                 request.StartMonth = request.Month ?? DateTime.Now.Month;
                 request.EndMonth = request.Month?? DateTime.Now.Month;
 
-                result = await _gameRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.Year) ?? throw new Exception();
+                var data = await _gameRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.Year) ?? throw new Exception();
+
+                result = data.Where(x => Enum.IsDefined(typeof(Month), x.Key))
+                             .ToDictionary(k => (Month)k.Key, k => k.Value);
 
             }
             catch (Exception)
             {
-                return new DashboardResponse<int>()
+                return new DashboardResponse<Month>()
                 {
                     Message = Constraints.LOAD_FAILED,
                 };
             }
 
-            return new DashboardResponse<int>()
+            return new DashboardResponse<Month>()
             {
                 Message = Constraints.INFORMATION,
                 Values = result
@@ -102,26 +105,29 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public async Task<DashboardResponse<int>> GetDashboardMonetaryByMonth(MonthRequestModel request)
+        public async Task<DashboardResponse<Month>> GetDashboardMonetaryByMonth(MonthRequestModel request)
         {
-            Dictionary<int, decimal> result = new Dictionary<int, decimal>();
+            Dictionary<Month, decimal> result = new Dictionary<Month, decimal>();
             try
             {
                 request.StartMonth = request.Month ?? DateTime.Now.Month;
                 request.EndMonth = request.Month ?? DateTime.Now.Month;
 
-                result = await _monetaryRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.Year) ?? throw new Exception();
+                var data = await _monetaryRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.Year) ?? throw new Exception();
+
+                result = data.Where(x => Enum.IsDefined(typeof(Month), x.Key))
+                             .ToDictionary(k => (Month)k.Key, x => x.Value);
 
             }
             catch (Exception)
             {
-                return new DashboardResponse<int>()
+                return new DashboardResponse<Month>()
                 {
                     Message = Constraints.LOAD_FAILED,
                 };
             }
 
-            return new DashboardResponse<int>()
+            return new DashboardResponse<Month>()
             {
                 Message = Constraints.INFORMATION,
                 Values = result

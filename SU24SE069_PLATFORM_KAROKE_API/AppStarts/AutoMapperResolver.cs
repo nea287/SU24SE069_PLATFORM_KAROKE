@@ -3,7 +3,6 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
-using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
@@ -51,6 +50,9 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region Song
             CreateMap<Song, SongViewModel>()
                 .ForMember(x => x.SongStatus, dest => dest.MapFrom(opt => (SongStatus)opt.SongStatus))
+                .ForMember(x => x.Genre, dest => dest.MapFrom(opt => String.Concat(opt.SongGenres.Select(a => a.Genre.GenreName))))
+                .ForMember(x => x.Singer, dest => dest.MapFrom(opt => String.Concat(opt.SongSingers.Select(a => a.Singer.SingerName))))
+                .ForMember(x => x.Artist, dest => dest.MapFrom(opt => String.Concat(opt.SongArtists.Select(a => a.Artist.ArtistName))))
                 .ReverseMap();
 
             CreateMap<Song, CreateSongRequestModel>().ReverseMap();
@@ -149,7 +151,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
 
             #region PurchasedSong
-            CreateMap<PurchasedSong, PurchasedSongViewModel>().ReverseMap();
+            CreateMap<PurchasedSong, PurchasedSongViewModel>()
+                    .ForMember(x => x.Price, dest => dest.MapFrom(dest => dest.Song.Price))
+                    .ForMember(x => x.SongName, dest => dest.MapFrom(dest => dest.Song.SongName))
+                    .ForMember(x => x.Artists, dest => dest.MapFrom(dest => String.Concat(dest.Song.SongArtists.Select(a => a.Artist.ArtistName))))
+                    .ForMember(x => x.Singers, dest => dest.MapFrom(dest => String.Concat(dest.Song.SongSingers.Select(a => a.Singer.SingerName)))) 
+                    .ForMember(x => x.Genres, dest => dest.MapFrom(dest => String.Concat(dest.Song.SongGenres.Select(a => a.Genre.GenreName))))
+            .ReverseMap();
+
             CreateMap<PurchasedSong, PurchasedSongRequestModel>().ReverseMap();
             #endregion
 
