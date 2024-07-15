@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Castle.Core.Internal;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
@@ -36,6 +37,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 {
                     rs = _mapper.Map<InAppTransaction>(request);
                     rs.CreatedDate = DateTime.Now;
+
+                    if (!rs.PurchasedSongs.IsNullOrEmpty())
+                    {
+                        rs.PurchasedSongs = rs.PurchasedSongs.Select(item => { item.PurchaseDate = DateTime.Now; return item; }).ToList();
+                    }
 
                     if (!_repository.CreateInAppTransaction(rs).Result)
                     {

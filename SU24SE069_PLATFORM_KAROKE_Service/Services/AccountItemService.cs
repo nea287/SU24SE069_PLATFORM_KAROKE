@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Castle.Core.Internal;
+using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
@@ -20,11 +23,13 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
     public class AccountItemService : IAccountItemService
     {
+        private readonly IMemoryCache _cache;
         private readonly IMapper _mapper;
         private readonly IAccountItemRepository _inventoryRepository;
 
-        public AccountItemService(IMapper mapper, IAccountItemRepository inventoryRepository)
+        public AccountItemService(IMapper mapper, IAccountItemRepository inventoryRepository, IMemoryCache cache)
         {
+            _cache = cache;
             _mapper = mapper;
             _inventoryRepository = inventoryRepository;
         }
@@ -66,6 +71,13 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             (int, IQueryable<AccountItemViewModel>) result;
             try
             {
+                IQueryable<AccountItemViewModel> dataFromCache = JsonConvert.DeserializeObject<IQueryable<AccountItemViewModel>>(GetCache("ACCOUNTS"));
+
+                if (dataFromCache.IsNullOrEmpty())
+                {
+
+                }
+
                 lock (_inventoryRepository)
                 {
                     var data = _inventoryRepository.GetAll(
@@ -152,6 +164,37 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 result = true,
                 Value = _mapper.Map<AccountItemViewModel>(rs)
             };
+        }
+
+        public bool SetCache(String nameKey, string value, int minutes)
+        {
+            try
+            {
+                _cache.Set(nameKey, value, new TimeSpan(0, minutes, 0));
+            }
+            catch (Exception)
+            {
+
+                return false; 
+            }
+
+            return true;
+
+        }
+
+        public string GetCache(String nameKey)
+        {
+            string value = "";
+            try
+            {
+                value = String.Concat(_cache.Get(nameKey));
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            return value;
         }
     }
 }
