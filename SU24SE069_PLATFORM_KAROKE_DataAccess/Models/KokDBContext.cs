@@ -48,7 +48,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS01;Initial Catalog=Kok_Database;Uid=sa;Pwd=1234;TrustServerCertificate=true;MultipleActiveResultSets=True;");
+                optionsBuilder.UseSqlServer("Server=LAPTOP-BQ4FD1R8\\SQLEXPRESS;Initial Catalog=Kok_Database;Uid=sa;Pwd=10032398;TrustServerCertificate=true;MultipleActiveResultSets=True;");
+                //optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS01;Initial Catalog=Kok_Database;Uid=sa;Pwd=1234;TrustServerCertificate=true;MultipleActiveResultSets=True;");
                 //optionsBuilder.UseSqlServer("Server=KOKDatabase.mssql.somee.com;Initial Catalog=Kok_Database;Uid=kok-admin;Pwd=11111111;TrustServerCertificate=true");
                 //optionsBuilder.UseSqlServer("Server=gible-db.database.windows.net;Initial Catalog=Kok-DB;Uid=gible-db-sa;Pwd=G!ble87654321;TrustServerCertificate=true");
             }

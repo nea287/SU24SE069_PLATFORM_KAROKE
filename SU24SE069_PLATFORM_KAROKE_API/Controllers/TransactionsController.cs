@@ -31,8 +31,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTransaction([FromBody] MonetaryTransactionRequestModel request)
         {
-            var rs = await _service.CreateTransaction(request); 
-           
+            var rs = await _service.CreateTransaction(request);
+
             return rs.result.HasValue? (rs.result.Value? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
 

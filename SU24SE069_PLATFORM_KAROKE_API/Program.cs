@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SU24SE069_PLATFORM_KAROKE_API.AppStarts;
 using SU24SE069_PLATFORM_KAROKE_DAO.DAO;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -16,6 +17,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
+#region Momo
+builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
+#endregion
 
 #region AppStarts
 builder.Services.ConfigDI();
