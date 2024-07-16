@@ -10,6 +10,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
     public interface IPurchasedSongRepository : IBaseRepository<PurchasedSong>
     {
         public Task<bool> CreatePurchasedSong(PurchasedSong purchasedSong);
+        public bool CheckPurchasedSong(Guid memberId, Guid songId);
 
     }
 }

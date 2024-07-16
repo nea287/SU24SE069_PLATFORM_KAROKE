@@ -457,8 +457,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     created_date = table.Column<DateTime>(type: "datetime", nullable: false),
                     transaction_type = table.Column<int>(type: "int", nullable: false),
                     member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     up_amount_before = table.Column<decimal>(type: "money", nullable: false),
                     MonetaryTransactionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     up_total_amount = table.Column<decimal>(type: "money", nullable: false)

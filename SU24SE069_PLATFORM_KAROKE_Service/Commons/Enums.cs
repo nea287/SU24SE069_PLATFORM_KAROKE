@@ -299,6 +299,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         CreateTime
     }
     #endregion
+
+    #region Account
     public enum AccountRole
     {
         ADMIN = 1,
@@ -319,6 +321,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         INACTIVE = 2,
     }
 
+    #endregion
+
+    #region Song
     public enum SongStatus
     {
         DISABLE = 0,
@@ -338,11 +343,16 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         ROCK = 3,
     }
 
+    #endregion
+
+    #region Friend
     public enum FriendStatus
     {
         OFFLINE = 0,
         ONLINE = 1,
     }
+    #endregion
+    #region Item
     public enum ItemStatus
     {
         DISABLE = 0,
@@ -356,6 +366,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         DEFAULT,
     }
 
+    #endregion
+
+    #region InAppTransaction
     public enum InAppTransactionType
     {
         BUY_ITEM = 1,
@@ -368,11 +381,18 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         CANCELED,
     }
 
+    #endregion
+
+    #region Recording
+
     public enum RecordingType
     {
         SINGLE,
         MULTIPLE
     }
+    #endregion
+
+    #region Package
 
     public enum PackageStatus
     {
@@ -380,6 +400,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         ACTIVE = 1,
 
     }
+    #endregion
+
+    #region Payment
 
     public enum PaymentType
     {
@@ -392,7 +415,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         COMPLETE,
         CANCELLED,
     }
+    #endregion
 
+    #region SupportRequest
     public enum SupportRequestCategory
     {
         TECHNICAL,
@@ -408,13 +433,16 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
     }
 
+    #endregion
+
+    #region Conversation
     public enum ConversationType
     {
         DEFAULT,
         SUPPORT,
     }
-
-
+    #endregion
+    #region Post
     public enum PostCommentType
     {
         PARENT,
@@ -426,4 +454,5 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         DEACTIVE,
         ACTIVE,
     }
+    #endregion
 }

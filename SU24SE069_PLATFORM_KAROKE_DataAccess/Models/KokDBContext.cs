@@ -44,41 +44,41 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual DbSet<VoiceAudio> VoiceAudios { get; set; } = null!;
 
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS01;Initial Catalog=Kok_Database;Uid=sa;Pwd=1234;TrustServerCertificate=true;MultipleActiveResultSets=True;");
-                //optionsBuilder.UseSqlServer("Server=KOKDatabase.mssql.somee.com;Initial Catalog=Kok_Database;Uid=kok-admin;Pwd=11111111;TrustServerCertificate=true");
-                //optionsBuilder.UseSqlServer("Server=gible-db.database.windows.net;Initial Catalog=Kok-DB;Uid=gible-db-sa;Pwd=G!ble87654321;TrustServerCertificate=true");
-            }
-        }
-
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    if (!optionsBuilder.IsConfigured)
         //    {
-
-
-        //        optionsBuilder.UseSqlServer(GetConnectionString());
-        //        optionsBuilder.UseLazyLoadingProxies();
-
-        //        using (SqlConnection conn = new SqlConnection(GetConnectionString()))
-        //        {
-        //            // Đóng kết nối hiện tại nếu đang mở
-        //            if (conn.State == System.Data.ConnectionState.Open)
-        //            {
-        //                conn.Close();
-        //            }
-        //            conn.Open();
-
-
-        //        }
-
-
+        //        //optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS01;Initial Catalog=Kok_Database;Uid=sa;Pwd=1234;TrustServerCertificate=true;MultipleActiveResultSets=True;");
+        //        optionsBuilder.UseSqlServer("Server=KOKDatabase.mssql.somee.com;Initial Catalog=KOKDatabase;Uid=kok-admin;Pwd=11111111;TrustServerCertificate=true");
+        //        //optionsBuilder.UseSqlServer("Server=gible-db.database.windows.net;Initial Catalog=Kok-DB;Uid=gible-db-sa;Pwd=G!ble87654321;TrustServerCertificate=true");
         //    }
-
         //}
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+
+
+                optionsBuilder.UseSqlServer(GetConnectionString());
+                optionsBuilder.UseLazyLoadingProxies();
+
+                using (SqlConnection conn = new SqlConnection(GetConnectionString()))
+                {
+                    // Đóng kết nối hiện tại nếu đang mở
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        conn.Close();
+                    }
+                    conn.Open();
+
+
+                }
+
+
+            }
+
+        }
 
         private string GetConnectionString()
         {
@@ -86,7 +86,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
                 .Build();
-            var strConn = config.GetConnectionString("localDatabase");
+            var strConn = config.GetConnectionString("Database");
             return strConn;
         }
 

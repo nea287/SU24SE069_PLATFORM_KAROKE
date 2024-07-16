@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Castle.Core.Internal;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Ocsp;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
@@ -128,15 +130,26 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             (int, IQueryable<AccountViewModel>) result;
             try
             {
+                IQueryable<AccountViewModel>? data = JsonConvert.DeserializeObject<List<AccountViewModel>>(SupportingFeature.Instance.GetDataFromCache(_memoryCache, Constraints.ACCOUNTS))?.AsQueryable();
+
+                if (data.IsNullOrEmpty())
+                {
+                    data = _accountRepository.GetAll(
+                            includeProperties: String.Join(",",
+                            SupportingFeature.GetNameIncludedProperties<Account>()))
+                            .AsQueryable()
+
+                            .ProjectTo<AccountViewModel>(_mapper.ConfigurationProvider);
+
+
+
+                    SupportingFeature.Instance.SetDataToCache(_memoryCache, Constraints.ACCOUNTS, JsonConvert.SerializeObject(data.ToList()), 10);
+                }
                 lock (_accountRepository)
                 {
-                    var data = _accountRepository.GetAll(
-                                                includeProperties: String.Join(",",
-                                                SupportingFeature.GetNameIncludedProperties<Account>()))
-                        .AsQueryable()
+                    
 
-                        .ProjectTo<AccountViewModel>(_mapper.ConfigurationProvider)
-                        .DynamicFilter(filter);
+                        data = data.DynamicFilter(filter);
 
                     string? colName = Enum.GetName(typeof(AccountOrderFilter), orderFilter);
 
@@ -204,6 +217,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     } 
 
                     result = _mapper.Map<AccountViewModel>(data);
+
+                    SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, Constraints.ACCOUNTS);
                 };
 
             }
@@ -270,6 +285,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     }
 
                     result = _mapper.Map<AccountViewModel>(data);
+                    SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, Constraints.ACCOUNTS);
+
                 };
 
 
@@ -314,7 +331,10 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     throw new Exception();
                 }
 
-            }catch(Exception)
+                SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, Constraints.ACCOUNTS);
+
+            }
+            catch (Exception)
             {
                 return new ResponseResult<AccountViewModel>()
                 {
@@ -336,7 +356,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 string code = SupportingFeature.Instance.GenerateCode();
                 SupportingFeature.Instance.SendEmail(receiverMail, code, "Mã xác thực");
 
-                SetDataMemory(code, "verification-code", 5);
+                SupportingFeature.Instance.SetDataToCache(_memoryCache, code, "verification-code", 5);
 
             }
             catch (Exception)
@@ -350,7 +370,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
         {
             AccountViewModel result = new AccountViewModel();
 
-            if (verificationCode != GetDataFromMemory("verification-code"))
+            if (verificationCode != SupportingFeature.Instance.GetDataFromCache(_memoryCache, "verification-code"))
             {
                 return new ResponseResult<AccountViewModel>()
                 {
@@ -392,6 +412,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     }
 
                     result = _mapper.Map<AccountViewModel>(data);
+                    SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, Constraints.ACCOUNTS);
+
                 };
 
             }
@@ -413,17 +435,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
         }
         #endregion
 
-        #region Cookie
-        public void SetDataMemory(string value, string nameValue, int minutes)
-        {
-            _memoryCache.Set(nameValue, value, new TimeSpan(0, minutes, 0));
-        }
-
-        public string GetDataFromMemory(string nameValue)
-        {
-            return string.Concat(_memoryCache.Get(nameValue));
-        }
-        #endregion
 
         #region Redis
 

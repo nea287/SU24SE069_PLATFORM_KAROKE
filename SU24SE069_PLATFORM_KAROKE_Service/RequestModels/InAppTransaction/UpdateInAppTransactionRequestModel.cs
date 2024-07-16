@@ -1,4 +1,5 @@
 ﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PurchasedSong;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction
     public class UpdateInAppTransactionRequestModel
     {
         public InAppTransactionStatus Status { get; set; }
+
     }
 }

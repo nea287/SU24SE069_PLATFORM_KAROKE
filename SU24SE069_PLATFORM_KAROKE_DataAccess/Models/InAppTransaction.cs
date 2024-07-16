@@ -14,8 +14,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public DateTime CreatedDate { get; set; }
         public int TransactionType { get; set; }
         public Guid MemberId { get; set; }
-        public Guid ItemId { get; set; }
-        public Guid SongId { get; set; }
+        public Guid? ItemId { get; set; }
+        public Guid? SongId { get; set; }
         public decimal UpAmountBefore { get; set; }
         public Guid MonetaryTransactionId { get; set; }
         public decimal UpTotalAmount { get; set; }
@@ -24,7 +24,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual Account Member { get; set; } = null!;
         public virtual Song Song { get; set; } = null!;
         public virtual MonetaryTransaction MonetaryTransaction { get; set; } = null!;
-
         public virtual ICollection<PurchasedSong> PurchasedSongs { get; set; }
 
     }
