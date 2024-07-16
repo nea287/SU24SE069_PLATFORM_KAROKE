@@ -192,7 +192,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         Message = Constraints.INSUFFICIENT_FUNDS,
                         result = false,
                     };
-                }d
+                }
 
                 data.UpBalance = data.UpBalance - dataSong.Price;
 
