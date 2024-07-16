@@ -5,6 +5,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 {
     public partial class MonetaryTransaction
     {
+        public MonetaryTransaction()
+        {
+            InAppTransactions = new HashSet<InAppTransaction>();
+        }
         public Guid MonetaryTransactionId { get; set; }
         public int PaymentType { get; set; }
         public string PaymentCode { get; set; } = null!;
@@ -17,5 +21,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
         public virtual Account Member { get; set; } = null!;
         public virtual Package Package { get; set; } = null!;
+        public virtual ICollection<InAppTransaction> InAppTransactions { get; set; }
     }
 }

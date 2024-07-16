@@ -14,7 +14,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers
         private static SupportingFeature instance = null;
         private static readonly object InstanceClock = new object();
 
-
         public static SupportingFeature Instance
         {
             get
@@ -29,6 +28,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers
                 }
             }
         }
+
 
         public void SendEmail(string receiver, string content, string title)
         {

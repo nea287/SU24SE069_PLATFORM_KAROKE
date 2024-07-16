@@ -65,7 +65,13 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
         #region name key of cache
         public const string ACCOUNTS = "ACCOUNTS";
-        public const string ACCOUNT = "account, id: "; 
+        public const string ACCOUNT = "account, id: ";
+        public const string SONGS = "SONGS";
+        public const string SONG = "song, id: ";
+        #endregion
+
+        #region Purchase Song 
+        public const string INSUFFICIENT_FUNDS = "Tài khoản không đủ để thực hiện giao dịch";
         #endregion
     }
 }

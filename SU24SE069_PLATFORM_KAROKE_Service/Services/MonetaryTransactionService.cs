@@ -1,14 +1,18 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
+using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PurchasedSong;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +24,17 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
     public class MonetaryTransactionService : IMonetaryTransactionService
     {
+        private readonly IAccountRepository _accountRepository;
+        private readonly ISongRepository _songRepository;
+        private readonly IMemoryCache _cache;
         private readonly IMapper _mapper;
         private readonly IMonetaryTransactionRepository _repository;
 
-        public MonetaryTransactionService(IMapper mapper, IMonetaryTransactionRepository repository)
+        public MonetaryTransactionService(IMapper mapper, IMonetaryTransactionRepository repository, IMemoryCache cache, IAccountRepository accountRepository, ISongRepository songRepository)
         {
+            _accountRepository = accountRepository;
+            _songRepository = songRepository;
+            _cache = cache;
             _mapper = mapper;
             _repository = repository;
         }
@@ -152,6 +162,52 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Message = Constraints.UPDATE_SUCCESS,
                 result = true,
                 Value = _mapper.Map<MonetaryTransactionViewModel>(rs)
+            };
+        }
+
+
+        public async Task<ResponseResult<MonetaryTransactionViewModel>> PurchaseSong(PurchasedSongRequestModel request)
+        {
+            try
+            {
+                Account? data = JsonConvert.DeserializeObject<List<Account>>(SupportingFeature.Instance.GetDataFromCache(_cache, Constraints.ACCOUNTS))?
+                                                                                       .FirstOrDefault(x => x.AccountId == request.MemberId);
+
+                Song? dataSong = JsonConvert.DeserializeObject<List<Song>>(SupportingFeature.Instance.GetDataFromCache(_cache, Constraints.SONGS))?
+                                                                                       .FirstOrDefault(x => x.SongId == request.SongId);
+
+                if (data is null)
+                {
+                    data = await _accountRepository.GetByIdGuid(request.MemberId);
+                }
+                if (dataSong is null)
+                {
+                    dataSong = await _songRepository.GetByIdGuid(request.SongId);
+                }
+
+                if (data.UpBalance < dataSong.Price)
+                {
+                    return new ResponseResult<MonetaryTransactionViewModel>()
+                    {
+                        Message = Constraints.INSUFFICIENT_FUNDS,
+                        result = false,
+                    };
+                }d
+
+                data.UpBalance = data.UpBalance - dataSong.Price;
+
+
+
+
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return new ResponseResult<MonetaryTransactionViewModel>()
+            {
+
             };
         }
     }

@@ -24,7 +24,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual Account Member { get; set; } = null!;
         public virtual Song Song { get; set; } = null!;
         public virtual MonetaryTransaction MonetaryTransaction { get; set; } = null!;
-
         public virtual ICollection<PurchasedSong> PurchasedSongs { get; set; }
 
     }

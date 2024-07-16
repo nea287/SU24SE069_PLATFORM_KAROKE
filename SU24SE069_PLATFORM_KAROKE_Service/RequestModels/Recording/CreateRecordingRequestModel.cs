@@ -29,6 +29,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public Guid KaraokeRoomId { get; set; }
 
+        public float StartTime { get; set; }
+        public float EndTime { get; set; }
+
         public ICollection<CreateVoiceAudioRequestModel>? VoiceAudios { get; set; }
 
     }

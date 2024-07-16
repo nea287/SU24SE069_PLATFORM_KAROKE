@@ -11,7 +11,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction
     public class CrreateInAppTransactionRequestModel
     {
         [RegularExpression(Constraints.VALIDATE_AMOUNT, ErrorMessage = Constraints.STAR_INVALID)]
-        public decimal StarAmount { get; set; }
+        public decimal UpMoneyBefore { get; set; }
         public InAppTransactionStatus Status { get; set; }
         //public DateTime CreatedDate { get; set; }
         public InAppTransactionType TransactionType { get; set; }

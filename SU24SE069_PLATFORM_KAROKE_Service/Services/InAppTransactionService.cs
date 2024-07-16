@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Castle.Core.Internal;
+using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
@@ -10,9 +12,11 @@ using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PurchasedSong;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,13 +24,19 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
     public class InAppTransactionService : IInAppTransactionService
     {
+        private readonly IMemoryCache _cache;
         private readonly IMapper _mapper;
         private readonly IInAppTransactionRepository _repository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly ISongRepository _songRepository;
 
-        public InAppTransactionService(IMapper mapper, IInAppTransactionRepository repository)
+        public InAppTransactionService(IMapper mapper, IInAppTransactionRepository repository, IMemoryCache cache, IAccountRepository accountRepository, ISongRepository songRepository)
         {
+            _cache = cache;
             _mapper = mapper;
             _repository = repository;
+            _accountRepository = accountRepository;
+            _songRepository = songRepository;
         }
         public async Task<ResponseResult<InAppTransactionViewModel>> CreateInAppTransaction(CrreateInAppTransactionRequestModel request)
         {
@@ -191,5 +201,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Value = _mapper.Map<InAppTransactionViewModel>(rs)
             };
         }
+
+
     }
 }
