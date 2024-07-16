@@ -13,9 +13,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public Guid? MemberId { get; set; }
         public Guid? SongId { get; set; }
         public string? SongName { get; set; }
-        public string? Genres { get; set; }
-        public string? Singers { get; set; }
+        public ICollection<string>? Genres { get; set; }
+        public ICollection<string>? Singers { get; set; }
         public decimal? Price { get; set; }
-        public string? Artists { get; set; }
+        public ICollection<string>? Artists { get; set; }
     }
 }

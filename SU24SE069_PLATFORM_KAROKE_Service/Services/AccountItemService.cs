@@ -71,21 +71,23 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             (int, IQueryable<AccountItemViewModel>) result;
             try
             {
-                IQueryable<AccountItemViewModel> dataFromCache = JsonConvert.DeserializeObject<IQueryable<AccountItemViewModel>>(GetCache("ACCOUNTS"));
+                IQueryable<AccountItemViewModel> data = JsonConvert.DeserializeObject<IQueryable<AccountItemViewModel>>(GetCache("ACCOUNTITEMS"));
 
-                if (dataFromCache.IsNullOrEmpty())
-                {
 
-                }
 
                 lock (_inventoryRepository)
                 {
-                    var data = _inventoryRepository.GetAll(
-                                                includeProperties: String.Join(",",
-                                                SupportingFeature.GetNameIncludedProperties<AccountItem>()))
-                        .AsQueryable()
-                        .ProjectTo<AccountItemViewModel>(_mapper.ConfigurationProvider)
-                        .DynamicFilter(filter);
+
+                    if (data.IsNullOrEmpty())
+                    {
+                        data = _inventoryRepository.GetAll(
+                               includeProperties: String.Join(",",
+                               SupportingFeature.GetNameIncludedProperties<AccountItem>()))
+                               .AsQueryable()
+                               .ProjectTo<AccountItemViewModel>(_mapper.ConfigurationProvider);
+                    }
+
+                    data = data.DynamicFilter(filter);
 
                     string? colName = Enum.GetName(typeof(AccountInventoryItemOrderFilter), orderFilter);
 

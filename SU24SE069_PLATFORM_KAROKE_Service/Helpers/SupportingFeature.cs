@@ -1,4 +1,5 @@
 ﻿using MailKit.Net.Smtp;
+using Microsoft.Extensions.Caching.Memory;
 using MimeKit;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using System;
@@ -130,6 +131,47 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers
             }
 
             return enumValues;
+        }
+
+        public string GetDataFromCache(IMemoryCache cache, string cacheKey)
+        {
+            string data = "";
+            try
+            {
+                data = String.Concat(cache.Get(cacheKey));
+            }
+            catch (Exception)
+            {
+                return null; 
+            }
+
+            return data;
+        }
+
+        public bool SetDataToCache(IMemoryCache cache, string key, string value, int minutes)
+        {
+            try
+            {
+                cache.Set(key, value, new TimeSpan(0, minutes, 0));
+
+            }catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool RemoveDataFromCache(IMemoryCache cache, string cacheKey)
+        {
+            try
+            {
+                cache.Remove(cacheKey);
+            }catch(Exception)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

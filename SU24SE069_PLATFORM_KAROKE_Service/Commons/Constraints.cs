@@ -62,5 +62,10 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         public const string START_DATE_END_DATE = "Ngày bắt đầu phải lớn hơn hoặc bằng ngày kết thúc";
         public const string START_YEAR_END_YEAR = "Năm bắt đầu phải lớn hơn hoặc bằng năm kết thúc";
         #endregion
+
+        #region name key of cache
+        public const string ACCOUNTS = "ACCOUNTS";
+        public const string ACCOUNT = "account, id: "; 
+        #endregion
     }
 }
