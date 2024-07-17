@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Castle.Core.Internal;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
@@ -15,7 +16,9 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
+using System.Security.Principal;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 {
@@ -147,9 +150,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 }
                 lock (_accountRepository)
                 {
-                    
 
-                        data = data.DynamicFilter(filter);
+
+                    data = data.DynamicFilter(filter);
 
                     string? colName = Enum.GetName(typeof(AccountOrderFilter), orderFilter);
 
@@ -181,10 +184,10 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 Results = result.Item2.ToList()
             };
         }
-            #endregion
+        #endregion
 
-            #region Create
-            public async Task<ResponseResult<AccountViewModel>> CreateAccount(CreateAccountRequestModel request)
+        #region Create
+        public async Task<ResponseResult<AccountViewModel>> CreateAccount(CreateAccountRequestModel request)
         {
             AccountViewModel result = new AccountViewModel();
             try
@@ -214,7 +217,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     {
                         _accountRepository.DetachEntity(data);
                         throw new Exception();
-                    } 
+                    }
 
                     result = _mapper.Map<AccountViewModel>(data);
 
@@ -250,7 +253,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 {
                     var data1 = _accountRepository.GetAccountByMail(email).Result;
 
-                    
+
 
                     var data = _mapper.Map<Account>(request);
 
@@ -266,7 +269,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     data.Password = BCrypt.Net.BCrypt.HashPassword(request.Password, 12);
 
                     _accountRepository.DetachEntity(data1);
-                    _accountRepository.MotifyEntity(data);  
+                    _accountRepository.MotifyEntity(data);
 
                     if (data == null)
                     {
@@ -278,7 +281,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                         };
                     }
 
-                    if(!_accountRepository.UpdateAccount(data).Result)
+                    if (!_accountRepository.UpdateAccount(data).Result)
                     {
                         _accountRepository.DetachEntity(data);
                         throw new Exception();
@@ -313,8 +316,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
         {
             try
             {
-                 var data = await _accountRepository.GetAccount(id);
-                if(data is null)
+                var data = await _accountRepository.GetAccount(id);
+                if (data is null)
                 {
                     return new ResponseResult<AccountViewModel>()
                     {
@@ -325,7 +328,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 
                 data.AccountStatus = (int)AccountStatus.INACTIVE;
 
-                if(!await _accountRepository.UpdateAccount(data))
+                if (!await _accountRepository.UpdateAccount(data))
                 {
                     _accountRepository.DetachEntity(data);
                     throw new Exception();
@@ -366,7 +369,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             return true;
         }
 
-        public async Task<ResponseResult<AccountViewModel>> SignUp(CreateAccount1RequestModel request , string verificationCode)
+        public async Task<ResponseResult<AccountViewModel>> SignUp(CreateAccount1RequestModel request, string verificationCode)
         {
             AccountViewModel result = new AccountViewModel();
 
@@ -509,6 +512,180 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 Value = result
             };
         }
+        #endregion
+
+        #region SignUp
+
+        public async Task<ResponseResult<AccountViewModel>> CreateNewMemberAccount(MemberSignUpRequest signUpRequest)
+        {
+            // Validate email
+            var emailValidation = _accountRepository.IsAccountEmailExisted(signUpRequest.Email);
+            if (emailValidation)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = $"{Constraints.INFORMATION_EXISTED} Email {signUpRequest.Email} đã được sử dụng để đăng ký 1 tài khoản khác.",
+                    result = false,
+                };
+            }
+            // Validate username
+            var usernameValidation = _accountRepository.IsAccountUsernameExisted(signUpRequest.Username);
+            if (usernameValidation)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = $"{Constraints.INFORMATION_EXISTED} Tên hiển thị {signUpRequest.Username} đã tồn tại, vui lòng sử dụng tên hiển thị khác.",
+                    result = false,
+                };
+            }
+
+            // Create new account
+            Guid newAccountId = Guid.NewGuid();
+            Account newAccount = new Account()
+            {
+                AccountId = newAccountId,
+                UserName = signUpRequest.Username,
+                Password = BCrypt.Net.BCrypt.HashPassword(signUpRequest.Password),
+                Email = signUpRequest.Email,
+                Gender = (int)signUpRequest.Gender,
+                Role = (int)AccountRole.MEMBER,
+                IsOnline = false,
+                Fullname = null,
+                Yob = null,
+                IdentityCardNumber = null,
+                PhoneNumber = null,
+                CreatedTime = DateTime.Now,
+                CharacterItemId = null,
+                RoomItemId = null,
+                AccountStatus = (int)AccountStatus.NOT_VERIFY,
+                UpBalance = 0,
+            };
+
+            bool createResult = false;
+            try
+            {
+                createResult = await _accountRepository.CreateAccount(newAccount);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = $"{Constraints.CREATE_FAILED} Có lỗi xảy ra trong quá trình lưu tài khoản member mới: {ex.Message}",
+                    result = false,
+                };
+            }
+            if (!createResult)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = $"{Constraints.CREATE_FAILED} Có lỗi xảy ra trong quá trình tạo tài khoản member mới.",
+                    result = false,
+                };
+            }
+            var result = _mapper.Map<AccountViewModel>(newAccount);
+            return new ResponseResult<AccountViewModel>()
+            {
+                Message = $"{Constraints.CREATE_SUCCESS} Tài khoản member mới đã được đăng ký.",
+                result = true,
+                Value = result,
+            };
+        }
+
+        public async Task<(bool, string)> SendVerificationEmail(string accountEmail)
+        {
+            Regex emailRegex = new Regex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$");
+            if (!emailRegex.IsMatch(accountEmail)) 
+            {
+                return (false, $"{accountEmail} không phải là địa chỉ email hợp lệ.");
+            }
+            var account = await _accountRepository.GetAccountByMail(accountEmail);
+            if (account == null)
+            {
+                return (false, $"Không tìm thấy tài khoản được đăng ký bởi email {accountEmail}.");
+            }
+            if (account.AccountStatus != (int)AccountStatus.NOT_VERIFY) 
+            {
+                return (false, $"Tài khoản được đăng ký bởi email {accountEmail} không hợp lệ để xác thực (Trạng thái: {(AccountStatus)account.AccountStatus!}).");
+            }
+            try
+            {
+                string verifyCode = SupportingFeature.Instance.GenerateCode();
+                string verifyCodeKey = accountEmail + "_verify_code";
+                string emailContent = $"Mã xác thực tài khoản: {verifyCode}.\nMã xác thực sẽ có hiệu lực trong 5 phút, vui lòng xác thực tài khoản trong thời gian này.";
+                SupportingFeature.Instance.SendEmail(accountEmail, emailContent, "[KOK] Xác Thực Tài Khoản");
+                SupportingFeature.Instance.SetDataToCache(_memoryCache, verifyCodeKey, verifyCode, 5);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Có lỗi xảy ra trong quá trình gửi email xác thực tài khoản: {ex.Message}");
+            }
+            return (true, $"Gửi mã xác thực tài khoản đến email {accountEmail} thành công.");
+        }
+
+        public async Task<ResponseResult<AccountViewModel>> VerifyMemberAccount(MemberAccountVerifyRequest verifyRequest)
+        {
+            var account = await _accountRepository.GetAccountByMail(verifyRequest.AccountEmail);
+            if (account == null)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.NOT_FOUND + $" Không tìm thấy tài khoản được đăng ký bởi email {verifyRequest.AccountEmail}.",
+                    result = false,
+                };
+            }
+            if (account.AccountStatus != (int)AccountStatus.NOT_VERIFY)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED + $" Tài khoản được đăng ký bởi email {verifyRequest.AccountEmail} không hợp lệ để xác thực (Trạng thái: {(AccountStatus)account.AccountStatus!}).",
+                    result = false,
+                };
+            }
+            string verifyCodeKey = verifyRequest.AccountEmail + "_verify_code";
+
+            if (verifyRequest.VerifyCode != SupportingFeature.Instance.GetDataFromCache(_memoryCache, verifyCodeKey))
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED + Constraints.INVALID_VERIFICATION_CODE,
+                    result = false,
+                };
+            }
+
+            // Update account status to ACTIVE
+            account.AccountStatus = (int)AccountStatus.ACTIVE;
+            bool result = false;
+            try
+            {
+                result = await _accountRepository.UpdateAccount(account);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED + $" Có lỗi xảy ra trong quá trình xác thực tài khoản: {ex.Message}",
+                    result = false,
+                };
+            }
+            if (!result)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED + $" Có lỗi xảy ra trong quá trình xác thực tài khoản.",
+                    result = false,
+                };
+            }
+
+            SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, verifyCodeKey);
+            var accountModel = _mapper.Map<AccountViewModel>(account);
+            return new ResponseResult<AccountViewModel>()
+            {
+                Message = $"{Constraints.UPDATE_SUCCESS} Tài khoản member mới đã được xác thực.",
+                result = true,
+                Value = accountModel,
+            };
+        }
+
         #endregion
     }
 }

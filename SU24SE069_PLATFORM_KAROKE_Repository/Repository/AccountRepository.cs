@@ -101,6 +101,16 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                         x.Email.ToLower().Equals(email??"null".ToLower())
                         || x.UserName.ToLower().Equals(username??"null".ToLower(), StringComparison.Ordinal));
 
+        public bool IsAccountEmailExisted(string email)
+        {
+            return Any(a => a.Email.Trim().ToLower() == email.Trim().ToLower());
+        }
+
+        public bool IsAccountUsernameExisted(string username)
+        {
+            return Any(a => a.UserName.Trim().ToLower() == username.Trim().ToLower());
+        }
+
         #endregion
     }
 }
