@@ -58,5 +58,41 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             }
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("verify/{email}")]
+        [AllowAnonymous]
+        public async Task<ActionResult> SendVerificationByEmail([FromRoute] string email)
+        {
+            (bool result, string message) = await _accountService.SendVerificationEmail(email);
+            if (!result)
+            {
+                return BadRequest(new ResponseResult<bool>()
+                {
+                    result = result,
+                    Message = message,
+                    Value = result
+                });
+            }
+            return Ok(new ResponseResult<bool>()
+            {
+                result = result,
+                Message = message,
+                Value = result
+            });
+        }
+
+        [HttpPost]
+        [Route("verify")]
+        [AllowAnonymous]
+        public async Task<ActionResult> VerifyMemberAccount([FromBody] MemberAccountVerifyRequest verifyRequest)
+        {
+            var result = await _accountService.VerifyMemberAccount(verifyRequest);
+            if (result.result == null || !result.result.Value)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 }

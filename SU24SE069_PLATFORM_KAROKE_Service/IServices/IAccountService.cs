@@ -25,7 +25,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices
         public Task<ResponseResult<AccountViewModel>> ActiveAccount(Guid id);
         public bool SendVerificationCode(string receiverMail);
         public Task<ResponseResult<AccountViewModel>> CreateNewMemberAccount(MemberSignUpRequest signUpRequest);
-
-
+        public Task<(bool, string)> SendVerificationEmail(string accountEmail);
+        public Task<ResponseResult<AccountViewModel>> VerifyMemberAccount(MemberAccountVerifyRequest verifyRequest);
     }
 }
