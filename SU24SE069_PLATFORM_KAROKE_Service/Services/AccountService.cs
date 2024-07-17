@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Castle.Core.Internal;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
@@ -147,9 +148,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 }
                 lock (_accountRepository)
                 {
-                    
 
-                        data = data.DynamicFilter(filter);
+
+                    data = data.DynamicFilter(filter);
 
                     string? colName = Enum.GetName(typeof(AccountOrderFilter), orderFilter);
 
@@ -181,10 +182,10 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 Results = result.Item2.ToList()
             };
         }
-            #endregion
+        #endregion
 
-            #region Create
-            public async Task<ResponseResult<AccountViewModel>> CreateAccount(CreateAccountRequestModel request)
+        #region Create
+        public async Task<ResponseResult<AccountViewModel>> CreateAccount(CreateAccountRequestModel request)
         {
             AccountViewModel result = new AccountViewModel();
             try
@@ -214,7 +215,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     {
                         _accountRepository.DetachEntity(data);
                         throw new Exception();
-                    } 
+                    }
 
                     result = _mapper.Map<AccountViewModel>(data);
 
@@ -250,7 +251,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 {
                     var data1 = _accountRepository.GetAccountByMail(email).Result;
 
-                    
+
 
                     var data = _mapper.Map<Account>(request);
 
@@ -266,7 +267,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     data.Password = BCrypt.Net.BCrypt.HashPassword(request.Password, 12);
 
                     _accountRepository.DetachEntity(data1);
-                    _accountRepository.MotifyEntity(data);  
+                    _accountRepository.MotifyEntity(data);
 
                     if (data == null)
                     {
@@ -278,7 +279,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                         };
                     }
 
-                    if(!_accountRepository.UpdateAccount(data).Result)
+                    if (!_accountRepository.UpdateAccount(data).Result)
                     {
                         _accountRepository.DetachEntity(data);
                         throw new Exception();
@@ -313,8 +314,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
         {
             try
             {
-                 var data = await _accountRepository.GetAccount(id);
-                if(data is null)
+                var data = await _accountRepository.GetAccount(id);
+                if (data is null)
                 {
                     return new ResponseResult<AccountViewModel>()
                     {
@@ -325,7 +326,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 
                 data.AccountStatus = (int)AccountStatus.INACTIVE;
 
-                if(!await _accountRepository.UpdateAccount(data))
+                if (!await _accountRepository.UpdateAccount(data))
                 {
                     _accountRepository.DetachEntity(data);
                     throw new Exception();
@@ -366,7 +367,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             return true;
         }
 
-        public async Task<ResponseResult<AccountViewModel>> SignUp(CreateAccount1RequestModel request , string verificationCode)
+        public async Task<ResponseResult<AccountViewModel>> SignUp(CreateAccount1RequestModel request, string verificationCode)
         {
             AccountViewModel result = new AccountViewModel();
 
@@ -509,6 +510,85 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 Value = result
             };
         }
+        #endregion
+
+        #region SignUp
+
+        public async Task<ResponseResult<AccountViewModel>> CreateNewMemberAccount(MemberSignUpRequest signUpRequest)
+        {
+            // Validate email
+            var emailValidation = _accountRepository.IsAccountEmailExisted(signUpRequest.Email);
+            if (emailValidation)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = $"{Constraints.INFORMATION_EXISTED} Email {signUpRequest.Email} đã được sử dụng để đăng ký 1 tài khoản khác.",
+                    result = false,
+                };
+            }
+            // Validate username
+            var usernameValidation = _accountRepository.IsAccountUsernameExisted(signUpRequest.UserName);
+            if (usernameValidation)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = $"{Constraints.INFORMATION_EXISTED} Tên hiển thị {signUpRequest.UserName} đã tồn tại, vui lòng sử dụng tên hiển thị khác.",
+                    result = false,
+                };
+            }
+
+            // Create new account
+            Guid newAccountId = Guid.NewGuid();
+            Account newAccount = new Account()
+            {
+                AccountId = newAccountId,
+                UserName = signUpRequest.UserName,
+                Password = BCrypt.Net.BCrypt.HashPassword(signUpRequest.Password),
+                Email = signUpRequest.Email,
+                Gender = (int)signUpRequest.Gender,
+                Role = (int)AccountRole.MEMBER,
+                IsOnline = false,
+                Fullname = null,
+                Yob = null,
+                IdentityCardNumber = null,
+                PhoneNumber = null,
+                CreatedTime = DateTime.Now,
+                CharacterItemId = null,
+                RoomItemId = null,
+                AccountStatus = (int)AccountStatus.NOT_VERIFY,
+                UpBalance = 0,
+            };
+
+            bool createResult = false;
+            try
+            {
+                createResult = await _accountRepository.CreateAccount(newAccount);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = $"{Constraints.CREATE_FAILED} Có lỗi xảy ra trong quá trình lưu tài khoản member mới: {ex.Message}",
+                    result = false,
+                };
+            }
+            if (!createResult)
+            {
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = $"{Constraints.CREATE_FAILED} Có lỗi xảy ra trong quá trình tạo tài khoản member mới.",
+                    result = false,
+                };
+            }
+            var result = _mapper.Map<AccountViewModel>(newAccount);
+            return new ResponseResult<AccountViewModel>()
+            {
+                Message = $"{Constraints.CREATE_SUCCESS} Tài khoản member mới đã được đăng ký.",
+                result = true,
+                Value = result,
+            };
+        }
+
         #endregion
     }
 }

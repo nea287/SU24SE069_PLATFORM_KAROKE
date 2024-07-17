@@ -6,6 +6,8 @@ using SU24SE069_PLATFORM_KAROKE_DAO.DAO;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json.Serialization;
+using SU24SE069_PLATFORM_KAROKE_Service;
+using SU24SE069_PLATFORM_KAROKE_Service.Validator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -147,6 +149,10 @@ builder.Services.AddStackExchangeRedisCache(options =>
 
 #region Memory Cache
 builder.Services.AddMemoryCache();
+#endregion
+
+#region FluentValidator
+builder.Services.AddFluentValidator();
 #endregion
 var app = builder.Build();
 
