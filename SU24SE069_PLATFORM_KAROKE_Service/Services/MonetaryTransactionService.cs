@@ -196,6 +196,13 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                 data.UpBalance = data.UpBalance - dataSong.Price;
 
+                MonetaryTransaction transaction = new MonetaryTransaction()
+                {
+                    MemberId = request.MemberId,
+                    CreatedDate = DateTime.Now,
+                    Currency = "",
+                    MoneyAmount = dataSong.Price,
+                };
 
 
 
@@ -209,6 +216,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
 
             };
-        }
+        }        
+
     }
 }
