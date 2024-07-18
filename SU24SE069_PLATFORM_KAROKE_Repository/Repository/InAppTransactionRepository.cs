@@ -11,6 +11,16 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
     public class InAppTransactionRepository : BaseRepository<InAppTransaction>, IInAppTransactionRepository
     {
+        public bool CheckPurchasedItem(Guid memberId, Guid itemId)
+        {
+            return Any(x => x.MemberId == memberId && x.ItemId == itemId && x.Item.CanStack == false);
+        }
+
+        public bool CheckPurchasedSong(Guid memberId, Guid songId)
+        {
+            return Any(x => x.MemberId == memberId && x.SongId == songId);
+        }
+
         public async Task<bool> CreateInAppTransaction(InAppTransaction request)
         {
             try
