@@ -17,13 +17,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public Guid? ItemId { get; set; }
         public Guid? SongId { get; set; }
         public decimal UpAmountBefore { get; set; }
-        public Guid MonetaryTransactionId { get; set; }
+        public Guid? MonetaryTransactionId { get; set; }
         public decimal UpTotalAmount { get; set; }
 
         public virtual Item Item { get; set; } = null!;
         public virtual Account Member { get; set; } = null!;
         public virtual Song Song { get; set; } = null!;
-        public virtual MonetaryTransaction MonetaryTransaction { get; set; } = null!;
+        public virtual MonetaryTransaction MonetaryTransaction { get; set; }
         public virtual ICollection<PurchasedSong> PurchasedSongs { get; set; }
 
     }

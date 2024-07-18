@@ -19,6 +19,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
@@ -202,6 +203,87 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
+
+        public async Task<ResponseResult<InAppTransactionViewModel>> PurchaseSong(PurchasedSongRequestModel request)
+        {
+            InAppTransaction transation = new InAppTransaction();
+            try
+            {
+                Account? data = JsonConvert.DeserializeObject<List<Account>>(SupportingFeature.Instance.GetDataFromCache(_cache, Constraints.ACCOUNTS))?
+                                                                                       .FirstOrDefault(x => x.AccountId == request.MemberId);
+
+                Song? dataSong = JsonConvert.DeserializeObject<List<Song>>(SupportingFeature.Instance.GetDataFromCache(_cache, Constraints.SONGS))?
+                                                                                       .FirstOrDefault(x => x.SongId == request.SongId);
+
+                if (data is null)
+                {
+                    data = await _accountRepository.GetByIdGuid(request.MemberId);
+                }
+                if (dataSong is null)
+                {
+                    dataSong = await _songRepository.GetByIdGuid(request.SongId);
+                }
+
+                if (data.UpBalance < dataSong.Price)
+                {
+                    return new ResponseResult<InAppTransactionViewModel>()
+                    {
+                        Message = Constraints.INSUFFICIENT_FUNDS,
+                        result = false,
+                    };
+                }
+
+                data.UpBalance = data.UpBalance - dataSong.Price;
+                transation = new InAppTransaction()
+                {
+                    CreatedDate = DateTime.UtcNow,
+                    MemberId = request.MemberId,
+                    SongId = request.SongId,
+                    Status = (int)PaymentStatus.PENDING,
+                    UpAmountBefore = dataSong.Price,
+                    UpTotalAmount = dataSong.Price,
+                    TransactionType = (int)PaymentType.MOMO,
+                    PurchasedSongs = new List<PurchasedSong>()
+                    {
+                        new PurchasedSong()
+                        {
+                            PurchaseDate = DateTime.Now,
+                            MemberId=request.MemberId,
+                            SongId=request.SongId,  
+                        }
+                    }
+
+                };
+
+                await _accountRepository.SaveChagesAsync();
+                
+                if(!await _repository.CreateInAppTransaction(transation))
+                {
+                    _accountRepository.DetachEntity(data);
+                    _songRepository.DetachEntity(dataSong);
+                    _repository.DetachEntity(transation);   
+
+                    throw new Exception();
+                }
+
+
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<InAppTransactionViewModel>()
+                {
+                    Message = Constraints.PURCHASE_FAILED,
+                    result = false,
+                };
+            }
+
+            return new ResponseResult<InAppTransactionViewModel>()
+            {
+                Message = Constraints.PURCHASE_SUCCESS,
+                result = true,
+                Value = _mapper.Map<InAppTransactionViewModel>(transation)
+            };
+        }
 
     }
 }

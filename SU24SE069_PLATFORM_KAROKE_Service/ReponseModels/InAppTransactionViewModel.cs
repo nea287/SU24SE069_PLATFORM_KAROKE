@@ -10,7 +10,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
     public class InAppTransactionViewModel
     {
         public Guid? InAppTransactionId { get; set; }
-        public decimal? StarAmount { get; set; }
         public InAppTransactionStatus? Status { get; set; }
         public DateTime? CreatedDate { get; set; }
         public InAppTransactionType? TransactionType { get; set; }

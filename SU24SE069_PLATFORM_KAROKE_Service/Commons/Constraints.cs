@@ -72,6 +72,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
         #region Purchase Song 
         public const string INSUFFICIENT_FUNDS = "Tài khoản không đủ để thực hiện giao dịch";
+        public const string PURCHASE_FAILED = "Mua bài hát thất bại, Vui lòng thử lại!";
+        public const string PURCHASE_SUCCESS = "Mua bài hát thành công!";
         #endregion
     }
 }

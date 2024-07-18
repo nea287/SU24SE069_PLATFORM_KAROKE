@@ -166,49 +166,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         }
 
 
-        public async Task<ResponseResult<MonetaryTransactionViewModel>> PurchaseSong(PurchasedSongRequestModel request)
-        {
-            try
-            {
-                Account? data = JsonConvert.DeserializeObject<List<Account>>(SupportingFeature.Instance.GetDataFromCache(_cache, Constraints.ACCOUNTS))?
-                                                                                       .FirstOrDefault(x => x.AccountId == request.MemberId);
 
-                Song? dataSong = JsonConvert.DeserializeObject<List<Song>>(SupportingFeature.Instance.GetDataFromCache(_cache, Constraints.SONGS))?
-                                                                                       .FirstOrDefault(x => x.SongId == request.SongId);
-
-                if (data is null)
-                {
-                    data = await _accountRepository.GetByIdGuid(request.MemberId);
-                }
-                if (dataSong is null)
-                {
-                    dataSong = await _songRepository.GetByIdGuid(request.SongId);
-                }
-
-                if (data.UpBalance < dataSong.Price)
-                {
-                    return new ResponseResult<MonetaryTransactionViewModel>()
-                    {
-                        Message = Constraints.INSUFFICIENT_FUNDS,
-                        result = false,
-                    };
-                }
-
-                data.UpBalance = data.UpBalance - dataSong.Price;
-
-
-
-
-            }
-            catch (Exception)
-            {
-
-            }
-
-            return new ResponseResult<MonetaryTransactionViewModel>()
-            {
-
-            };
-        }
     }
 }
