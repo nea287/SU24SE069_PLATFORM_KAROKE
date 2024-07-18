@@ -12,5 +12,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
         public Task<bool> CreateInAppTransaction(InAppTransaction request);
         //public bool DeleteAccountInventory(AccountInventoryItem request);
         public Task<bool> UpdateInAppTransaction(Guid id, InAppTransaction request);
+        public bool CheckPurchasedSong(Guid memberId, Guid songId);
+        public bool CheckPurchasedItem(Guid memberId, Guid itemId);
     }
 }

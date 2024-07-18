@@ -3,6 +3,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PurchasedSong;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>> GetTransactions(InAppTransactionViewModel filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter);
 
         public Task<ResponseResult<InAppTransactionViewModel>> PurchaseSong(PurchasedSongRequestModel request);
+        public Task<ResponseResult<InAppTransactionViewModel>> PurchaseItem(PurchaseItemRequestModel request);
 
 
     }
