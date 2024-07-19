@@ -65,8 +65,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             Account result = new Account();
             try
             {
-                result = FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()) 
-                            && x.AccountStatus == 1).Result;
+                result = FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower())).Result;
             }catch(Exception ex)
             {
                 throw new Exception(ex?.Message);
