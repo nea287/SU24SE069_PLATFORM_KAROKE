@@ -208,6 +208,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.ItemId).HasColumnName("item_id");
 
                 entity.Property(e => e.ItemStatus).HasColumnName("item_status");
+                entity.Property(e => e.InAppTransactionId).HasColumnName("in_app_transaction_id");
 
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
 
@@ -228,6 +229,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__AccountIn__membe__7F2BE32F");
+
+                entity.HasOne(d => d.InAppTransaction)
+                    .WithMany(p => p.AccountItems)
+                    .HasForeignKey(d => d.InAppTransactionId)
+                    .HasConstraintName("FK_AccountItem_InAppTransaction");
             });
 
             modelBuilder.Entity<Artist>(entity =>
@@ -404,6 +410,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("up_total_amount");
 
                 entity.Property(e => e.Status).HasColumnName("status");
+                entity.Property(e => e.MonetaryTransactionId).HasColumnName("monetary_transaction_id");
 
                 entity.Property(e => e.TransactionType).HasColumnName("transaction_type");
 
@@ -424,6 +431,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasForeignKey(d => d.SongId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__InAppTran__song___08B54D69");
+
+                entity.HasOne(d => d.MonetaryTransaction)
+                    .WithMany(p => p.InAppTransactions)
+                    .HasForeignKey(p => p.MonetaryTransactionId)
+                    .HasConstraintName("FK_InAppTransaction_MonetaryTransaction_MonetaryTransactionId");
+                   
+
             });
 
             modelBuilder.Entity<Item>(entity =>
@@ -478,6 +492,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .WithMany(p => p.Items)
                     .HasForeignKey(d => d.CreatorId)
                     .HasConstraintName("FK__Item__creator_id__0A9D95DB");
+
             });
 
             modelBuilder.Entity<KaraokeRoom>(entity =>
@@ -810,6 +825,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
+                entity.Property(e => e.InAppTransactionId).HasColumnName("in_app_transaction_id");
 
                 entity.Property(e => e.PurchaseDate)
                     .HasColumnType("datetime")
@@ -828,6 +844,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasForeignKey(d => d.SongId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Purchased__song___1BC821DD");
+
+                entity.HasOne(d => d.InAppTransaction)
+                      .WithMany(p => p.PurchasedSongs)
+                      .HasForeignKey(d => d.InAppTransactionId)
+                      .HasConstraintName("FK_PurchasedSong_InAppTransaction_InAppTransactionId");
             });
 
             modelBuilder.Entity<Recording>(entity =>

@@ -8,6 +8,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public InAppTransaction()
         {
             PurchasedSongs = new HashSet<PurchasedSong>();
+            AccountItems = new HashSet<AccountItem>();  
         }
         public Guid InAppTransactionId { get; set; }
         public int Status { get; set; }
@@ -23,8 +24,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual Item Item { get; set; } = null!;
         public virtual Account Member { get; set; } = null!;
         public virtual Song Song { get; set; } = null!;
-        public virtual MonetaryTransaction MonetaryTransaction { get; set; }
+        public virtual MonetaryTransaction? MonetaryTransaction { get; set; }
         public virtual ICollection<PurchasedSong> PurchasedSongs { get; set; }
+        public virtual ICollection<AccountItem> AccountItems { get; set; }
 
     }
 }

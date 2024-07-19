@@ -212,6 +212,14 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             InAppTransaction transation = new InAppTransaction();
             try
             {
+                if (await _repository.CheckPurchasedSong1(request.MemberId, request.SongId))
+                {
+                    return new ResponseResult<InAppTransactionViewModel>()
+                    {
+                        Message = Constraints.INFORMATION_EXISTED,
+                        result = false,
+                    };
+                }
                 Account? data = JsonConvert.DeserializeObject<List<Account>>(SupportingFeature.Instance.GetDataFromCache(_cache, Constraints.ACCOUNTS))?
                                                                                        .FirstOrDefault(x => x.AccountId == request.MemberId);
 
@@ -227,16 +235,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     dataSong = await _songRepository.GetByIdGuid(request.SongId);
                 }
 
-                if(_repository.CheckPurchasedSong(request.MemberId, request.SongId))
-                {
-                    return new ResponseResult<InAppTransactionViewModel>()
-                    {
-                        Message = Constraints.INFORMATION_EXISTED,
-                        result = false,
-                    };
-                }
 
-                
+
+
 
                 if (data.UpBalance < dataSong.Price)
                 {
@@ -304,6 +305,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             InAppTransaction transation = new InAppTransaction();
             try
             {
+                if (await _repository.CheckPurchasedItem1(request.MemberId, request.ItemId))
+                {
+                    return new ResponseResult<InAppTransactionViewModel>()
+                    {
+                        Message = Constraints.INFORMATION_EXISTED,
+                        result = false,
+                    };
+                }
+
                 Account? data = JsonConvert.DeserializeObject<List<Account>>(SupportingFeature.Instance.GetDataFromCache(_cache, Constraints.ACCOUNTS))?
                                                                                        .FirstOrDefault(x => x.AccountId == request.MemberId);
 
@@ -319,14 +329,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     dataItem = await _itemRepository.GetByIdGuid(request.ItemId);
                 }
 
-                if(_repository.CheckPurchasedItem(request.MemberId, request.ItemId))
-                {
-                    return new ResponseResult<InAppTransactionViewModel>()
-                    {
-                        Message = Constraints.INFORMATION_EXISTED,
-                        result = false,
-                    };
-                }
+
 
                 if (data.UpBalance < dataItem.ItemBuyPrice)
                 {
@@ -349,13 +352,17 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     UpAmountBefore = dataItem.ItemBuyPrice,
                     UpTotalAmount = dataItem.ItemBuyPrice,
                     TransactionType = (int)PaymentType.MOMO,
-                    PurchasedSongs = new List<PurchasedSong>()
+                    AccountItems = new List<AccountItem>()
                     {
-                        new PurchasedSong()
+                        new AccountItem()
                         {
-                            PurchaseDate = DateTime.Now,
+                            ActivateDate = DateTime.Now,
                             MemberId=request.MemberId,
-                            SongId=request.ItemId,
+                            ItemId=request.ItemId,
+                            ItemStatus = (int)ItemStatus.ENABLE,
+                            Quantity = request.Quantity,
+                            ExpirationDate = new DateTime(day: DateTime.Now.Day, month: DateTime.Now.Month, year: DateTime.Now.Year + 100),
+                            ObtainMethod = 1
                         }
                     }
 
