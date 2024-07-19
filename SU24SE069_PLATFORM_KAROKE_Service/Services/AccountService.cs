@@ -545,7 +545,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             {
                 AccountId = newAccountId,
                 UserName = signUpRequest.Username,
-                Password = BCrypt.Net.BCrypt.HashPassword(signUpRequest.Password),
+                Password = BCrypt.Net.BCrypt.HashPassword(signUpRequest.Password, 12),
                 Email = signUpRequest.Email,
                 Gender = (int)signUpRequest.Gender,
                 Role = (int)AccountRole.MEMBER,
