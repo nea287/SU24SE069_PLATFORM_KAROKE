@@ -1,10 +1,5 @@
 ﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
@@ -42,6 +37,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return result;
         }
         #endregion
+
         #region Create
         public async Task<bool> CreateAccount(Account request)
         {
@@ -65,10 +61,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             Account result = new Account();
             try
             {
-                result = FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower())).Result;
-            }catch(Exception ex)
+                result = await FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            }catch(Exception)
             {
-                throw new Exception(ex?.Message);
+                throw new Exception();
             }
 
             return result;
@@ -84,7 +80,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 await UpdateGuid(request, request.AccountId);
                 SaveChages();
 
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return false;  
             }
