@@ -137,7 +137,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
 
             #region FavouriteSong
-            CreateMap<FavouriteSong, FavouriteSongViewModel>().ReverseMap();
+            CreateMap<FavouriteSong, FavouriteSongViewModel>()
+                .ForMember(x => x.Artists, dest => dest.MapFrom(opt => opt.Song.SongArtists.Select(a => a.Artist.ArtistName)))
+                .ForMember(x => x.Singers, dest => dest.MapFrom(opt => opt.Song.SongSingers.Select(a => a.Singer.SingerName)))  
+                .ForMember(x => x.Genres, dest => dest.MapFrom(opt => opt.Song.SongGenres.Select(a => a.Genre.GenreName)))
+                .ReverseMap();
             CreateMap<FavouriteSong, CreateFavouriteSongRequestModel>().ReverseMap();
             CreateMap<FavouriteSongViewModel, CreateFavouriteSongRequestModel>().ReverseMap();
             #endregion
