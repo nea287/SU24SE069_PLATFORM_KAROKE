@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Castle.Core.Internal;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
@@ -84,6 +86,17 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.ItemStatus, dest => dest.MapFrom(src => (ItemStatus)src.ItemStatus))
                 .ReverseMap();
 
+            CreateMap<Item, ItemFilter>()
+                .ForMember(x => x.ItemType, dest => dest.MapFrom(src => (ItemType)src.ItemType))
+                .ForMember(x => x.ItemStatus, dest => dest.MapFrom(src => (ItemStatus)src.ItemStatus))
+                .ForMember(x => x.BuyerId, dest =>
+                {
+                          dest.MapFrom(a => a.AccountItems.Any() && a.AccountItems != null ? a.AccountItems.Select(t => t.MemberId).First() : (Guid?)null);
+                })
+                .ReverseMap();
+
+            CreateMap<ItemViewModel, ItemFilter>().ReverseMap();
+
             CreateMap<Item, CreateItemRequestModel>().ReverseMap();
             CreateMap<Item, UpdateItemRequestModel>().ReverseMap();
             CreateMap<ItemViewModel, CreateItemRequestModel>().ReverseMap();
@@ -155,7 +168,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                     .ForMember(x => x.Price, dest => dest.MapFrom(dest => dest.Song.Price))
                     .ForMember(x => x.SongName, dest => dest.MapFrom(dest => dest.Song.SongName))
                     .ForMember(x => x.Artists, dest => dest.MapFrom(dest => dest.Song.SongArtists.Select(a => a.Artist.ArtistName)))
-                    .ForMember(x => x.Singers, dest => dest.MapFrom(dest => dest.Song.SongSingers.Select(a => a.Singer.SingerName))) 
+                    .ForMember(x => x.Singers, dest => dest.MapFrom(dest => dest.Song.SongSingers.Select(a => a.Singer.SingerName)))
                     .ForMember(x => x.Genres, dest => dest.MapFrom(dest => dest.Song.SongGenres.Select(a => a.Genre.GenreName)))
             .ReverseMap();
 

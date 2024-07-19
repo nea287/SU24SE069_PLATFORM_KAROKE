@@ -16,7 +16,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             try
             {
                 await InsertAsync(item);
-                SaveChages();
+                await SaveChagesAsync();
             }catch(Exception ex)
             {
                 return false;

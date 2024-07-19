@@ -1,21 +1,15 @@
 ﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
-using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
+namespace SU24SE069_PLATFORM_KAROKE_Service.Filters
 {
-    public class ItemViewModel
+    public class ItemFilter
     {
-        //public ItemViewModel()
-        //{
-        //    AccountInventoryItems = new HashSet<AccountInventoryItem>();
-        //    InAppTransactions = new HashSet<InAppTransaction>();
-        //}
-
         public Guid? ItemId { get; set; }
         public string? ItemCode { get; set; }
         public string? ItemName { get; set; }
@@ -28,10 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public DateTime? CreatedDate { get; set; }
         public Guid? CreatorId { get; set; }
         public string? PrefabCode { get; set; }
+        public Guid? BuyerId { get; set; }
         public ICollection<AccountItemViewModel>? AccountItems { get; set; }
-
-
-        //public ICollection<AccountInventoryItem>? AccountInventoryItems { get; set; }
-        //public ICollection<InAppTransaction>? InAppTransactions { get; set; }
     }
 }

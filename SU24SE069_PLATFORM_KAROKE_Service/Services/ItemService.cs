@@ -7,6 +7,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
@@ -131,19 +132,20 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public DynamicModelResponse.DynamicModelsResponse<ItemViewModel> GetItems(ItemViewModel filter, PagingRequest request, ItemOrderFilter orderFilter)
+        public DynamicModelResponse.DynamicModelsResponse<ItemViewModel> GetItems(ItemFilter filter, PagingRequest request, ItemOrderFilter orderFilter)
         {
             (int, IQueryable<ItemViewModel>) result;
             try
             {
                 lock (_itemRepository)
                 {
-                    var data = _itemRepository.GetAll(
+                    var data1 = _itemRepository.GetAll(
                                                 includeProperties: String.Join(",",
                                                 SupportingFeature.GetNameIncludedProperties<Item>()))
-                        .AsQueryable()
-                        .ProjectTo<ItemViewModel>(_mapper.ConfigurationProvider)
-                        .DynamicFilter(filter);
+                        .ProjectTo<ItemFilter>(_mapper.ConfigurationProvider)
+                        .DynamicFilter(_mapper.Map<ItemFilter>(filter)).ToList();
+
+                    var data = _mapper.Map<List<ItemViewModel>>(data1).AsQueryable();
 
                     string? colName = Enum.GetName(typeof(ItemOrderFilter), orderFilter);
                     data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)request.OrderType, colName).AsQueryable();
