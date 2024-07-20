@@ -2,6 +2,7 @@
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
 using System;
@@ -18,7 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<SongViewModel>> UpdateSong(Guid id, UpdateSongRequestModel song);
         public Task<ResponseResult<SongViewModel>> DeleteSong(Guid id);
         public Task<ResponseResult<SongViewModel>> CreateSong(CreateSongRequestModel request);
-        public DynamicModelResponse.DynamicModelsResponse<SongViewModel> GetSongs(SongViewModel filter,
+        public DynamicModelResponse.DynamicModelsResponse<SongViewModel> GetSongs(SongFilter filter,
             PagingRequest paging, SongOrderFilter orderFilter);
     }
 }

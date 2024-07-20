@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using AutoMapper.QueryableExtensions;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
@@ -68,20 +69,20 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         }
 
         public DynamicModelResponse.DynamicModelsResponse<SongViewModel> GetSongs(
-            SongViewModel filter, PagingRequest paging, SongOrderFilter orderFilter)
+            SongFilter filter, PagingRequest paging, SongOrderFilter orderFilter)
         {
             (int, IQueryable<SongViewModel>) result;
             try
             {
                 lock (_songRepository)
                 {
-                    var data = _songRepository.GetAll(
+                    var data1 = _songRepository.GetAll(
                                                 includeProperties: String.Join(",",
                                                 SupportingFeature.GetNameIncludedProperties<Song>()))
-                        .AsQueryable()
+                        .ProjectTo<SongFilter>(_mapper.ConfigurationProvider)
+                        .DynamicFilter(filter).ToList();
 
-                        .ProjectTo<SongViewModel>(_mapper.ConfigurationProvider)
-                        .DynamicFilter(filter);
+                    var data = _mapper.Map<ICollection<SongViewModel>>(data1).AsQueryable();
 
                     string? colName = Enum.GetName(typeof(SongOrderFilter), orderFilter);
 
