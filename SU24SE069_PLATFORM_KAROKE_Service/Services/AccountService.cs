@@ -77,6 +77,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             }
             catch (Exception)
             {
+                await _accountRepository.DisponseAsync();
                 result = new UserLoginResponse()
                 {
                     Message = Constraints.LOAD_FAILED,
@@ -117,6 +118,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             }
             catch (Exception)
             {
+                await _accountRepository.DisponseAsync();
                 result = new ResponseResult<AccountViewModel>()
                 {
                     Message = Constraints.LOAD_FAILED,
@@ -127,7 +129,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             return result;
         }
 
-        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccounts(
+        public async DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccounts(
             AccountViewModel filter, PagingRequest paging, AccountOrderFilter orderFilter)
         {
             (int, IQueryable<AccountViewModel>) result;
@@ -166,6 +168,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             }
             catch (Exception)
             {
+                await _accountRepository.DisponseAsync();
                 return new DynamicModelResponse.DynamicModelsResponse<AccountViewModel>()
                 {
                     Message = Constraints.LOAD_FAILED,
@@ -227,6 +230,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             }
             catch (Exception)
             {
+                await _accountRepository.DisponseAsync();
                 return new ResponseResult<AccountViewModel>()
                 {
                     Message = Constraints.CREATE_FAILED,
@@ -296,6 +300,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             }
             catch (Exception)
             {
+                await _accountRepository.DisponseAsync();
                 return new ResponseResult<AccountViewModel>()
                 {
                     Message = Constraints.UPDATE_FAILED,
@@ -339,6 +344,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             }
             catch (Exception)
             {
+                await _accountRepository.DisponseAsync();
                 return new ResponseResult<AccountViewModel>()
                 {
                     Message = Constraints.DELETE_FAILED,
@@ -422,6 +428,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             }
             catch (Exception)
             {
+                await _accountRepository.DisponseAsync();
                 return new ResponseResult<AccountViewModel>()
                 {
                     Message = Constraints.CREATE_FAILED,
