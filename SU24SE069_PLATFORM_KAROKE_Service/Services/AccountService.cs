@@ -129,7 +129,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             return result;
         }
 
-        public async DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccounts(
+        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccounts(
             AccountViewModel filter, PagingRequest paging, AccountOrderFilter orderFilter)
         {
             (int, IQueryable<AccountViewModel>) result;
@@ -168,7 +168,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             }
             catch (Exception)
             {
-                await _accountRepository.DisponseAsync();
+                //await _accountRepository.DisponseAsync();
                 return new DynamicModelResponse.DynamicModelsResponse<AccountViewModel>()
                 {
                     Message = Constraints.LOAD_FAILED,
