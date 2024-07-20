@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Swashbuckle.AspNetCore.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public ICollection<string>? Genres { get; set; }
         public ICollection<string>? Singers { get; set; }
         public decimal? Price { get; set; }
+        [SwaggerIgnore]
         public ICollection<string>? Artists { get; set; }
     }
 }
