@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using SU24SE069_PLATFORM_KAROKE_Service;
 using SU24SE069_PLATFORM_KAROKE_Service.Validator;
+using SU24SE069_PLATFORM_KAROKE_Service.Commons;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperResolver));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.SchemaFilter<SwaggerIgnoreFilter>();
     #region JWT
     //Khai bao bearer token trong swagger
     var securityScheme = new Microsoft.OpenApi.Models.OpenApiSecurityScheme

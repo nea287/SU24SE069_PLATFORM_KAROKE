@@ -2,11 +2,7 @@
 using Newtonsoft.Json;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Filters
 {
@@ -26,25 +22,25 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Filters
         public string? GenreName { get; set; }
         public string? SingerName { get; set; }
         public string? ArtistName { get; set; }
-        [JsonIgnore]
+        [SwaggerIgnore]
         public ICollection<string>? Genre { get; set; }
-        [JsonIgnore]
+        [SwaggerIgnore]
         public ICollection<string>? Singer { get; set; }
-        [JsonIgnore]
+        [SwaggerIgnore]
         public ICollection<string>? Artist { get; set; }
-        [JsonIgnore]
+        [SwaggerIgnore]
         public ICollection<FavouriteSongViewModel>? FavouriteSongs { get; set; }
-        [JsonIgnore]
+        [SwaggerIgnore]
         public ICollection<InAppTransactionViewModel>? InAppTransactions { get; set; }
-        [JsonIgnore]
+        [SwaggerIgnore]
         public ICollection<PurchasedSongViewModel>? PurchasedSongs { get; set; }
-        [JsonIgnore]
+        [SwaggerIgnore]
         public ICollection<RecordingViewModel>? Recordings { get; set; }
-        [JsonIgnore]
+        [SwaggerIgnore]
         public ICollection<SongArtistViewModel>? SongArtists { get; set; }
-        [JsonIgnore]
+        [SwaggerIgnore]
         public ICollection<SongGenreViewModel>? SongGenres { get; set; }
-        [JsonIgnore]
+        [SwaggerIgnore]
         public ICollection<SongSingerViewModel>? SongSingers { get; set; }
     }
 }
