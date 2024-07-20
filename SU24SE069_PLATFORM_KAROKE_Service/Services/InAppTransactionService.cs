@@ -379,10 +379,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     throw new Exception();
                 }
 
-
+               
             }
             catch (Exception)
             {
+                await _accountRepository.DisponseAsync();
+                
                 return new ResponseResult<InAppTransactionViewModel>()
                 {
                     Message = Constraints.PURCHASE_ITEM_FAILED,
