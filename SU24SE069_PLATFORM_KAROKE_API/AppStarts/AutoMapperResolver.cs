@@ -114,11 +114,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<Item, ItemViewModel>()
                 .ForMember(x => x.ItemType, dest => dest.MapFrom(src => (ItemType)src.ItemType))
                 .ForMember(x => x.ItemStatus, dest => dest.MapFrom(src => (ItemStatus)src.ItemStatus))
+                .ForMember(x => x.CreatorMail, dest => dest.MapFrom(src => src.Creator.Email))
                 .ReverseMap();
 
             CreateMap<Item, ItemFilter>()
                 .ForMember(x => x.ItemType, dest => dest.MapFrom(src => (ItemType)src.ItemType))
                 .ForMember(x => x.ItemStatus, dest => dest.MapFrom(src => (ItemStatus)src.ItemStatus))
+                .ForMember(x => x.CreatorMail, dest => dest.MapFrom(src => src.Creator.Email))
+
                 .ForMember(x => x.BuyerId, dest =>
                 {
                           dest.MapFrom(a => a.AccountItems.Any() && a.AccountItems != null ? a.AccountItems.Select(t => t.MemberId).First() : (Guid?)null);
