@@ -552,6 +552,17 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return entity;
         }
 
+        public async Task DisponseAsync()
+        {
+            try
+            {
+                await BaseDAO<TEntity>.Instance.DisponseAsync();
+            }catch (Exception)
+            {
+                throw new Exception();
+            }
+        }
+
         public DbSet<TEntity> GetDbSet()
         {
             return BaseDAO<TEntity>.Instance.GetDbSet();

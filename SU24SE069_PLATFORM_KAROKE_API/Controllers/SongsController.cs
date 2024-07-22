@@ -6,6 +6,7 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
@@ -34,7 +35,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetSongs([FromQuery]SongViewModel filter,
+        public IActionResult GetSongs([FromQuery]SongFilter filter,
             [FromQuery]PagingRequest paging,[FromQuery] SongOrderFilter orderFilter = SongOrderFilter.UpdatedDate)
         {
             DynamicModelResponse.DynamicModelsResponse<SongViewModel> rs = _songService.GetSongs(filter, paging, orderFilter);

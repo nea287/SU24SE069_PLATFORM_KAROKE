@@ -1,4 +1,7 @@
-﻿namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
+﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+using Swashbuckle.AspNetCore.Annotations;
+
+namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
 {
     public class PostCommentViewModel
     {
@@ -10,8 +13,8 @@
         public Guid? ParentCommentId { get; set; }
         public Guid? MemberId { get; set; }
         public Guid? PostId { get; set; }
-        public DateTime? CreateTime { get; set; }
-
-        public ICollection<PostCommentViewModel>? InverseParentComment { get; set; }
+        public DateTime? UploadTime { get; set; }
+        [SwaggerIgnore]
+        public ICollection<PostComment>? InverseParentComment { get; set; }
     }
 }

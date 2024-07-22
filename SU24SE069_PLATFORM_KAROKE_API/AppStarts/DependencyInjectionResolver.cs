@@ -19,6 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddSingleton(typeof(IBaseDAO<>), typeof(BaseDAO<>));
             services.AddScoped<ITokenService, TokenService>();
             services.AddSingleton(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddHttpClient();
 
             #region Account
             services.AddScoped<IAccountRepository, AccountRepository>();
@@ -68,6 +69,10 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region Money Transaction
             services.AddScoped<IMonetaryTransactionRepository, MonetaryTransactionRepository>();
             services.AddScoped<IMonetaryTransactionService, MonetaryTransactionService>();
+            #endregion
+
+            #region Money Transaction
+            services.AddScoped<IMomoService, MomoService>();
             #endregion
 
             #region KaraokeRoom

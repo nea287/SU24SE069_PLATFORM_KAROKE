@@ -51,6 +51,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 }
             }catch(Exception)
             {
+                await _inventoryRepository.DisponseAsync();
                 return new ResponseResult<AccountItemViewModel>()
                 {
                     Message = Constraints.CREATE_FAILED,
@@ -101,6 +102,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             }
             catch (Exception)
             {
+                //await _inventoryRepository.DisponseAsync();
                 return new DynamicModelResponse.DynamicModelsResponse<AccountItemViewModel>()
                 {
                     Message = Constraints.LOAD_FAILED,
@@ -153,6 +155,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 }
             }catch(Exception)
             {
+                await  _inventoryRepository.DisponseAsync();
                 return new ResponseResult<AccountItemViewModel>()
                 {
                     Message = Constraints.UPDATE_FAILED,

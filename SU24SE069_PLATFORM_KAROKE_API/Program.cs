@@ -3,11 +3,13 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SU24SE069_PLATFORM_KAROKE_API.AppStarts;
 using SU24SE069_PLATFORM_KAROKE_DAO.DAO;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json.Serialization;
 using SU24SE069_PLATFORM_KAROKE_Service;
 using SU24SE069_PLATFORM_KAROKE_Service.Validator;
+using SU24SE069_PLATFORM_KAROKE_Service.Commons;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
+#region Momo
+builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
+#endregion
 
 #region AppStarts
 builder.Services.ConfigDI();
@@ -27,6 +32,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperResolver));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.SchemaFilter<SwaggerIgnoreFilter>();
     #region JWT
     //Khai bao bearer token trong swagger
     var securityScheme = new Microsoft.OpenApi.Models.OpenApiSecurityScheme

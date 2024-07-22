@@ -279,6 +279,14 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.DAO
             return Table.Find(data);
         }
 
+        public async Task DisponseAsync()
+        {
+           await _context.DisposeAsync();
+            instance = null;
+
+
+        }
+
         public DbSet<TEntity> GetDbSet()
         {
             return Table;
