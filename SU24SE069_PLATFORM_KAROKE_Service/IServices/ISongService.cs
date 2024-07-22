@@ -24,6 +24,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public DynamicModelResponse.DynamicModelsResponse<SongViewModel> GetSongs(SongFilter filter,
             PagingRequest paging, SongOrderFilter orderFilter);
 
-        public Task<DynamicModelsResponse<SongDTO>> GetSongsPurchaseFavorite(Guid accountId, SongViewModel filter, PagingRequest paging, SongOrderFilter orderFilter = SongOrderFilter.SongName);
+        public Task<DynamicModelsResponse<SongDTO>> GetSongsPurchaseFavorite(Guid accountId, SongFilter filter, PagingRequest paging, SongOrderFilter orderFilter = SongOrderFilter.SongName);
     }
 }

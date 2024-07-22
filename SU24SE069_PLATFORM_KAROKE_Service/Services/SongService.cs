@@ -266,19 +266,21 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
         #region Query
 
-        public async Task<DynamicModelResponse.DynamicModelsResponse<SongDTO>> GetSongsPurchaseFavorite(Guid accountId, SongViewModel filter, PagingRequest paging, SongOrderFilter orderFilter = SongOrderFilter.SongName)
+        public async Task<DynamicModelResponse.DynamicModelsResponse<SongDTO>> GetSongsPurchaseFavorite(Guid accountId, SongFilter filter, PagingRequest paging, SongOrderFilter orderFilter = SongOrderFilter.SongName)
         {
             (int, IQueryable<SongViewModel>) result;
             try
             {
                 lock (_songRepository)
                 {
-                    var data = _songRepository.GetAll(
+                    var data1 = _songRepository.GetAll(
                                                 includeProperties: String.Join(",",
                                                 SupportingFeature.GetNameIncludedProperties<Song>()))
-                        .AsQueryable()
-                        .ProjectTo<SongViewModel>(_mapper.ConfigurationProvider)
-                        .DynamicFilter(filter);
+                        .ProjectTo<SongFilter>(_mapper.ConfigurationProvider)
+                        .DynamicFilter(filter)
+                        .ToList();
+
+                    var data = _mapper.Map<ICollection<SongViewModel>>(data1).AsQueryable();
 
                     string? colName = Enum.GetName(typeof(SongOrderFilter), orderFilter);
 
@@ -307,6 +309,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 },
                 Results = _mapper.Map<List<SongDTO>>(result.Item2.ToList())
             };
+            // If result has song, check if the account (accountId) has purchase or favorite the songs
             if(finalResult.Results != null && finalResult.Results.Count > 0)
             {
                 foreach (var song in finalResult.Results)
