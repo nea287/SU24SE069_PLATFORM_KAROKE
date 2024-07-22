@@ -25,7 +25,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         {
             var rs = await _service.GetRatings(filter, paging, orderFilter);
 
-            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : BadRequest(rs);
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
 
         [HttpPost]
