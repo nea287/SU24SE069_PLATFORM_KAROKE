@@ -296,7 +296,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         ParentCommentId,
         MemberId,
         PostId,
-        CreateTime
+        UploadTime
     }
     #endregion
 

@@ -22,7 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetComments([FromQuery] PostCommentViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] PostCommentFilter orderFilter = PostCommentFilter.CreateTime)
+        public async Task<IActionResult> GetComments([FromQuery] PostCommentViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] PostCommentFilter orderFilter = PostCommentFilter.UploadTime)
         {
             var rs = await _service.GetComments(filter, paging, orderFilter);
 
