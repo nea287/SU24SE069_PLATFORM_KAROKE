@@ -54,5 +54,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.IDAO
         public void DetachEntity(TEntity entity);
         public TEntity? FindEntity(params object[] data);
         public Task DisponseAsync();
+        public DbSet<TEntity> GetDbSet();
     }
 }
