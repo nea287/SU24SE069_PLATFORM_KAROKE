@@ -22,11 +22,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
     {
         private readonly IMapper _mapper;
         private readonly ISongRepository _songRepository;
+        private readonly IPurchasedSongRepository _purchasedSongRepository;
+        private readonly IFavouriteSongRepository _favouriteSongRepository;
 
-        public SongService(IMapper mapper, ISongRepository songRepository)
+        public SongService(IMapper mapper, ISongRepository songRepository, IPurchasedSongRepository purchasedSongRepository, IFavouriteSongRepository favouriteSongRepository)
         {
             _mapper = mapper;
             _songRepository = songRepository;
+            _purchasedSongRepository = purchasedSongRepository;
+            _favouriteSongRepository = favouriteSongRepository;
         }
         #region Read
         public async Task<ResponseResult<SongViewModel>> GetSong(Guid accountId)
@@ -198,7 +202,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     _songRepository.DetachEntity(data1);
                     _songRepository.MotifyEntity(data);
 
-                    if(!_songRepository.UpdateSong(id, data).Result)
+                    if (!_songRepository.UpdateSong(id, data).Result)
                     {
                         _songRepository.DetachEntity(data);
                         throw new Exception();
@@ -235,7 +239,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 {
                     throw new Exception();
                 }
-            }catch(Exception)
+            }
+            catch (Exception)
             {
                 return new ResponseResult<SongViewModel>()
                 {
@@ -250,6 +255,62 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 result = true,
             };
         }
+        #endregion
+
+        #region Query
+
+        public async Task<DynamicModelResponse.DynamicModelsResponse<SongDTO>> GetSongsPurchaseFavorite(Guid accountId, SongViewModel filter, PagingRequest paging, SongOrderFilter orderFilter = SongOrderFilter.SongName)
+        {
+            (int, IQueryable<SongViewModel>) result;
+            try
+            {
+                lock (_songRepository)
+                {
+                    var data = _songRepository.GetAll(
+                                                includeProperties: String.Join(",",
+                                                SupportingFeature.GetNameIncludedProperties<Song>()))
+                        .AsQueryable()
+                        .ProjectTo<SongViewModel>(_mapper.ConfigurationProvider)
+                        .DynamicFilter(filter);
+
+                    string? colName = Enum.GetName(typeof(SongOrderFilter), orderFilter);
+
+                    data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
+
+                    result = data.PagingIQueryable(paging.page, paging.pageSize,
+                            Constraints.LimitPaging, Constraints.DefaultPaging);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new DynamicModelResponse.DynamicModelsResponse<SongDTO>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+
+            var finalResult = new DynamicModelResponse.DynamicModelsResponse<SongDTO>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = _mapper.Map<List<SongDTO>>(result.Item2.ToList())
+            };
+            if(finalResult.Results != null && finalResult.Results.Count > 0)
+            {
+                foreach (var song in finalResult.Results)
+                {
+                    song.isPurchased = _purchasedSongRepository.GetDbSet().Any(s => s.SongId == song.SongId && s.MemberId == accountId);
+                    song.isFavorite = _favouriteSongRepository.GetDbSet().Any(s => s.SongId == song.SongId && s.MemberId == accountId);
+                }
+            }
+            return finalResult;
+        }
+
         #endregion
     }
 

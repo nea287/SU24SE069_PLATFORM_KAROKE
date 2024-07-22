@@ -551,5 +551,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 
             return entity;
         }
+
+        public DbSet<TEntity> GetDbSet()
+        {
+            return BaseDAO<TEntity>.Instance.GetDbSet();
+        }
     }
 }

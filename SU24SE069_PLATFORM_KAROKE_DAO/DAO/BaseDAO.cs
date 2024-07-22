@@ -278,5 +278,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.DAO
         {
             return Table.Find(data);
         }
+
+        public DbSet<TEntity> GetDbSet()
+        {
+            return Table;
+        }
     }
 }
