@@ -16,5 +16,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PurchasedSong
         public Guid MemberId { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public Guid SongId { get; set; }
+        //[Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
+        //public int Quantity { get; set; }
     }
 }

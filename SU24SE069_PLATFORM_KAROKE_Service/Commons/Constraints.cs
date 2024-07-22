@@ -62,5 +62,25 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         public const string START_DATE_END_DATE = "Ngày bắt đầu phải lớn hơn hoặc bằng ngày kết thúc";
         public const string START_YEAR_END_YEAR = "Năm bắt đầu phải lớn hơn hoặc bằng năm kết thúc";
         #endregion
+
+        #region name key of cache
+        public const string ACCOUNTS = "ACCOUNTS";
+        public const string ACCOUNT = "account, id: ";
+        public const string SONGS = "SONGS";
+        public const string SONG = "song, id: ";
+        public const string ITEMS = "ITEMS";
+        public const string ITEM = "item, id: ";
+        #endregion
+
+        #region Purchase Song 
+        public const string INSUFFICIENT_FUNDS = "Tài khoản không đủ để thực hiện giao dịch";
+        public const string PURCHASE_SONG_FAILED = "Mua bài hát thất bại, Vui lòng thử lại!";
+        public const string PURCHASE_SONG_SUCCESS = "Mua bài hát thành công!";
+        #endregion
+
+        #region Purchase Item
+        public const string PURCHASE_ITEM_FAILED = "Mua vật phẩm thất bại, Vui lòng thử lại!";
+        public const string PURCHASE_ITEM_SUCCESS = "Mua vật phẩm thành công!";
+        #endregion
     }
 }

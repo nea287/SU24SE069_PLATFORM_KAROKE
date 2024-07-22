@@ -1,14 +1,20 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
+using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PurchasedSong;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +26,17 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
     public class MonetaryTransactionService : IMonetaryTransactionService
     {
+        private readonly IAccountRepository _accountRepository;
+        private readonly ISongRepository _songRepository;
+        private readonly IMemoryCache _cache;
         private readonly IMapper _mapper;
         private readonly IMonetaryTransactionRepository _repository;
 
-        public MonetaryTransactionService(IMapper mapper, IMonetaryTransactionRepository repository)
+        public MonetaryTransactionService(IMapper mapper, IMonetaryTransactionRepository repository, IMemoryCache cache, IAccountRepository accountRepository, ISongRepository songRepository)
         {
+            _accountRepository = accountRepository;
+            _songRepository = songRepository;
+            _cache = cache;
             _mapper = mapper;
             _repository = repository;
         }
@@ -154,5 +166,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Value = _mapper.Map<MonetaryTransactionViewModel>(rs)
             };
         }
+        
     }
 }

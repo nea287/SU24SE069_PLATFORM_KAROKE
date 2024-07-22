@@ -8,6 +8,7 @@ using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PurchasedSong;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,5 +71,25 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Results = result.Item2.ToList()
             };
         }
+
+        //public async Task<ResponseResult<PurchasedSongViewModel>> PurchageSong(PurchasedSongRequestModel request)
+        //{
+        //    try
+        //    {
+        //        if (_repository.CheckPurchasedSong(request.MemberId, request.SongId))
+        //        {
+        //            return new ResponseResult<PurchasedSongViewModel>()
+        //            {
+        //                Message = Constraints.INFORMATION_EXISTED
+        //            };
+        //        }
+
+
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //    }
+        //}
     }
 }

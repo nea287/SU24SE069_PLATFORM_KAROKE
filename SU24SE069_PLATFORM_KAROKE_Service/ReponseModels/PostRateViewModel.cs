@@ -14,6 +14,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public Guid PostId { get; set; }
         public int? VoteType { get; set; }
         public int? Category { get; set; }
-        public string? Comment { get; set; } = null!;
+        public string? Comment { get; set; }
     }
 }

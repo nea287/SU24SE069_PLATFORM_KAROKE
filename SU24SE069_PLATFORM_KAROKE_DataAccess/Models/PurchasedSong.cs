@@ -9,8 +9,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public DateTime PurchaseDate { get; set; }
         public Guid MemberId { get; set; }
         public Guid SongId { get; set; }
+        public Guid? InAppTransactionId { get; set; }
 
         public virtual Account Member { get; set; } = null!;
         public virtual Song Song { get; set; } = null!;
+        public virtual InAppTransaction? InAppTransaction { get; set; }
     }
 }

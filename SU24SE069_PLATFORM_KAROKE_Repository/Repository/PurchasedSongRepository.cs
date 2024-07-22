@@ -10,6 +10,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
     public class PurchasedSongRepository : BaseRepository<PurchasedSong>, IPurchasedSongRepository
     {
+        public bool CheckPurchasedSong(Guid memberId, Guid songId)
+        {
+            return Any(x => x.MemberId == memberId && x.SongId == songId);
+        }
+
         public async Task<bool> CreatePurchasedSong(PurchasedSong purchasedSong)
         {
             try

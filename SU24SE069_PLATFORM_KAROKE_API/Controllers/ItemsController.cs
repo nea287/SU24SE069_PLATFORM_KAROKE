@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
@@ -31,7 +32,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetItems([FromQuery] ItemViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] ItemOrderFilter orderFilter = ItemOrderFilter.CreatedDate)
+        public IActionResult GetItems([FromQuery] ItemFilter filter, [FromQuery] PagingRequest paging, [FromQuery] ItemOrderFilter orderFilter = ItemOrderFilter.CreatedDate)
         {
             var rs = _itemService.GetItems(filter, paging, orderFilter);
 

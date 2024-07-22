@@ -1,10 +1,5 @@
 ﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
@@ -42,6 +37,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return result;
         }
         #endregion
+
         #region Create
         public async Task<bool> CreateAccount(Account request)
         {
@@ -65,11 +61,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             Account result = new Account();
             try
             {
-                result = FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()) 
-                            && x.AccountStatus == 1).Result;
-            }catch(Exception ex)
+                result = await FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            }catch(Exception)
             {
-                throw new Exception(ex?.Message);
+                throw new Exception();
             }
 
             return result;
@@ -85,7 +80,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 await UpdateGuid(request, request.AccountId);
                 SaveChages();
 
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return false;  
             }
@@ -100,6 +95,16 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             => this.Any(x =>
                         x.Email.ToLower().Equals(email??"null".ToLower())
                         || x.UserName.ToLower().Equals(username??"null".ToLower(), StringComparison.Ordinal));
+
+        public bool IsAccountEmailExisted(string email)
+        {
+            return Any(a => a.Email.Trim().ToLower() == email.Trim().ToLower());
+        }
+
+        public bool IsAccountUsernameExisted(string username)
+        {
+            return Any(a => a.UserName.Trim().ToLower() == username.Trim().ToLower());
+        }
 
         #endregion
     }

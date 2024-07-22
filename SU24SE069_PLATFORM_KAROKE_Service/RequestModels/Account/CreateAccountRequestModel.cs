@@ -22,7 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
         ///public bool IsVerified { get; set; }
         public AccountRole Role { get; set; }
         [RegularExpression(Constraints.VALIDATE_AMOUNT, ErrorMessage = Constraints.STAR_INVALID)]
-        public decimal Star { get; set; }
+        public decimal UpBalance { get; set; }
         //public bool? IsOnline { get; set; } = false;3
         public string? Fullname { get; set; }
         [InRangeOneHundredAttribute(ErrorMessage = Constraints.INFORMATION_INVALID)]

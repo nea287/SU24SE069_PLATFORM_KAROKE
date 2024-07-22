@@ -5,6 +5,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 {
@@ -25,7 +26,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         {
             var rs = await _accountService.Login(request.email, request.password);
 
-            return rs.Result.HasValue? (rs.Result.Value? Ok(rs) : BadRequest(rs)): BadRequest(rs);
+            return rs.Result.HasValue ? (rs.Result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
 
 
@@ -43,6 +44,55 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             var rs = await _accountService.SignUp(request, verificationCode);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+        }
+
+        [HttpPost]
+        [Route("sign-up/member")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ResponseResult<AccountViewModel>>> MemberSignUp([FromBody] MemberSignUpRequest signUpRequest)
+        {
+            var result = await _accountService.CreateNewMemberAccount(signUpRequest);
+            if (result.result == null || !result.result.Value)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("verify/{email}")]
+        [AllowAnonymous]
+        public async Task<ActionResult> SendVerificationByEmail([FromRoute] string email)
+        {
+            (bool result, string message) = await _accountService.SendVerificationEmail(email);
+            if (!result)
+            {
+                return BadRequest(new ResponseResult<bool>()
+                {
+                    result = result,
+                    Message = message,
+                    Value = result
+                });
+            }
+            return Ok(new ResponseResult<bool>()
+            {
+                result = result,
+                Message = message,
+                Value = result
+            });
+        }
+
+        [HttpPost]
+        [Route("verify")]
+        [AllowAnonymous]
+        public async Task<ActionResult> VerifyMemberAccount([FromBody] MemberAccountVerifyRequest verifyRequest)
+        {
+            var result = await _accountService.VerifyMemberAccount(verifyRequest);
+            if (result.result == null || !result.result.Value)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
     }
 }
