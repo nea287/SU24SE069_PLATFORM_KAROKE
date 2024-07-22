@@ -66,5 +66,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
         }
+
+        [HttpGet]
+        [Route("{accountId}/filter")]
+        public async Task<ActionResult> GetSongsPurchaseFavorite([FromRoute] Guid accountId, [FromQuery] SongFilter filter,
+            [FromQuery] PagingRequest paging, [FromQuery] SongOrderFilter orderFilter = SongOrderFilter.SongName)
+        {
+            var result = await _songService.GetSongsPurchaseFavorite(accountId, filter, paging, orderFilter);
+            return result.Results.IsNullOrEmpty() ? NotFound(result) : Ok(result);
+        }
     }
 }
