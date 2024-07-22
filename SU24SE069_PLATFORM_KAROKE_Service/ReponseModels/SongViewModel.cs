@@ -1,5 +1,6 @@
 ﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,18 +31,28 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public DateTime? PublicDate { get; set; }
         public Guid? CreatorId { get; set; }
         public decimal? Price { get; set; }
+        [SwaggerIgnore]
         public ICollection<string>? Genre { get; set; }
+        [SwaggerIgnore]
         public ICollection<string>? Singer { get; set; }
+        [SwaggerIgnore]
         public ICollection<string>? Artist { get; set; }
-
+        [SwaggerIgnore]
 
         public ICollection<FavouriteSongViewModel>? FavouriteSongs { get; set; }
+        [SwaggerIgnore]
         public ICollection<InAppTransactionViewModel>? InAppTransactions { get; set; }
+        [SwaggerIgnore] 
         public ICollection<PurchasedSongViewModel>? PurchasedSongs { get; set; }
+        [SwaggerIgnore] 
         public ICollection<RecordingViewModel>? Recordings { get; set; }
+        [SwaggerIgnore] 
         public ICollection<SongArtistViewModel>? SongArtists { get; set; }
+            [SwaggerIgnore]
         public ICollection<SongGenreViewModel>? SongGenres { get; set; }
+        [SwaggerIgnore]
         public ICollection<SongSingerViewModel>? SongSingers { get; set; }
+
 
     }
 }

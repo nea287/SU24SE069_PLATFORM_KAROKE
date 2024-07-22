@@ -52,9 +52,18 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region Song
             CreateMap<Song, SongViewModel>()
                 .ForMember(x => x.SongStatus, dest => dest.MapFrom(opt => (SongStatus)opt.SongStatus))
-                .ForMember(x => x.Genre, dest => dest.MapFrom(opt => opt.SongGenres.Select(a => a.Genre.GenreName)))
-                .ForMember(x => x.Singer, dest => dest.MapFrom(opt => opt.SongSingers.Select(a => a.Singer.SingerName)))
-                .ForMember(x => x.Artist, dest => dest.MapFrom(opt => opt.SongArtists.Select(a => a.Artist.ArtistName)))
+                //.ForMember(x => x.Genre, dest => 
+                //{
+                //    dest.MapFrom(opt => opt.SongGenres.Any() && opt.SongGenres != null? opt.SongGenres.Select(a => a.Genre.GenreName) : (ICollection<string>?)null);
+                //})
+                //.ForMember(x => x.Singer, dest => 
+                //{
+                //    dest.MapFrom(opt => opt.SongSingers.Any() && opt.SongSingers != null? opt.SongSingers.Select(a => a.Singer.SingerName) : (ICollection<string>?)null);
+                //})
+                //.ForMember(x => x.Artist, dest => 
+                //{
+                //    dest.MapFrom(opt => opt.SongArtists.Any() && opt.SongArtists != null? opt.SongArtists.Select(a => a.Artist.ArtistName) : (ICollection<string>?)null);
+                //})
                 .ReverseMap();
             
             CreateMap<Song, SongFilter>()

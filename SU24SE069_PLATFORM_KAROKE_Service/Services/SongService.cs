@@ -141,13 +141,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     data.CreatedDate = DateTime.Now;
                     data.UpdatedDate = DateTime.Now;
 
+
+
                     if (!_songRepository.CreateSong(data).Result)
                     {
                         _songRepository.DetachEntity(data);
                         throw new Exception();
                     }
-
                     result = _mapper.Map<SongViewModel>(data);
+
                 };
 
             }
@@ -158,6 +160,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Message = Constraints.CREATE_FAILED,
                     result = false,
                 };
+            }
+            finally
+            {
+                await _songRepository.DisponseAsync();
             }
 
             return new ResponseResult<SongViewModel>()
