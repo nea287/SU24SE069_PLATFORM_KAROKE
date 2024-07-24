@@ -58,7 +58,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             }
             finally
             {
-                lock (_repository) { }
+               await  _repository.DisponseAsync();
             }
 
             return new ResponseResult<FavouriteSongViewModel>()
@@ -98,6 +98,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Message = Constraints.DELETE_FAILED,
                     result = false,
                 };
+            }
+            finally
+            {
+                await _repository.DisponseAsync();
             }
 
             return new ResponseResult<FavouriteSongViewModel>()

@@ -57,6 +57,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Message = Constraints.CREATE_FAILED,
                     result = false
                 };
+            }finally
+            {
+                await _inventoryRepository.DisponseAsync();
             }
 
             return new ResponseResult<AccountItemViewModel>()
@@ -155,12 +158,16 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 }
             }catch(Exception)
             {
-                await  _inventoryRepository.DisponseAsync();
                 return new ResponseResult<AccountItemViewModel>()
                 {
                     Message = Constraints.UPDATE_FAILED,
                     result = false,
                 };
+            }
+            finally
+            {
+                await _inventoryRepository.DisponseAsync();
+
             }
 
             return new ResponseResult<AccountItemViewModel>()

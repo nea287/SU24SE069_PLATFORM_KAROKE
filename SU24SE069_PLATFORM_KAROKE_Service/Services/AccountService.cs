@@ -77,12 +77,16 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             }
             catch (Exception)
             {
-                await _accountRepository.DisponseAsync();
                 result = new UserLoginResponse()
                 {
                     Message = Constraints.LOAD_FAILED,
                     Result = false
                 };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
+
             }
 
             return result;
@@ -95,10 +99,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             ResponseResult<AccountViewModel> result = new ResponseResult<AccountViewModel>();
             try
             {
-                lock (_accountRepository)
-                {
-                    var data = _mapper.Map<AccountViewModel>(_accountRepository
-                        .GetAccount(id: accountId).Result);
+                    var data = _mapper.Map<AccountViewModel>(await _accountRepository
+                        .GetAccount(id: accountId));
 
                     result = data == null ?
                         new ResponseResult<AccountViewModel>()
@@ -114,16 +116,20 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                             result = true
                         };
 
-                }
+                
             }
             catch (Exception)
             {
-                await _accountRepository.DisponseAsync();
                 result = new ResponseResult<AccountViewModel>()
                 {
                     Message = Constraints.LOAD_FAILED,
                     result = false
                 };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
+
             }
 
             return result;
@@ -230,12 +236,16 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             }
             catch (Exception)
             {
-                await _accountRepository.DisponseAsync();
                 return new ResponseResult<AccountViewModel>()
                 {
                     Message = Constraints.CREATE_FAILED,
                     result = false,
                 };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
+
             }
 
             return new ResponseResult<AccountViewModel>()
@@ -308,6 +318,11 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     Value = result
                 };
             }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
+
+            }
 
             return new ResponseResult<AccountViewModel>()
             {
@@ -350,6 +365,11 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     Message = Constraints.DELETE_FAILED,
                     result = false,
                 };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
+
             }
 
             return new ResponseResult<AccountViewModel>()
@@ -434,6 +454,11 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     Message = Constraints.CREATE_FAILED,
                     result = false,
                 };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
+
             }
 
             return new ResponseResult<AccountViewModel>()

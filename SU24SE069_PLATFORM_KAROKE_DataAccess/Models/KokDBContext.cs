@@ -742,7 +742,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.ParentCommentId).HasColumnName("parent_comment_id");
 
-                entity.Property(e => e.PostId).HasColumnName("post_id");
+                entity.Property(e => e.PostId)
+                .HasColumnName("post_id");
+
+                entity.HasIndex(e => e.PostId)
+                .IsUnique(false);
 
                 entity.Property(e => e.Status).HasColumnName("status");
 
