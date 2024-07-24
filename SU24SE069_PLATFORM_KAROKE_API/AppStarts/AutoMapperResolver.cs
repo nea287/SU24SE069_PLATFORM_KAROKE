@@ -110,6 +110,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.SingerName, dest => dest.MapFrom(opt => opt.Singer.SingerName))
                 .ReverseMap();
             CreateMap<SongSinger, SongSingerRequestModel>().ReverseMap();
+
+            CreateMap<SongViewModel, SongDTO>().ReverseMap();
             #endregion
 
             #region Friend
