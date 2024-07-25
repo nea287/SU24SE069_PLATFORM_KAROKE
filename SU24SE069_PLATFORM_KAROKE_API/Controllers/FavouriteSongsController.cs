@@ -43,5 +43,13 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             var rs = await _service.DeleteFavouteSong(request);
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
         }
+
+        [HttpGet]
+        [Route("filter")]
+        public async Task<IActionResult> GetFavoriteSongsPurchasedFilter([FromQuery] FavouriteSongViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] FavouriteSongOrderFilter orderFilter = FavouriteSongOrderFilter.SongId)
+        {
+            var result = await _service.GetFavoriteSongsPurchasedFilter(filter, paging, orderFilter);
+            return result.Results.IsNullOrEmpty() ? NotFound(result) : Ok(result);
+        }
     }
 }
