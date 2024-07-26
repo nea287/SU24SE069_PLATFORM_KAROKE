@@ -48,8 +48,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         //{
         //    if (!optionsBuilder.IsConfigured)
         //    {
-        //        //optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS01;Initial Catalog=Kok_Database;Uid=sa;Pwd=1234;TrustServerCertificate=true;MultipleActiveResultSets=True;");
-        //        optionsBuilder.UseSqlServer("Server=KOKDatabase.mssql.somee.com;Initial Catalog=KOKDatabase;Uid=kok-admin;Pwd=11111111;TrustServerCertificate=true");
+        //        //optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS01;Initial Catalog=KOKDatabase;Uid=sa;Pwd=1234;TrustServerCertificate=true;MultipleActiveResultSets=True;");
+        //        //optionsBuilder.UseSqlServer("Server=KOKDatabase.mssql.somee.com;Initial Catalog=KOKDatabase;Uid=kok-admin;Pwd=11111111;TrustServerCertificate=true");
         //        //optionsBuilder.UseSqlServer("Server=gible-db.database.windows.net;Initial Catalog=Kok-DB;Uid=gible-db-sa;Pwd=G!ble87654321;TrustServerCertificate=true");
         //    }
         //}
@@ -65,7 +65,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 using (SqlConnection conn = new SqlConnection(GetConnectionString()))
                 {
-                    // Đóng kết nối hiện tại nếu đang mở
+                    //Đóng kết nối hiện tại nếu đang mở
                     if (conn.State == System.Data.ConnectionState.Open)
                     {
                         conn.Close();
@@ -86,7 +86,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
                 .Build();
-            var strConn = config.GetConnectionString("Database");
+            var strConn = config.GetConnectionString("localDatabase");
             return strConn;
         }
 
@@ -881,7 +881,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.Score).HasColumnName("score");
 
-                entity.Property(e => e.SongId).HasColumnName("song_id");
+                entity.Property(e => e.PurchasedSongId).HasColumnName("purchased_song_id");
 
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")
@@ -913,11 +913,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Recording__owner__1EA48E88");
 
-                entity.HasOne(d => d.Song)
+                entity.HasOne(d => d.PurchasedSong)
                     .WithMany(p => p.Recordings)
-                    .HasForeignKey(d => d.SongId)
+                    .HasForeignKey(d => d.PurchasedSongId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Recording__song___1F98B2C1");
+                    .HasConstraintName("FK__Recording__purchasedsong___1F98B2C1");
             });
 
             modelBuilder.Entity<Report>(entity =>

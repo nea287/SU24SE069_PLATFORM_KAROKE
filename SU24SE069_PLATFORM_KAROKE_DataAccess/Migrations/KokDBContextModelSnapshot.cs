@@ -128,6 +128,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("expiration_date");
 
+                    b.Property<Guid?>("InAppTransactionId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("in_app_transaction_id");
+
                     b.Property<Guid>("ItemId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("item_id");
@@ -149,6 +153,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnName("quantity");
 
                     b.HasKey("AccountItemId");
+
+                    b.HasIndex("InAppTransactionId");
 
                     b.HasIndex("ItemId");
 
@@ -282,7 +288,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("created_date");
 
-                    b.Property<Guid>("ItemId")
+                    b.Property<Guid?>("ItemId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("item_id");
 
@@ -290,10 +297,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("member_id");
 
-                    b.Property<Guid>("MonetaryTransactionId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid?>("MonetaryTransactionId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("monetary_transaction_id");
 
-                    b.Property<Guid>("SongId")
+                    b.Property<Guid?>("SongId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("song_id");
 
@@ -685,8 +694,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.HasIndex("ParentCommentId");
 
-                    b.HasIndex("PostId")
-                        .IsUnique();
+                    b.HasIndex("PostId");
 
                     b.ToTable("PostComment", (string)null);
                 });
@@ -758,7 +766,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<Guid?>("InAppTransactionId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("in_app_transaction_id");
 
                     b.Property<Guid>("MemberId")
                         .HasColumnType("uniqueidentifier")
@@ -795,11 +804,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("created_date");
 
-                    b.Property<float>("StartTime")
-                        .HasColumnType("float")
-                        .HasColumnName("start_time");
-
-                    b.Property<float>("EndTime")
+                    b.Property<double>("EndTime")
                         .HasColumnType("float")
                         .HasColumnName("end_time");
 
@@ -815,6 +820,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("owner_id");
 
+                    b.Property<Guid>("PurchasedSongId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("purchased_song_id");
+
                     b.Property<string>("RecordingName")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -829,9 +838,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("int")
                         .HasColumnName("score");
 
-                    b.Property<Guid>("SongId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("song_id");
+                    b.Property<Guid?>("SongId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("StartTime")
+                        .HasColumnType("float")
+                        .HasColumnName("start_time");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime")
@@ -844,6 +856,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     b.HasIndex("KaraokeRoomId");
 
                     b.HasIndex("OwnerId");
+
+                    b.HasIndex("PurchasedSongId");
 
                     b.HasIndex("SongId");
 
@@ -1156,6 +1170,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
             modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.AccountItem", b =>
                 {
+                    b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.InAppTransaction", "InAppTransaction")
+                        .WithMany("AccountItems")
+                        .HasForeignKey("InAppTransactionId")
+                        .HasConstraintName("FK_AccountItem_InAppTransaction");
+
                     b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Item", "Item")
                         .WithMany("AccountItems")
                         .HasForeignKey("ItemId")
@@ -1167,6 +1186,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasForeignKey("MemberId")
                         .IsRequired()
                         .HasConstraintName("FK__AccountIn__membe__7F2BE32F");
+
+                    b.Navigation("InAppTransaction");
 
                     b.Navigation("Item");
 
@@ -1254,10 +1275,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasConstraintName("FK__InAppTran__membe__07C12930");
 
                     b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.MonetaryTransaction", "MonetaryTransaction")
-                        .WithMany()
+                        .WithMany("InAppTransactions")
                         .HasForeignKey("MonetaryTransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasConstraintName("FK_InAppTransaction_MonetaryTransaction_MonetaryTransactionId");
 
                     b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Song", "Song")
                         .WithMany("InAppTransactions")
@@ -1446,9 +1466,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
             modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PurchasedSong", b =>
                 {
-                    b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.InAppTransaction", null)
+                    b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.InAppTransaction", "InAppTransaction")
                         .WithMany("PurchasedSongs")
-                        .HasForeignKey("InAppTransactionId");
+                        .HasForeignKey("InAppTransactionId")
+                        .HasConstraintName("FK_PurchasedSong_InAppTransaction_InAppTransactionId");
 
                     b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Account", "Member")
                         .WithMany("PurchasedSongs")
@@ -1461,6 +1482,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasForeignKey("SongId")
                         .IsRequired()
                         .HasConstraintName("FK__Purchased__song___1BC821DD");
+
+                    b.Navigation("InAppTransaction");
 
                     b.Navigation("Member");
 
@@ -1487,11 +1510,15 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .IsRequired()
                         .HasConstraintName("FK__Recording__owner__1EA48E88");
 
-                    b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Song", "Song")
+                    b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PurchasedSong", "PurchasedSong")
                         .WithMany("Recordings")
-                        .HasForeignKey("SongId")
+                        .HasForeignKey("PurchasedSongId")
                         .IsRequired()
-                        .HasConstraintName("FK__Recording__song___1F98B2C1");
+                        .HasConstraintName("FK__Recording__purchasedsong___1F98B2C1");
+
+                    b.HasOne("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Song", null)
+                        .WithMany("Recordings")
+                        .HasForeignKey("SongId");
 
                     b.Navigation("Host");
 
@@ -1499,7 +1526,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
                     b.Navigation("Owner");
 
-                    b.Navigation("Song");
+                    b.Navigation("PurchasedSong");
                 });
 
             modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Report", b =>
@@ -1712,6 +1739,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 
             modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.InAppTransaction", b =>
                 {
+                    b.Navigation("AccountItems");
+
                     b.Navigation("PurchasedSongs");
                 });
 
@@ -1727,6 +1756,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     b.Navigation("Recordings");
 
                     b.Navigation("Reports");
+                });
+
+            modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.MonetaryTransaction", b =>
+                {
+                    b.Navigation("InAppTransactions");
                 });
 
             modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Package", b =>
@@ -1750,6 +1784,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
             modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PostComment", b =>
                 {
                     b.Navigation("InverseParentComment");
+                });
+
+            modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.PurchasedSong", b =>
+                {
+                    b.Navigation("Recordings");
                 });
 
             modelBuilder.Entity("SU24SE069_PLATFORM_KAROKE_DataAccess.Models.Recording", b =>

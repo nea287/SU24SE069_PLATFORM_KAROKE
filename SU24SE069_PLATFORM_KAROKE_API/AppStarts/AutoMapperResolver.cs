@@ -293,7 +293,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region Post
             CreateMap<Post, CreatePostRequestModel>().ReverseMap();
             CreateMap<Post, PostViewModel>()
-                .ForMember(x => x.SongUrl, dest => dest.MapFrom(src => src.Recording.Song.SongUrl))
+                .ForMember(x => x.SongUrl, dest => dest.MapFrom(src => src.Recording.PurchasedSong.Song.SongUrl))
                 .ReverseMap();
             #endregion
 

@@ -231,34 +231,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AccountItem",
-                columns: table => new
-                {
-                    account_item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
-                    item_status = table.Column<int>(type: "int", nullable: false),
-                    activate_date = table.Column<DateTime>(type: "datetime", nullable: false),
-                    expiration_date = table.Column<DateTime>(type: "datetime", nullable: false),
-                    quantity = table.Column<int>(type: "int", nullable: false),
-                    item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    obtain_method = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AccountItem", x => x.account_item_id);
-                    table.ForeignKey(
-                        name: "FK__AccountIn__item___7E37BEF6",
-                        column: x => x.item_id,
-                        principalTable: "Item",
-                        principalColumn: "item_id");
-                    table.ForeignKey(
-                        name: "FK__AccountIn__membe__7F2BE32F",
-                        column: x => x.member_id,
-                        principalTable: "Account",
-                        principalColumn: "account_id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MonetaryTransaction",
                 columns: table => new
                 {
@@ -304,48 +276,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         principalColumn: "account_id");
                     table.ForeignKey(
                         name: "FK__Favourite__song___03F0984C",
-                        column: x => x.song_id,
-                        principalTable: "Song",
-                        principalColumn: "song_id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Recording",
-                columns: table => new
-                {
-                    recording_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
-                    recording_name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    recording_type = table.Column<int>(type: "int", nullable: false),
-                    created_date = table.Column<DateTime>(type: "datetime", nullable: false),
-                    updated_date = table.Column<DateTime>(type: "datetime", nullable: false),
-                    score = table.Column<int>(type: "int", nullable: false),
-                    song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    host_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    owner_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    karaoke_room_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    start_time = table.Column<float>(type: "float", nullable: false),
-                    end_time = table.Column<float>(type: "float", nullable: false),
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Recording", x => x.recording_id);
-                    table.ForeignKey(
-                        name: "FK__Recording__host___1CBC4616",
-                        column: x => x.host_id,
-                        principalTable: "Account",
-                        principalColumn: "account_id");
-                    table.ForeignKey(
-                        name: "FK__Recording__karao__1DB06A4F",
-                        column: x => x.karaoke_room_id,
-                        principalTable: "KaraokeRoom",
-                        principalColumn: "room_id");
-                    table.ForeignKey(
-                        name: "FK__Recording__owner__1EA48E88",
-                        column: x => x.owner_id,
-                        principalTable: "Account",
-                        principalColumn: "account_id");
-                    table.ForeignKey(
-                        name: "FK__Recording__song___1F98B2C1",
                         column: x => x.song_id,
                         principalTable: "Song",
                         principalColumn: "song_id");
@@ -457,10 +387,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     created_date = table.Column<DateTime>(type: "datetime", nullable: false),
                     transaction_type = table.Column<int>(type: "int", nullable: false),
                     member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     up_amount_before = table.Column<decimal>(type: "money", nullable: false),
-                    MonetaryTransactionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    monetary_transaction_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     up_total_amount = table.Column<decimal>(type: "money", nullable: false)
                 },
                 constraints: table =>
@@ -483,10 +413,146 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         principalColumn: "song_id");
                     table.ForeignKey(
                         name: "FK_InAppTransaction_MonetaryTransaction_MonetaryTransactionId",
-                        column: x => x.MonetaryTransactionId,
+                        column: x => x.monetary_transaction_id,
                         principalTable: "MonetaryTransaction",
-                        principalColumn: "monetary_transaction_id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "monetary_transaction_id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Message",
+                columns: table => new
+                {
+                    message_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
+                    content = table.Column<string>(type: "text", nullable: false),
+                    time_stamp = table.Column<DateTime>(type: "datetime", nullable: false),
+                    sender_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    conversation_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Message", x => x.message_id);
+                    table.ForeignKey(
+                        name: "FK__Message__convers__0E6E26BF",
+                        column: x => x.conversation_id,
+                        principalTable: "Conversation",
+                        principalColumn: "conversation_id");
+                    table.ForeignKey(
+                        name: "FK__Message__sender___0F624AF8",
+                        column: x => x.sender_id,
+                        principalTable: "Account",
+                        principalColumn: "account_id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountItem",
+                columns: table => new
+                {
+                    account_item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
+                    item_status = table.Column<int>(type: "int", nullable: false),
+                    activate_date = table.Column<DateTime>(type: "datetime", nullable: false),
+                    expiration_date = table.Column<DateTime>(type: "datetime", nullable: false),
+                    quantity = table.Column<int>(type: "int", nullable: false),
+                    item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    obtain_method = table.Column<int>(type: "int", nullable: false),
+                    in_app_transaction_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountItem", x => x.account_item_id);
+                    table.ForeignKey(
+                        name: "FK__AccountIn__item___7E37BEF6",
+                        column: x => x.item_id,
+                        principalTable: "Item",
+                        principalColumn: "item_id");
+                    table.ForeignKey(
+                        name: "FK__AccountIn__membe__7F2BE32F",
+                        column: x => x.member_id,
+                        principalTable: "Account",
+                        principalColumn: "account_id");
+                    table.ForeignKey(
+                        name: "FK_AccountItem_InAppTransaction",
+                        column: x => x.in_app_transaction_id,
+                        principalTable: "InAppTransaction",
+                        principalColumn: "in_app_transaction_id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PurchasedSong",
+                columns: table => new
+                {
+                    purchased_song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
+                    purchase_date = table.Column<DateTime>(type: "datetime", nullable: false),
+                    member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    in_app_transaction_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PurchasedSong", x => x.purchased_song_id);
+                    table.ForeignKey(
+                        name: "FK__Purchased__membe__1AD3FDA4",
+                        column: x => x.member_id,
+                        principalTable: "Account",
+                        principalColumn: "account_id");
+                    table.ForeignKey(
+                        name: "FK__Purchased__song___1BC821DD",
+                        column: x => x.song_id,
+                        principalTable: "Song",
+                        principalColumn: "song_id");
+                    table.ForeignKey(
+                        name: "FK_PurchasedSong_InAppTransaction_InAppTransactionId",
+                        column: x => x.in_app_transaction_id,
+                        principalTable: "InAppTransaction",
+                        principalColumn: "in_app_transaction_id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Recording",
+                columns: table => new
+                {
+                    recording_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
+                    recording_name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    recording_type = table.Column<int>(type: "int", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime", nullable: false),
+                    updated_date = table.Column<DateTime>(type: "datetime", nullable: false),
+                    start_time = table.Column<double>(type: "float", nullable: false),
+                    end_time = table.Column<double>(type: "float", nullable: false),
+                    score = table.Column<int>(type: "int", nullable: false),
+                    purchased_song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    host_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    owner_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    karaoke_room_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SongId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recording", x => x.recording_id);
+                    table.ForeignKey(
+                        name: "FK__Recording__host___1CBC4616",
+                        column: x => x.host_id,
+                        principalTable: "Account",
+                        principalColumn: "account_id");
+                    table.ForeignKey(
+                        name: "FK__Recording__karao__1DB06A4F",
+                        column: x => x.karaoke_room_id,
+                        principalTable: "KaraokeRoom",
+                        principalColumn: "room_id");
+                    table.ForeignKey(
+                        name: "FK__Recording__owner__1EA48E88",
+                        column: x => x.owner_id,
+                        principalTable: "Account",
+                        principalColumn: "account_id");
+                    table.ForeignKey(
+                        name: "FK__Recording__purchasedsong___1F98B2C1",
+                        column: x => x.purchased_song_id,
+                        principalTable: "PurchasedSong",
+                        principalColumn: "purchased_song_id");
+                    table.ForeignKey(
+                        name: "FK_Recording_Song_SongId",
+                        column: x => x.SongId,
+                        principalTable: "Song",
+                        principalColumn: "song_id");
                 });
 
             migrationBuilder.CreateTable(
@@ -550,61 +616,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         column: x => x.recording_id,
                         principalTable: "Recording",
                         principalColumn: "recording_id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Message",
-                columns: table => new
-                {
-                    message_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
-                    content = table.Column<string>(type: "text", nullable: false),
-                    time_stamp = table.Column<DateTime>(type: "datetime", nullable: false),
-                    sender_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    conversation_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Message", x => x.message_id);
-                    table.ForeignKey(
-                        name: "FK__Message__convers__0E6E26BF",
-                        column: x => x.conversation_id,
-                        principalTable: "Conversation",
-                        principalColumn: "conversation_id");
-                    table.ForeignKey(
-                        name: "FK__Message__sender___0F624AF8",
-                        column: x => x.sender_id,
-                        principalTable: "Account",
-                        principalColumn: "account_id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PurchasedSong",
-                columns: table => new
-                {
-                    purchased_song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
-                    purchase_date = table.Column<DateTime>(type: "datetime", nullable: false),
-                    member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    InAppTransactionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PurchasedSong", x => x.purchased_song_id);
-                    table.ForeignKey(
-                        name: "FK__Purchased__membe__1AD3FDA4",
-                        column: x => x.member_id,
-                        principalTable: "Account",
-                        principalColumn: "account_id");
-                    table.ForeignKey(
-                        name: "FK__Purchased__song___1BC821DD",
-                        column: x => x.song_id,
-                        principalTable: "Song",
-                        principalColumn: "song_id");
-                    table.ForeignKey(
-                        name: "FK_PurchasedSong_InAppTransaction_InAppTransactionId",
-                        column: x => x.InAppTransactionId,
-                        principalTable: "InAppTransaction",
-                        principalColumn: "in_app_transaction_id");
                 });
 
             migrationBuilder.CreateTable(
@@ -742,6 +753,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 column: "room_item_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AccountItem_in_app_transaction_id",
+                table: "AccountItem",
+                column: "in_app_transaction_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AccountItem_item_id",
                 table: "AccountItem",
                 column: "item_id");
@@ -787,9 +803,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 column: "member_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InAppTransaction_MonetaryTransactionId",
+                name: "IX_InAppTransaction_monetary_transaction_id",
                 table: "InAppTransaction",
-                column: "MonetaryTransactionId");
+                column: "monetary_transaction_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InAppTransaction_song_id",
@@ -864,8 +880,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_PostComment_post_id",
                 table: "PostComment",
-                column: "post_id",
-                unique: true);
+                column: "post_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostRating_post_id",
@@ -883,9 +898,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 column: "post_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchasedSong_InAppTransactionId",
+                name: "IX_PurchasedSong_in_app_transaction_id",
                 table: "PurchasedSong",
-                column: "InAppTransactionId");
+                column: "in_app_transaction_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PurchasedSong_member_id",
@@ -913,9 +928,14 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 column: "owner_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Recording_song_id",
+                name: "IX_Recording_purchased_song_id",
                 table: "Recording",
-                column: "song_id");
+                column: "purchased_song_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Recording_SongId",
+                table: "Recording",
+                column: "SongId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Report_post_id",
@@ -1026,9 +1046,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 name: "PostShare");
 
             migrationBuilder.DropTable(
-                name: "PurchasedSong");
-
-            migrationBuilder.DropTable(
                 name: "Report");
 
             migrationBuilder.DropTable(
@@ -1047,9 +1064,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 name: "Conversation");
 
             migrationBuilder.DropTable(
-                name: "InAppTransaction");
-
-            migrationBuilder.DropTable(
                 name: "Post");
 
             migrationBuilder.DropTable(
@@ -1065,25 +1079,31 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 name: "SupportRequest");
 
             migrationBuilder.DropTable(
-                name: "MonetaryTransaction");
-
-            migrationBuilder.DropTable(
                 name: "Recording");
-
-            migrationBuilder.DropTable(
-                name: "Package");
 
             migrationBuilder.DropTable(
                 name: "KaraokeRoom");
 
             migrationBuilder.DropTable(
-                name: "Song");
+                name: "PurchasedSong");
 
             migrationBuilder.DropTable(
                 name: "AccountItem");
 
             migrationBuilder.DropTable(
+                name: "InAppTransaction");
+
+            migrationBuilder.DropTable(
                 name: "Item");
+
+            migrationBuilder.DropTable(
+                name: "Song");
+
+            migrationBuilder.DropTable(
+                name: "MonetaryTransaction");
+
+            migrationBuilder.DropTable(
+                name: "Package");
 
             migrationBuilder.DropTable(
                 name: "Account");
