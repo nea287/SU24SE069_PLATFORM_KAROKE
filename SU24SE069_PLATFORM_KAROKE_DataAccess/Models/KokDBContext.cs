@@ -323,7 +323,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.MemberId2).HasColumnName("member_id_2");
 
-                entity.Property(e => e.TicketId).HasColumnName("support_request_id");
+                entity.Property(e => e.TicketId).HasColumnName("ticket_id");
 
                 entity.HasOne(d => d.MemberId1Navigation)
                     .WithMany(p => p.ConversationMemberId1Navigations)
@@ -340,7 +340,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.SupportRequest)
                     .WithMany(p => p.Conversations)
                     .HasForeignKey(d => d.TicketId)
-                    .HasConstraintName("FK__Conversat__suppo__02084FDA");
+                    .HasConstraintName("FK_Conversation_Ticket");
             });
 
             modelBuilder.Entity<Friend>(entity =>
@@ -917,7 +917,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .WithMany(p => p.Recordings)
                     .HasForeignKey(d => d.PurchasedSongId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Recording__purchasedsong___1F98B2C1");
+                    .HasConstraintName("FK_Recording_PurchasedSong");
             });
 
             modelBuilder.Entity<Report>(entity =>
@@ -1097,10 +1097,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasKey(e => e.TicketId)
                     .HasName("PK__SupportR__18D3B90FC2899572");
 
-                entity.ToTable("SupportRequest");
+                entity.ToTable("Ticket");
 
                 entity.Property(e => e.TicketId)
-                    .HasColumnName("request_id")
+                    .HasColumnName("ticket_id")
                     .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Category).HasColumnName("category");

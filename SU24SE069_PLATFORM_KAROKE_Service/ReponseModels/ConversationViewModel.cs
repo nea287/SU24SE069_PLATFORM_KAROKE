@@ -19,7 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public Guid? MemberId1 { get; set; }
         public Guid? MemberId2 { get; set; }
         public ConversationType? ConversationType { get; set; }
-        public Guid? SupportRequestId { get; set; }
+        public Guid? TicketId { get; set; }
         //public ICollection<MessageViewModel>? Messages { get; set; }
     }
 }
