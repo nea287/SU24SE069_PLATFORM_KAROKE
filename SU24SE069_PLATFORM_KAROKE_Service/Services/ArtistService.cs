@@ -6,6 +6,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
+using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Artist;
@@ -48,7 +49,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     result = false
                 };
             }
-            finally { lock (_repository) { } }
+            finally
+            {
+                await _repository.DisponseAsync();
+            }
 
             return new ResponseResult<ArtistViewModel>()
             {
@@ -86,7 +90,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Message = Constraints.DELETE_FAILED,
                     result = false,
                 };
-            }
+            }finally { await _repository.DisponseAsync(); }
 
             return new ResponseResult<ArtistViewModel>()
             {
@@ -121,7 +125,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     result = false,
 
                 };
-            }
+            }finally{ await _repository.DisponseAsync(); }
 
             return new ResponseResult<ArtistViewModel>()
             {
@@ -161,6 +165,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 {
                     Message = Constraints.LOAD_FAILED,
                 };
+            }
+            finally
+            {
+                await _repository.DisponseAsync();
             }
 
             return new DynamicModelResponse.DynamicModelsResponse<ArtistViewModel>()
@@ -212,7 +220,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     result = false,
                 };
             }
-            finally { lock (_repository) { } }
+            finally
+            {
+                await _repository.DisponseAsync();
+            }
 
             return new ResponseResult<ArtistViewModel>()
             {

@@ -16,5 +16,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<FavouriteSongViewModel>> CreateFavouteSong(CreateFavouriteSongRequestModel request);
         public Task<DynamicModelResponse.DynamicModelsResponse<FavouriteSongViewModel>> GetFavouriteSongs(FavouriteSongViewModel filter, PagingRequest paging, FavouriteSongOrderFilter orderFilter);
         public Task<ResponseResult<FavouriteSongViewModel>> DeleteFavouteSong(CreateFavouriteSongRequestModel request);
+
+        public Task<DynamicModelResponse.DynamicModelsResponse<FavoriteSongDTO>> GetFavoriteSongsPurchasedFilter(FavouriteSongViewModel filter, PagingRequest paging, FavouriteSongOrderFilter orderFilter);
     }
 }

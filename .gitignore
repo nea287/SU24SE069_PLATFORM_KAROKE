@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/SU24SE069_PLATFORM_KAROKE_API/.config/dotnet-tools.json
+/SU24SE069_PLATFORM_KAROKE_API/Properties/ServiceDependencies/kok-api - Web Deploy/apis1.arm.json
+/SU24SE069_PLATFORM_KAROKE_API/Properties/ServiceDependencies/kok-api - Web Deploy/profile.arm.json
+/SU24SE069_PLATFORM_KAROKE_API/Properties/serviceDependencies.json
+/SU24SE069_PLATFORM_KAROKE_API/Properties/serviceDependencies.kok-api - Web Deploy.json

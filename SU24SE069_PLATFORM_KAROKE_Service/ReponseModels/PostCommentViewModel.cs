@@ -15,6 +15,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public Guid? PostId { get; set; }
         public DateTime? UploadTime { get; set; }
         [SwaggerIgnore]
-        public ICollection<PostComment>? InverseParentComment { get; set; }
+        public ICollection<PostCommentViewModel>? InverseParentComment { get; set; }
     }
 }

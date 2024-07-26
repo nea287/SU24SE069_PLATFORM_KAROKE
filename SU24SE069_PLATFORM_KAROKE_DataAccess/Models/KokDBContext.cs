@@ -48,7 +48,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         //{
         //    if (!optionsBuilder.IsConfigured)
         //    {
-        //        //optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS01;Initial Catalog=Kok_Database;Uid=sa;Pwd=1234;TrustServerCertificate=true;MultipleActiveResultSets=True;");
+        //        //optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS01;Initial Catalog=KOKDatabase;Uid=sa;Pwd=1234;TrustServerCertificate=true;MultipleActiveResultSets=True;");
         //        optionsBuilder.UseSqlServer("Server=KOKDatabase.mssql.somee.com;Initial Catalog=KOKDatabase;Uid=kok-admin;Pwd=11111111;TrustServerCertificate=true");
         //        //optionsBuilder.UseSqlServer("Server=gible-db.database.windows.net;Initial Catalog=Kok-DB;Uid=gible-db-sa;Pwd=G!ble87654321;TrustServerCertificate=true");
         //    }
@@ -65,7 +65,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 using (SqlConnection conn = new SqlConnection(GetConnectionString()))
                 {
-                    // Đóng kết nối hiện tại nếu đang mở
+                    //Đóng kết nối hiện tại nếu đang mở
                     if (conn.State == System.Data.ConnectionState.Open)
                     {
                         conn.Close();
@@ -323,7 +323,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.MemberId2).HasColumnName("member_id_2");
 
-                entity.Property(e => e.TicketId).HasColumnName("support_request_id");
+                entity.Property(e => e.TicketId).HasColumnName("ticket_id");
 
                 entity.HasOne(d => d.MemberId1Navigation)
                     .WithMany(p => p.ConversationMemberId1Navigations)
@@ -340,7 +340,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.SupportRequest)
                     .WithMany(p => p.Conversations)
                     .HasForeignKey(d => d.TicketId)
-                    .HasConstraintName("FK__Conversat__suppo__02084FDA");
+                    .HasConstraintName("FK_Conversation_Ticket");
             });
 
             modelBuilder.Entity<Friend>(entity =>
@@ -742,7 +742,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.ParentCommentId).HasColumnName("parent_comment_id");
 
-                entity.Property(e => e.PostId).HasColumnName("post_id");
+                entity.Property(e => e.PostId)
+                .HasColumnName("post_id");
+
+                entity.HasIndex(e => e.PostId)
+                .IsUnique(false);
 
                 entity.Property(e => e.Status).HasColumnName("status");
 
@@ -877,7 +881,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.Score).HasColumnName("score");
 
-                entity.Property(e => e.SongId).HasColumnName("song_id");
+                entity.Property(e => e.PurchasedSongId).HasColumnName("purchased_song_id");
 
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")
@@ -909,11 +913,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Recording__owner__1EA48E88");
 
-                entity.HasOne(d => d.Song)
+                entity.HasOne(d => d.PurchasedSong)
                     .WithMany(p => p.Recordings)
-                    .HasForeignKey(d => d.SongId)
+                    .HasForeignKey(d => d.PurchasedSongId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Recording__song___1F98B2C1");
+                    .HasConstraintName("FK_Recording_PurchasedSong");
             });
 
             modelBuilder.Entity<Report>(entity =>
@@ -1093,10 +1097,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasKey(e => e.TicketId)
                     .HasName("PK__SupportR__18D3B90FC2899572");
 
-                entity.ToTable("SupportRequest");
+                entity.ToTable("Ticket");
 
                 entity.Property(e => e.TicketId)
-                    .HasColumnName("request_id")
+                    .HasColumnName("ticket_id")
                     .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Category).HasColumnName("category");

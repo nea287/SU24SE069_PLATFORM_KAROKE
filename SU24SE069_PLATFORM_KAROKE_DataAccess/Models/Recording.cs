@@ -19,7 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public float StartTime { get; set; }    
         public float EndTime { get; set; }
         public int Score { get; set; }
-        public Guid SongId { get; set; }
+        public Guid PurchasedSongId { get; set; }
         public Guid HostId { get; set; }
         public Guid OwnerId { get; set; }
         public Guid KaraokeRoomId { get; set; }
@@ -27,7 +27,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual Account Host { get; set; } = null!;
         public virtual KaraokeRoom KaraokeRoom { get; set; } = null!;
         public virtual Account Owner { get; set; } = null!;
-        public virtual Song Song { get; set; } = null!;
+        public virtual PurchasedSong PurchasedSong { get; set; } = null!;
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<VoiceAudio> VoiceAudios { get; set; }
     }

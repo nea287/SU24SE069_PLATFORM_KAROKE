@@ -22,7 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public int? Score { get; set; }
-        public Guid? SongId { get; set; }
+        public Guid? PurchasedSongId { get; set; }
         public Guid? HostId { get; set; }
         public Guid? OwnerId { get; set; }
         public Guid? KaraokeRoomId { get; set; }

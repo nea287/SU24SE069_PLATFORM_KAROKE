@@ -198,9 +198,13 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 {
                     dest.MapFrom(a => a.Song.SongGenres.Any() && a.Song.SongGenres != null ? a.Song.SongGenres.Select(t => t.Genre.GenreName).First() : (string?)null);
                 })
+                .ForMember(d => d.SongUrl, opt => opt.MapFrom(s => s.Song.SongUrl))
+                .ForMember(d => d.Price, opt => opt.MapFrom(s => s.Song.Price))
                 .ReverseMap();
+
             CreateMap<FavouriteSong, CreateFavouriteSongRequestModel>().ReverseMap();
             CreateMap<FavouriteSongViewModel, CreateFavouriteSongRequestModel>().ReverseMap();
+            CreateMap<FavouriteSongViewModel, FavoriteSongDTO>().ReverseMap();
             #endregion
 
             #region Package
@@ -293,7 +297,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region Post
             CreateMap<Post, CreatePostRequestModel>().ReverseMap();
             CreateMap<Post, PostViewModel>()
-                .ForMember(x => x.SongUrl, dest => dest.MapFrom(src => src.Recording.Song.SongUrl))
+                .ForMember(x => x.SongUrl, dest => dest.MapFrom(src => src.Recording.PurchasedSong.Song.SongUrl))
                 .ReverseMap();
             #endregion
 
