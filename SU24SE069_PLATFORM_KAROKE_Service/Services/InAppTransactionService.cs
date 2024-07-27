@@ -209,7 +209,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
         public async Task<ResponseResult<InAppTransactionViewModel>> PurchaseSong(PurchasedSongRequestModel request)
         {
-            InAppTransaction transation = new InAppTransaction();
+            InAppTransaction transaction = new InAppTransaction();
             try
             {
                 if (await _repository.CheckPurchasedSong1(request.MemberId, request.SongId))
@@ -235,10 +235,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     dataSong = await _songRepository.GetByIdGuid(request.SongId);
                 }
 
-
-
-
-
                 if (data.UpBalance < dataSong.Price)
                 {
                     return new ResponseResult<InAppTransactionViewModel>()
@@ -249,39 +245,36 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 }
 
                 data.UpBalance = data.UpBalance - dataSong.Price;
-                transation = new InAppTransaction()
+                transaction = new InAppTransaction()
                 {
                     CreatedDate = DateTime.UtcNow,
                     MemberId = request.MemberId,
                     SongId = request.SongId,
-                    Status = (int)PaymentStatus.PENDING,
-                    UpAmountBefore = dataSong.Price,
+                    Status = (int)PaymentStatus.COMPLETE,
+                    UpAmountBefore = data.UpBalance + dataSong.Price,
                     UpTotalAmount = dataSong.Price,
-                    TransactionType = (int)PaymentType.MOMO,
+                    TransactionType = (int)InAppTransactionType.BUY_SONG,
                     PurchasedSongs = new List<PurchasedSong>()
                     {
                         new PurchasedSong()
                         {
                             PurchaseDate = DateTime.Now,
                             MemberId=request.MemberId,
-                            SongId=request.SongId,  
+                            SongId=request.SongId,
                         }
                     }
-
                 };
 
                 await _accountRepository.SaveChagesAsync();
                 
-                if(!await _repository.CreateInAppTransaction(transation))
+                if(!await _repository.CreateInAppTransaction(transaction))
                 {
                     _accountRepository.DetachEntity(data);
                     _songRepository.DetachEntity(dataSong);
-                    _repository.DetachEntity(transation);   
+                    _repository.DetachEntity(transaction);   
 
-                    throw new Exception();
+                    throw new Exception();  
                 }
-
-
             }
             catch (Exception)
             {
@@ -296,7 +289,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 Message = Constraints.PURCHASE_SONG_SUCCESS,
                 result = true,
-                Value = _mapper.Map<InAppTransactionViewModel>(transation)
+                Value = _mapper.Map<InAppTransactionViewModel>(transaction)
             };
         }
 
