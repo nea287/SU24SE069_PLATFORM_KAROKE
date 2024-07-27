@@ -144,6 +144,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Message = Constraints.LOAD_FAILED,
                 };
             }
+            finally
+            {
+                await _recordingRepository.DisponseAsync();
+            }
 
             return new DynamicModelResponse.DynamicModelsResponse<RecordingViewModel>()
             {

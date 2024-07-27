@@ -146,7 +146,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         CreatedDate,
         UpdatedDate,
         Score,
-        SongId,
+        PurchasedSongId,
         HostId,
         OwnerId,
         KaraokeRoomId,

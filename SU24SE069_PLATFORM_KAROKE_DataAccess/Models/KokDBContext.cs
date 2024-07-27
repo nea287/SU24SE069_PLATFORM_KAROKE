@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -859,6 +860,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             {
                 entity.ToTable("Recording");
 
+                entity.HasIndex(e => e.HostId, "IX_Recording_host_id");
+
+                entity.HasIndex(e => e.KaraokeRoomId, "IX_Recording_karaoke_room_id");
+
+                entity.HasIndex(e => e.OwnerId, "IX_Recording_owner_id");
+
                 entity.Property(e => e.RecordingId)
                     .HasColumnName("recording_id")
                     .HasDefaultValueSql("(newid())");
@@ -867,11 +874,15 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnType("datetime")
                     .HasColumnName("created_date");
 
+                entity.Property(e => e.EndTime).HasColumnName("end_time");
+
                 entity.Property(e => e.HostId).HasColumnName("host_id");
 
                 entity.Property(e => e.KaraokeRoomId).HasColumnName("karaoke_room_id");
 
                 entity.Property(e => e.OwnerId).HasColumnName("owner_id");
+
+                entity.Property(e => e.PurchasedSongId).HasColumnName("purchased_song_id");
 
                 entity.Property(e => e.RecordingName)
                     .HasMaxLength(150)
@@ -881,19 +892,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.Score).HasColumnName("score");
 
-                entity.Property(e => e.PurchasedSongId).HasColumnName("purchased_song_id");
+                entity.Property(e => e.StartTime).HasColumnName("start_time");
 
                 entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("updated_date");
-
-                entity.Property(e => e.StartTime)
-                      .HasColumnType("float")
-                      .HasColumnName("start_time");
-
-                entity.Property(e => e.EndTime)
-                      .HasColumnType("float")
-                      .HasColumnName("end_time");
 
                 entity.HasOne(d => d.Host)
                     .WithMany(p => p.RecordingHosts)
@@ -916,7 +919,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.PurchasedSong)
                     .WithMany(p => p.Recordings)
                     .HasForeignKey(d => d.PurchasedSongId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Recording_PurchasedSong");
             });
 

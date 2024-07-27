@@ -18,7 +18,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording
         //public int Score { get; set; }
         //public int SongType { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public Guid SongId { get; set; }
+        public Guid PurchasedSongId { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public Guid HostId { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]

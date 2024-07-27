@@ -45,8 +45,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         [SwaggerIgnore] 
         public ICollection<PurchasedSongViewModel>? PurchasedSongs { get; set; }
         [SwaggerIgnore] 
-        public ICollection<RecordingViewModel>? Recordings { get; set; }
-        [SwaggerIgnore] 
         public ICollection<SongArtistViewModel>? SongArtists { get; set; }
             [SwaggerIgnore]
         public ICollection<SongGenreViewModel>? SongGenres { get; set; }

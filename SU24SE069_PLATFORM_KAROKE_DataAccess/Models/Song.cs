@@ -9,7 +9,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         {
             InAppTransactions = new HashSet<InAppTransaction>();
             PurchasedSongs = new HashSet<PurchasedSong>();
-            Recordings = new HashSet<Recording>();
+            //Recordings = new HashSet<Recording>();
             SongArtists = new HashSet<SongArtist>();
             SongGenres = new HashSet<SongGenre>();
             FavouriteSongs = new HashSet<FavouriteSong>();
@@ -31,7 +31,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual Account Creator { get; set; } = null!;
         public virtual ICollection<InAppTransaction> InAppTransactions { get; set; }
         public virtual ICollection<PurchasedSong> PurchasedSongs { get; set; }
-        public virtual ICollection<Recording> Recordings { get; set; }
+       // public virtual ICollection<Recording> Recordings { get; set; }
 
         public virtual ICollection<SongArtist> SongArtists { get; set; }
         public virtual ICollection<SongGenre> SongGenres { get; set; }
