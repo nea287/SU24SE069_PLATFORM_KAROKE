@@ -597,8 +597,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     voice_url = table.Column<string>(type: "text", nullable: false),
                     duration_second = table.Column<double>(type: "float", nullable: false),
                     upload_time = table.Column<DateTime>(type: "datetime", nullable: false),
-                    start_time = table.Column<DateTime>(type: "datetime", nullable: false),
-                    end_time = table.Column<DateTime>(type: "datetime", nullable: false),
+                    start_time = table.Column<DateTime>(type: "float", nullable: false),
+                    end_time = table.Column<DateTime>(type: "float", nullable: false),
                     pitch = table.Column<int>(type: "int", nullable: false),
                     recording_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)

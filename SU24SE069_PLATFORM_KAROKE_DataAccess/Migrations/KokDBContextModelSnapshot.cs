@@ -1112,8 +1112,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("float")
                         .HasColumnName("duration_second");
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime")
+                    b.Property<float>("EndTime")
+                        .HasColumnType("float")
                         .HasColumnName("end_time");
 
                     b.Property<Guid>("MemberId")
@@ -1128,8 +1128,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("recording_id");
 
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime")
+                    b.Property<float>("StartTime")
+                        .HasColumnType("float")
                         .HasColumnName("start_time");
 
                     b.Property<DateTime>("UploadTime")
