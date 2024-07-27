@@ -308,6 +308,9 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<PostRatingViewModel, UpdatePostRatingRequestModel>().ReverseMap();
             CreateMap<PostRatingViewModel, PostRatingRequestModel>().ReverseMap();
             #endregion
+            #region VoiceAudio
+            CreateMap<VoiceAudio, VoiceAudioViewModel>().ReverseMap();
+            #endregion
         }
     }
 }
