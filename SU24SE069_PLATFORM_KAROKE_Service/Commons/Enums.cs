@@ -372,6 +372,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     public enum InAppTransactionType
     {
         BUY_ITEM = 1,
+        BUY_SONG = 2,
     }
 
     public enum InAppTransactionStatus
