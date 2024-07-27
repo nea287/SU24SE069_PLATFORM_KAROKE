@@ -1138,7 +1138,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.DurationSecond).HasColumnName("duration_second");
 
                 entity.Property(e => e.EndTime)
-                    .HasColumnType("datetime")
+                    .HasColumnType("float")
                     .HasColumnName("end_time");
 
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
@@ -1148,7 +1148,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.RecordingId).HasColumnName("recording_id");
 
                 entity.Property(e => e.StartTime)
-                    .HasColumnType("datetime")
+                    .HasColumnType("float")
                     .HasColumnName("start_time");
 
                 entity.Property(e => e.UploadTime)
