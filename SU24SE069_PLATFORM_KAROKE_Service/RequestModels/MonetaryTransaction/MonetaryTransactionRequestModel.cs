@@ -14,8 +14,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction
         public PaymentType PaymentType { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public string PaymentCode { get; set; } = null!;
-        [RegularExpression(Constraints.VALIDATE_AMOUNT, ErrorMessage = Constraints.INFORMATION_INVALID)]
-        public decimal MoneyAmount { get; set; }
+        //[RegularExpression(Constraints.VALIDATE_AMOUNT, ErrorMessage = Constraints.INFORMATION_INVALID)]
+        //public decimal MoneyAmount { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public string Currency { get; set; } = null!;
         //public PaymentStatus Status { get; set; }

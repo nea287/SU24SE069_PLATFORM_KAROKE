@@ -22,6 +22,17 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
         #endregion
 
+        #region Account
+        public const string INFORMATION_ACCOUNT_EXISTED = "Thông tin tài khoản đã tồn tại!";
+        public const string INFORMATION_ACCOUNT_NOT_EXISTED = "Thông tin tài khoản không tồn tại!";
+
+        #endregion
+        #region Package
+        public const string INFORMATION_PACKAGE_EXISTED = "Thông tin gói đã tồn tại!";
+        public const string INFORMATION_PACKAGE_NOT_EXISTED = "Thông tin gói không tồn tại!";
+
+        #endregion
+
         #region Login
         public const string EMAIL_PASSWORD_INVALID = "email hoặc mật khẩu không đúng!";
         #endregion
