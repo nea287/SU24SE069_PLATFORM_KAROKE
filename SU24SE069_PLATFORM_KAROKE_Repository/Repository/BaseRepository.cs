@@ -484,9 +484,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             try
             {
                 await BaseDAO<TEntity>.Instance.SaveChagesAsync();
-            }catch(Exception ex)
+            }catch(Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 
