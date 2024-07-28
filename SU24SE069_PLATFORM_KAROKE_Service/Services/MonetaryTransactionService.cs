@@ -31,14 +31,16 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         private readonly IMemoryCache _cache;
         private readonly IMapper _mapper;
         private readonly IMonetaryTransactionRepository _repository;
+        private readonly IPackageRepository _packageRepository;
 
-        public MonetaryTransactionService(IMapper mapper, IMonetaryTransactionRepository repository, IMemoryCache cache, IAccountRepository accountRepository, ISongRepository songRepository)
+        public MonetaryTransactionService(IMapper mapper, IMonetaryTransactionRepository repository, IMemoryCache cache, IAccountRepository accountRepository, ISongRepository songRepository, IPackageRepository packageRepository)
         {
             _accountRepository = accountRepository;
             _songRepository = songRepository;
             _cache = cache;
             _mapper = mapper;
             _repository = repository;
+            _packageRepository = packageRepository;
         }
         public async Task<ResponseResult<MonetaryTransactionViewModel>> CreateTransaction(MonetaryTransactionRequestModel request)
         {
@@ -65,6 +67,74 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Message = Constraints.CREATE_FAILED,
                     result = false
                 };
+            }
+
+            return new ResponseResult<MonetaryTransactionViewModel>()
+            {
+                Message = Constraints.CREATE_SUCCESS,
+                result = true,
+                Value = _mapper.Map<MonetaryTransactionViewModel>(rs)
+            };
+        }
+
+        public async Task<ResponseResult<MonetaryTransactionViewModel>> BuyPackageTransaction(MonetaryTransactionRequestModel request)
+        {
+            MonetaryTransaction rs = new MonetaryTransaction();
+            try
+            {
+                var Account = await _accountRepository.GetByIdGuid(request.MemberId);
+
+                if (Account == null)
+                {
+                    return new ResponseResult<MonetaryTransactionViewModel>()
+                    {
+                        Message = Constraints.INFORMATION_ACCOUNT_NOT_EXISTED,
+                        result = false
+                    };
+                }
+                
+                var Package = await _packageRepository.GetByIdGuid(request.PackageId);
+
+                if (Package == null)
+                {
+                    return new ResponseResult<MonetaryTransactionViewModel>()
+                    {
+                        Message = Constraints.INFORMATION_PACKAGE_NOT_EXISTED,
+                        result = false
+                    };
+                }
+
+                rs = _mapper.Map<MonetaryTransaction>(request);
+
+                rs.CreatedDate = DateTime.Now;
+                rs.Status = (int)PaymentStatus.COMPLETE;
+                rs.MoneyAmount = Package.MoneyAmount.Value;
+
+                Account.MoneyTransactions.Add(rs);
+
+                Account.UpBalance += Package.StarNumber;
+
+                if (!await _repository.CreateMoneyTransaction(rs))
+                {
+                    _repository.DetachEntity(rs);
+                    throw new Exception();
+                }
+
+                await _accountRepository.SaveChagesAsync();
+                //await _packageRepository.SaveChagesAsync();
+
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<MonetaryTransactionViewModel>()
+                {
+                    Message = Constraints.CREATE_FAILED,
+                    result = false
+                };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
             }
 
             return new ResponseResult<MonetaryTransactionViewModel>()
