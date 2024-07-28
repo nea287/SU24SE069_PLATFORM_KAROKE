@@ -235,9 +235,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                     .ForMember(x => x.Artists, dest => dest.MapFrom(dest => dest.Song.SongArtists.Select(a => a.Artist.ArtistName)))
                     .ForMember(x => x.Singers, dest => dest.MapFrom(dest => dest.Song.SongSingers.Select(a => a.Singer.SingerName)))
                     .ForMember(x => x.Genres, dest => dest.MapFrom(dest => dest.Song.SongGenres.Select(a => a.Genre.GenreName)))
+                    .ForMember(d => d.SongUrl, opt => opt.MapFrom(s => s.Song.SongUrl))
             .ReverseMap();
 
             CreateMap<PurchasedSong, PurchasedSongRequestModel>().ReverseMap();
+            CreateMap<PurchasedSongViewModel, PurchasedSongDTO>().ReverseMap();
             #endregion
 
             #region SupportRequest

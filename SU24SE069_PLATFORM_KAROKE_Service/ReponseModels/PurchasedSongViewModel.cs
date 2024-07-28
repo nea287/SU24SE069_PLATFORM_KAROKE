@@ -19,5 +19,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public decimal? Price { get; set; }
         [SwaggerIgnore]
         public ICollection<string>? Artists { get; set; }
+        public string? SongUrl { get; set; }
     }
 }

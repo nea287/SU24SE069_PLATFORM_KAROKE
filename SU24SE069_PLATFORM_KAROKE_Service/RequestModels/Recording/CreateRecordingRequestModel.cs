@@ -21,7 +21,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording
         [Range(0, 100, ErrorMessage = Constraints.VALIDATE_RANGE_0_TO_100)]
         public int Score { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public Guid SongId { get; set; }
+        public Guid PurchasedSongId { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public Guid HostId { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
