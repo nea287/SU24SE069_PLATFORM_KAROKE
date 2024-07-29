@@ -21,7 +21,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item
         public decimal ItemBuyPrice { get; set; }
         [RegularExpression(Constraints.VALIDATE_AMOUNT, ErrorMessage = Constraints.STAR_INVALID)]
         public decimal ItemSellPrice { get; set; }
-        public int ItemStatus { get; set; }
+        public ItemStatus ItemStatus { get; set; }
         public bool CanExpire { get; set; }
         public bool CanStack { get; set; }
         //public DateTime CreatedDate { get; set; }
