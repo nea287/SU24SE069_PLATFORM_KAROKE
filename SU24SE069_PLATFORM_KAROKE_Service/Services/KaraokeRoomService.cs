@@ -34,14 +34,14 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             try
             {
 
-                if (_repository.ExistedRoom(roomLog: request.RoomLog))
-                {
-                    return new ResponseResult<KaraokeRoomViewModel>()
-                    {
-                        Message = Constraints.INFORMATION_EXISTED,
-                        result = false,
-                    };
-                }
+                //if (_repository.ExistedRoom(roomLog: request.RoomLog))
+                //{
+                //    return new ResponseResult<KaraokeRoomViewModel>()
+                //    {
+                //        Message = Constraints.INFORMATION_EXISTED,
+                //        result = false,
+                //    };
+                //}
                 rs = _mapper.Map<KaraokeRoom>(request);
 
                 rs.CreateTime = DateTime.Now;
