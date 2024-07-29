@@ -21,9 +21,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public Guid? MonetaryTransactionId { get; set; }
         public decimal UpTotalAmount { get; set; }
 
-        public virtual Item Item { get; set; } = null!;
+        public virtual Item? Item { get; set; }
         public virtual Account Member { get; set; } = null!;
-        public virtual Song Song { get; set; } = null!;
+        public virtual Song? Song { get; set; }
         public virtual MonetaryTransaction? MonetaryTransaction { get; set; }
         public virtual ICollection<PurchasedSong> PurchasedSongs { get; set; }
         public virtual ICollection<AccountItem> AccountItems { get; set; }
