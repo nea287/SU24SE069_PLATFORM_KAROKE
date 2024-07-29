@@ -18,7 +18,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item
         public string ItemDescription { get; set; } = null!;
         public ItemType ItemType { get; set; }
         [RegularExpression(Constraints.VALIDATE_AMOUNT, ErrorMessage = Constraints.STAR_INVALID)]
-        public decimal ItemPrice { get; set; }
+        public decimal ItemBuyPrice { get; set; }
+        [RegularExpression(Constraints.VALIDATE_AMOUNT, ErrorMessage = Constraints.STAR_INVALID)]
+        public decimal ItemSellPrice { get; set; }
         public int ItemStatus { get; set; }
         public bool CanExpire { get; set; }
         public bool CanStack { get; set; }
