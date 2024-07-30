@@ -52,20 +52,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region Song
             CreateMap<Song, SongViewModel>()
                 .ForMember(x => x.SongStatus, dest => dest.MapFrom(opt => (SongStatus)opt.SongStatus))
-                //.ForMember(x => x.Genre, dest => 
-                //{
-                //    dest.MapFrom(opt => opt.SongGenres.Any() && opt.SongGenres != null? opt.SongGenres.Select(a => a.Genre.GenreName) : (ICollection<string>?)null);
-                //})
-                //.ForMember(x => x.Singer, dest => 
-                //{
-                //    dest.MapFrom(opt => opt.SongSingers.Any() && opt.SongSingers != null? opt.SongSingers.Select(a => a.Singer.SingerName) : (ICollection<string>?)null);
-                //})
-                //.ForMember(x => x.Artist, dest => 
-                //{
-                //    dest.MapFrom(opt => opt.SongArtists.Any() && opt.SongArtists != null? opt.SongArtists.Select(a => a.Artist.ArtistName) : (ICollection<string>?)null);
-                //})
                 .ReverseMap();
-            
+
             CreateMap<Song, SongFilter>()
                 .ForMember(x => x.SongStatus, dest => dest.MapFrom(opt => (SongStatus)opt.SongStatus))
                 .ForMember(x => x.Genre, dest => dest.MapFrom(opt => opt.SongGenres.Select(a => a.Genre.GenreName)))
@@ -73,17 +61,28 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.Artist, dest => dest.MapFrom(opt => opt.SongArtists.Select(a => a.Artist.ArtistName)))
                 .ForMember(x => x.SingerName, dest =>
                 {
-                    dest.MapFrom(a => a.SongSingers.Any() && a.SongSingers != null ? a.SongSingers.Select(t => t.Singer.SingerName).First() : (string?) null); 
+                    dest.MapFrom(a => a.SongSingers.Any() && a.SongSingers != null ? a.SongSingers.Select(t => t.Singer.SingerName).First() : (string?)null);
                 })
                 .ForMember(x => x.GenreName, dest =>
                 {
-                    dest.MapFrom(a => a.SongGenres.Any() && a.SongGenres != null ? a.SongGenres.Select(t => t.Genre.GenreName).First() : (string?) null); 
+                    dest.MapFrom(a => a.SongGenres.Any() && a.SongGenres != null ? a.SongGenres.Select(t => t.Genre.GenreName).First() : (string?)null);
                 })
                 .ForMember(x => x.ArtistName, dest =>
                 {
-                    dest.MapFrom(a => a.SongArtists.Any() && a.SongArtists != null ? a.SongArtists.Select(t => t.Artist.ArtistName).First() : (string?) null); 
+                    dest.MapFrom(a => a.SongArtists.Any() && a.SongArtists != null ? a.SongArtists.Select(t => t.Artist.ArtistName).First() : (string?)null);
                 })
                 .ReverseMap();
+
+            //CreateMap<Song, SongFilter>()
+            //.ForMember(x => x.SongStatus, dest => dest.MapFrom(opt => (SongStatus)opt.SongStatus))
+            //.ForMember(x => x.Genre, dest => dest.MapFrom(opt => opt.SongGenres != null ? opt.SongGenres.Select(a => a.Genre.GenreName).ToList() : new List<string>()))
+            //.ForMember(x => x.Singer, dest => dest.MapFrom(opt => opt.SongSingers != null ? opt.SongSingers.Select(a => a.Singer.SingerName).ToList() : new List<string>()))
+            //.ForMember(x => x.Artist, dest => dest.MapFrom(opt => opt.SongArtists != null ? opt.SongArtists.Select(a => a.Artist.ArtistName).ToList() : new List<string>()))
+            //.ForMember(x => x.SingerName, dest => dest.MapFrom(opt => opt.SongSingers != null && opt.SongSingers.Any() ? opt.SongSingers.Select(t => t.Singer.SingerName).First() : (string)null))
+            //.ForMember(x => x.GenreName, dest => dest.MapFrom(opt => opt.SongGenres != null && opt.SongGenres.Any() ? opt.SongGenres.Select(t => t.Genre.GenreName).First() : (string)null))
+            //.ForMember(x => x.ArtistName, dest => dest.MapFrom(opt => opt.SongArtists != null && opt.SongArtists.Any() ? opt.SongArtists.Select(t => t.Artist.ArtistName).First() : (string)null))
+            //.ReverseMap();
+
 
             CreateMap<SongViewModel, SongFilter>().ReverseMap();
 
@@ -112,6 +111,12 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<SongSinger, SongSingerRequestModel>().ReverseMap();
 
             CreateMap<SongViewModel, SongDTO>().ReverseMap();
+            CreateMap<Song, SongDTO>()
+                .ForMember(d => d.SongStatus, opt => opt.MapFrom(s => (SongStatus)s.SongStatus))
+                .ForMember(d => d.Artist, opt => opt.MapFrom(s => s.SongArtists.Select(a => a.Artist.ArtistName)))
+                .ForMember(d => d.Singer, opt => opt.MapFrom(s => s.SongSingers.Select(a => a.Singer.SingerName)))
+                .ForMember(d => d.Genre, opt => opt.MapFrom(s => s.SongGenres.Select(a => a.Genre.GenreName)))
+                .ReverseMap();
             #endregion
 
             #region Friend
@@ -160,6 +165,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.RecordingType, dest => dest.MapFrom(src => (RecordingType)src.RecordingType))
                 .ReverseMap();
             CreateMap<Recording, CreateRecordingRequestModel>().ReverseMap();
+            CreateMap<Recording, UpdateRecording1RequestModel>()
+                .ForMember(x => x.VoiceAudios, dest => dest.MapFrom(opt => opt.VoiceAudios)).ReverseMap();
             #endregion
 
             #region VoiceAudio
