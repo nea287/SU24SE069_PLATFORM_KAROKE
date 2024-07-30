@@ -224,6 +224,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Value = result
                 };
             }
+            finally
+            {
+                await _recordingRepository.DisponseAsync();
+            }
 
             return new ResponseResult<RecordingViewModel>()
             {
