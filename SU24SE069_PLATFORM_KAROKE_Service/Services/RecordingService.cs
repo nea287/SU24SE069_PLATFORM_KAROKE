@@ -169,7 +169,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public async Task<ResponseResult<RecordingViewModel>> UpdateRecording(Guid id)
+        public async Task<ResponseResult<RecordingViewModel>> UpdateRecording(Guid id, UpdateRecording1RequestModel request)
         {
             RecordingViewModel result = new RecordingViewModel();
             try
@@ -190,6 +190,20 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     var data = _mapper.Map<Recording>(data1);
 
                     data.UpdatedDate = DateTime.Now;
+                    data.StartTime = request.StartTime;
+                    data.EndTime = request.EndTime;
+                    if(request.VoiceAudios != null)
+                    {
+                        foreach(var audio in data.VoiceAudios)
+                        {
+                            if(request.VoiceAudios.Any(x => x.VoiceId == audio.VoiceId))
+                            {
+                                audio.StartTime = request.VoiceAudios.FirstOrDefault(x => x.VoiceId == audio.VoiceId).StartTime;
+                                audio.EndTime = request.VoiceAudios.FirstOrDefault(x => x.VoiceId == audio.VoiceId).EndTime;
+                                audio.DurationSecond = request.VoiceAudios.FirstOrDefault(x => x.VoiceId == audio.VoiceId).DurationSecond;
+                            }
+                        }
+                    }
 
                     if (data == null)
                     {

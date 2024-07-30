@@ -37,9 +37,9 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateRecording(Guid id)
+        public async Task<IActionResult> UpdateRecording(Guid id, [FromBody] UpdateRecording1RequestModel request)
         {
-            var rs = await _recordingService.UpdateRecording(id);
+            var rs = await _recordingService.UpdateRecording(id, request);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
