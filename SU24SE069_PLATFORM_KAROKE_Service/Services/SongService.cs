@@ -16,6 +16,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using AutoMapper.QueryableExtensions;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
 using SU24SE069_PLATFORM_KAROKE_Service.Filters;
+using Microsoft.EntityFrameworkCore;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
@@ -266,37 +267,76 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
         #region Query
 
+        //public async Task<DynamicModelResponse.DynamicModelsResponse<SongDTO>> GetSongsPurchaseFavorite(Guid accountId, SongFilter filter, PagingRequest paging, SongOrderFilter orderFilter = SongOrderFilter.SongName)
+        //{
+        //    (int, IQueryable<SongViewModel>) result;
+        //    try
+        //    {
+        //        lock (_songRepository)
+        //        {
+        //            var data1 = _songRepository.GetAll(
+        //                                        includeProperties: String.Join(",",
+        //                                        SupportingFeature.GetNameIncludedProperties<Song>()))
+        //                .ProjectTo<SongFilter>(_mapper.ConfigurationProvider)
+        //                .DynamicFilter(filter)
+        //                .ToList();
+
+        //            var data = _mapper.Map<ICollection<SongViewModel>>(data1).AsQueryable();
+
+        //            string? colName = Enum.GetName(typeof(SongOrderFilter), orderFilter);
+
+        //            data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
+
+        //            result = data.PagingIQueryable(paging.page, paging.pageSize,
+        //                    Constraints.LimitPaging, Constraints.DefaultPaging);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new DynamicModelResponse.DynamicModelsResponse<SongDTO>()
+        //        {
+        //            Message = Constraints.LOAD_FAILED,
+        //        };
+        //    }
+
+        //    var finalResult = new DynamicModelResponse.DynamicModelsResponse<SongDTO>()
+        //    {
+        //        Message = Constraints.INFORMATION,
+        //        Metadata = new DynamicModelResponse.PagingMetadata()
+        //        {
+        //            Page = paging.page,
+        //            Size = paging.pageSize,
+        //            Total = result.Item1
+        //        },
+        //        Results = _mapper.Map<List<SongDTO>>(result.Item2.ToList())
+        //    };
+        //    // If result has song, check if the account (accountId) has purchase or favorite the songs
+        //    if(finalResult.Results != null && finalResult.Results.Count > 0)
+        //    {
+        //        foreach (var song in finalResult.Results)
+        //        {
+        //            song.isPurchased = _purchasedSongRepository.GetDbSet().Any(s => s.SongId == song.SongId && s.MemberId == accountId);
+        //            song.isFavorite = _favouriteSongRepository.GetDbSet().Any(s => s.SongId == song.SongId && s.MemberId == accountId);
+        //        }
+        //    }
+        //    return finalResult;
+        //}
+
         public async Task<DynamicModelResponse.DynamicModelsResponse<SongDTO>> GetSongsPurchaseFavorite(Guid accountId, SongFilter filter, PagingRequest paging, SongOrderFilter orderFilter = SongOrderFilter.SongName)
         {
-            (int, IQueryable<SongViewModel>) result;
-            try
-            {
-                lock (_songRepository)
-                {
-                    var data1 = _songRepository.GetAll(
-                                                includeProperties: String.Join(",",
-                                                SupportingFeature.GetNameIncludedProperties<Song>()))
-                        .ProjectTo<SongFilter>(_mapper.ConfigurationProvider)
-                        .DynamicFilter(filter)
-                        .ToList();
-
-                    var data = _mapper.Map<ICollection<SongViewModel>>(data1).AsQueryable();
-
-                    string? colName = Enum.GetName(typeof(SongOrderFilter), orderFilter);
-
-                    data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
-
-                    result = data.PagingIQueryable(paging.page, paging.pageSize,
-                            Constraints.LimitPaging, Constraints.DefaultPaging);
-                }
-            }
-            catch (Exception ex)
-            {
-                return new DynamicModelResponse.DynamicModelsResponse<SongDTO>()
-                {
-                    Message = Constraints.LOAD_FAILED,
-                };
-            }
+            DbSet<Song> db = _songRepository.GetDbSet();
+            var songs = await db
+                .Include(s => s.SongArtists)
+                .ThenInclude(sa => sa.Artist)
+                .Include(s => s.SongSingers)
+                .ThenInclude(ss => ss.Singer)
+                .Include(s => s.SongGenres)
+                .ThenInclude(sg => sg.Genre)
+                .Where(s => s.SongName.Contains(filter.SongName == null ? string.Empty : filter.SongName) && s.SongStatus == (int)SongStatus.ENABLE)
+                .Skip(paging.pageSize * (paging.page - 1))
+                .Take(paging.pageSize)
+                .ToListAsync();
+            var songCount = await db.Where(s => s.SongName.Contains(filter.SongName == null ? string.Empty : filter.SongName) && s.SongStatus == (int)SongStatus.ENABLE).CountAsync();
 
             var finalResult = new DynamicModelResponse.DynamicModelsResponse<SongDTO>()
             {
@@ -305,12 +345,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 {
                     Page = paging.page,
                     Size = paging.pageSize,
-                    Total = result.Item1
+                    Total = songCount
                 },
-                Results = _mapper.Map<List<SongDTO>>(result.Item2.ToList())
+                Results = _mapper.Map<List<SongDTO>>(songs)
             };
             // If result has song, check if the account (accountId) has purchase or favorite the songs
-            if(finalResult.Results != null && finalResult.Results.Count > 0)
+            if (finalResult.Results != null && finalResult.Results.Count > 0)
             {
                 foreach (var song in finalResult.Results)
                 {
