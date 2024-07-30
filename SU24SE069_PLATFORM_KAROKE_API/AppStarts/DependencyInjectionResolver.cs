@@ -144,6 +144,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<IDashboardMonetaryRepository, DashboardMonetaryRepository>();
             services.AddScoped<IDashboardService, DashboardService>();
             #endregion
+
+            #region AudioVoice
+            services.AddScoped<IVoiceAudioRepository, VoiceAudioRepository>();
+            #endregion
         }
+
     }
 }

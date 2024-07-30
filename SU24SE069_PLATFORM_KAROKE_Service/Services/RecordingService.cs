@@ -25,11 +25,13 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
     {
         private readonly IMapper _mapper;
         private readonly IRecordingRepository _recordingRepository;
+        private readonly IVoiceAudioRepository _voiceAudioRepository;
 
-        public RecordingService(IMapper mapper, IRecordingRepository recordingRepository)
+        public RecordingService(IMapper mapper, IRecordingRepository recordingRepository, IVoiceAudioRepository voiceAudioRepository)
         {
             _mapper = mapper;
             _recordingRepository = recordingRepository;
+            _voiceAudioRepository = voiceAudioRepository;
         }
 
         public async Task<ResponseResult<RecordingViewModel>> CreateRecording(CreateRecordingRequestModel request)
@@ -88,17 +90,21 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         {
             try
             {
-                if (!_recordingRepository.ExistedRecording(id))
+                var data = await _recordingRepository.GetByIdGuid(id);
+                if (data == null)
                     return new ResponseResult<RecordingViewModel>()
                     {
                         Message = Constraints.NOT_FOUND,
                         result = false,
                     };
 
-                if (!await _recordingRepository.DeleteRecording(id))
+                if (!_voiceAudioRepository.DeleteVoiceAudios(data.VoiceAudios.AsQueryable()) && !await _recordingRepository.DeleteRecording(id))
                 {
                     throw new Exception();
                 }
+
+                await _voiceAudioRepository.SaveChagesAsync();
+                await _recordingRepository.SaveChagesAsync();
             }
             catch (Exception)
             {
@@ -108,6 +114,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     result = false,
                 };
             }
+            finally { await _recordingRepository.DisponseAsync(); }
 
             return new ResponseResult<RecordingViewModel>()
             {
