@@ -55,8 +55,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             Dictionary<Month, decimal> result = new Dictionary<Month, decimal>();
             try
             {
-                request.StartMonth = request.Month ?? DateTime.Now.Month;
-                request.EndMonth = request.Month?? DateTime.Now.Month;
+                //request.StartMonth = request.Month ?? DateTime.Now.Month;
+                //request.EndMonth = request.Month?? DateTime.Now.Month;
 
                 var data = await _gameRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.Year) ?? throw new Exception();
 
@@ -110,8 +110,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             Dictionary<Month, decimal> result = new Dictionary<Month, decimal>();
             try
             {
-                request.StartMonth = request.Month ?? DateTime.Now.Month;
-                request.EndMonth = request.Month ?? DateTime.Now.Month;
+                //request.StartMonth = request.Month ?? DateTime.Now.Month;
+                //request.EndMonth = request.Month ?? DateTime.Now.Month;
 
                 var data = await _monetaryRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.Year) ?? throw new Exception();
 
