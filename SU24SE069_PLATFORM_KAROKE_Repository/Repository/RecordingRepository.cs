@@ -29,7 +29,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             try
             {
                 await HardDeleteGuid(id);
-                //SaveChages();
+                await SaveChagesAsync();
             }catch(Exception ex)
             {
                 return false;

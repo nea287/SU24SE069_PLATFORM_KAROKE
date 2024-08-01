@@ -1163,8 +1163,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.VoiceAudios)
-                    .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.Cascade)
+                    .HasForeignKey(d => d.MemberId)
                     .HasConstraintName("FK__VoiceAudi__membe__2739D489");
 
                 entity.HasOne(d => d.Recording)

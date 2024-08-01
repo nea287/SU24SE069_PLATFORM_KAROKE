@@ -98,13 +98,13 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         result = false,
                     };
 
-                if (!_voiceAudioRepository.DeleteVoiceAudios(data.VoiceAudios.AsQueryable()) && !await _recordingRepository.DeleteRecording(id))
+                if ( !await _recordingRepository.DeleteRecording(id)) //!_voiceAudioRepository.DeleteVoiceAudios(data.VoiceAudios.AsQueryable()) ||
                 {
                     throw new Exception();
                 }
 
-                await _voiceAudioRepository.SaveChagesAsync();
-                await _recordingRepository.SaveChagesAsync();
+                //await _voiceAudioRepository.SaveChagesAsync();
+                //await _recordingRepository.SaveChagesAsync();
             }
             catch (Exception)
             {
