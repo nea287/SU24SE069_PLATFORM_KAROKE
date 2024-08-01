@@ -59,5 +59,18 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 
             return true;
         }
+
+        public async Task<bool> HasUserFavoriteSong(Guid? userId, Guid? songId)
+        {
+            if (userId == null || userId == Guid.Empty)
+            {
+                return false;
+            }
+            if (songId == null || songId == Guid.Empty)
+            {
+                return false;
+            }
+            return await GetDbSet().AnyAsync(s => s.MemberId == userId && s.SongId == songId);
+        }
     }
 }

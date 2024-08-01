@@ -7,6 +7,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Service.Filters;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters.Song;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
@@ -28,10 +29,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         [HttpGet("{songId:guid}")]
         public async Task<IActionResult> GetSong(Guid songId)
         {
-            ResponseResult<SongViewModel> result = await _songService.GetSong(songId);
-
-            return result.result.HasValue ? 
-                (result.result.Value ? Ok(result) : NotFound(result)) : BadRequest(result);
+            ResponseResult<SongDTO> result = await _songService.GetSong(songId);
+            return result.Value == null ? NotFound(result) : Ok(result);
         }
 
         [HttpGet]
@@ -69,7 +68,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
         [HttpGet]
         [Route("{accountId}/filter")]
-        public async Task<ActionResult> GetSongsPurchaseFavorite([FromRoute] Guid accountId, [FromQuery] SongFilter filter,
+        public async Task<ActionResult> GetSongsPurchaseFavorite([FromRoute] Guid accountId, [FromQuery] KaraokeSongFilter filter,
             [FromQuery] PagingRequest paging, [FromQuery] SongOrderFilter orderFilter = SongOrderFilter.SongName)
         {
             var result = await _songService.GetSongsPurchaseFavorite(accountId, filter, paging, orderFilter);

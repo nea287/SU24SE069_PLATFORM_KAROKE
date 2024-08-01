@@ -1,4 +1,5 @@
-﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,19 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 return false;
             }
             return true;
+        }
+
+        public async Task<bool> HasUserPurchaseSong(Guid? userId, Guid? songId)
+        {
+            if (userId == null || userId == Guid.Empty)
+            {
+                return false;
+            }
+            if (songId == null || songId == Guid.Empty)
+            {
+                return false;
+            }
+            return await GetDbSet().AnyAsync(s => s.MemberId == userId && s.SongId == songId);
         }
     }
 }

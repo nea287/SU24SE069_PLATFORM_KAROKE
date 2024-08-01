@@ -15,5 +15,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
         //public Task<Account> GetAccount(Guid id);
         //public Task<Account> GetAccountByMail(string email);
         public Task<bool> DeleteFavouriteSong(FavouriteSong request);
+        Task<bool> HasUserFavoriteSong(Guid? userId, Guid? songId);
     }
 }
