@@ -28,6 +28,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             try
             {
                  DeleteRange(voiceAudios);
+                SaveChages();
             }catch(Exception ex)
             {
                 return false;
