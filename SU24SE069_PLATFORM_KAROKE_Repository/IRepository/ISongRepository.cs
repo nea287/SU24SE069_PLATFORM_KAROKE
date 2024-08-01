@@ -21,5 +21,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
             Expression<Func<Song, bool>>? filter = null,
             Func<IQueryable<Song>, IOrderedQueryable<Song>>? orderBy = null,
             bool isTracking = false);
+        Task<Song?> GetSongById(Guid id);
     }
 }

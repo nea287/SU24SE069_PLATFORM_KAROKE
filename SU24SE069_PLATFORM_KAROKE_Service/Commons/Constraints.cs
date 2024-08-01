@@ -19,7 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         public const string UPDATE_FAILED = "Cập nhật thông tin thất bại!";
         public const string INFORMATION = "Thông tin: ";
         public const string INFORMATION_EXISTED = "Thông tin đã tồn tại!";
-
+        public const string LOAD_SUCCESS = "Tải thông tin thành công!";
         #endregion
 
         #region Account

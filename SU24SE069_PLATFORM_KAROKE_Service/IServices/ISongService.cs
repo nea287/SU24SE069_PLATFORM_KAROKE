@@ -18,7 +18,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
 {
     public interface ISongService
     {
-        public Task<ResponseResult<SongViewModel>> GetSong(Guid id);
+        public Task<ResponseResult<SongDTO>> GetSong(Guid id);
         public Task<ResponseResult<SongViewModel>> UpdateSong(Guid id, UpdateSongRequestModel song);
         public Task<ResponseResult<SongViewModel>> DeleteSong(Guid id);
         public Task<ResponseResult<SongViewModel>> CreateSong(CreateSongRequestModel request);

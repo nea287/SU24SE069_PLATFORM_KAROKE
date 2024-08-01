@@ -31,42 +31,25 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             _favouriteSongRepository = favouriteSongRepository;
         }
         #region Read
-        public async Task<ResponseResult<SongViewModel>> GetSong(Guid accountId)
+        public async Task<ResponseResult<SongDTO>> GetSong(Guid songId)
         {
-            ResponseResult<SongViewModel> result = new ResponseResult<SongViewModel>();
-            try
-            {
-                lock (_songRepository)
-                {
-                    var data = _mapper.Map<SongViewModel>(_songRepository
-                        .GetSong(id: accountId).Result);
+            var song = await _songRepository.GetSongById(songId);
 
-                    result = data == null ?
-                        new ResponseResult<SongViewModel>()
-                        {
-                            Message = Constraints.NOT_FOUND,
-                            result = false
-                        }
-                        :
-                        new ResponseResult<SongViewModel>()
-                        {
-                            Message = Constraints.INFORMATION,
-                            Value = data,
-                            result = true
-                        };
-
-                }
-            }
-            catch (Exception)
+            if (song == null) 
             {
-                result = new ResponseResult<SongViewModel>()
+                return new ResponseResult<SongDTO>()
                 {
-                    Message = Constraints.LOAD_FAILED,
-                    result = false
+                    Message = Constraints.NOT_FOUND,
+                    result = false,
+                    Value = null,
                 };
             }
-
-            return result;
+            return new ResponseResult<SongDTO>()
+            {
+                Message = Constraints.LOAD_SUCCESS,
+                result = true,
+                Value = _mapper.Map<SongDTO>(song),
+            };
         }
 
         public DynamicModelResponse.DynamicModelsResponse<SongViewModel> GetSongs(

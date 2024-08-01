@@ -29,10 +29,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         [HttpGet("{songId:guid}")]
         public async Task<IActionResult> GetSong(Guid songId)
         {
-            ResponseResult<SongViewModel> result = await _songService.GetSong(songId);
-
-            return result.result.HasValue ? 
-                (result.result.Value ? Ok(result) : NotFound(result)) : BadRequest(result);
+            ResponseResult<SongDTO> result = await _songService.GetSong(songId);
+            return result.Value == null ? NotFound(result) : Ok(result);
         }
 
         [HttpGet]

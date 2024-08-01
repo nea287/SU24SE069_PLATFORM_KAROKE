@@ -124,5 +124,13 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 throw new Exception($"[GetSongsPurchaseFavoriteFiltered]: Error when trying to query song data: " + ex.Message);
             }
         }
+
+        public async Task<Song?> GetSongById(Guid id)
+        {
+            return await GetDbSet().Include(s => s.SongArtists).ThenInclude(sa => sa.Artist)
+                .Include(s => s.SongSingers).ThenInclude(ss => ss.Singer)
+                .Include(s => s.SongGenres).ThenInclude(sg => sg.Genre)
+                .FirstOrDefaultAsync(s => s.SongId == id);
+        }
     }
 }
