@@ -168,7 +168,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             }
             finally
             {
-                await _repository.DisponseAsync();
+                //await _repository.DisponseAsync();
             }
 
             return new DynamicModelResponse.DynamicModelsResponse<ArtistViewModel>()
