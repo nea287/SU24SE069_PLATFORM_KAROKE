@@ -1,8 +1,10 @@
-﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -87,6 +89,40 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             }
 
             return true;
+        }
+
+        public async Task<(int, List<Song>)> GetSongsPurchaseFavoriteFiltered(int pageNumber, int pageSize, Expression<Func<Song, bool>>? filter = null, Func<IQueryable<Song>, IOrderedQueryable<Song>>? orderBy = null, bool isTracking = false)
+        {
+            IQueryable<Song> query = GetDbSet().AsQueryable();
+            try
+            {
+                query = !isTracking ? query.AsNoTracking() : query.AsTracking();
+                if (filter != null)
+                {
+                    query = query.Where(filter);
+                }
+
+                 query = query.Include(s => s.SongArtists)
+                .ThenInclude(sa => sa.Artist)
+                .Include(s => s.SongSingers)
+                .ThenInclude(ss => ss.Singer)
+                .Include(s => s.SongGenres)
+                .ThenInclude(sg => sg.Genre);
+
+                int totalCount = await query.CountAsync();
+
+                if (orderBy != null)
+                {
+                    query = orderBy(query);
+                }
+
+                query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                return (totalCount, await query.ToListAsync());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"[GetSongsPurchaseFavoriteFiltered]: Error when trying to query song data: " + ex.Message);
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,5 +16,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
         public Task<bool> UpdateSong(Guid id, Song song);
         public bool ExistedSong(string code);
         public Task<bool> DeleteSong(Guid id);
+        Task<(int, List<Song>)> GetSongsPurchaseFavoriteFiltered(int pageNumber,
+            int pageSize,
+            Expression<Func<Song, bool>>? filter = null,
+            Func<IQueryable<Song>, IOrderedQueryable<Song>>? orderBy = null,
+            bool isTracking = false);
     }
 }
