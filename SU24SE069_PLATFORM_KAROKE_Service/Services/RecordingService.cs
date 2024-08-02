@@ -121,6 +121,37 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
+        public async Task<ResponseResult<RecordingViewModel>> GetRecording(Guid id)
+        {
+            Recording data = new Recording();
+            try
+            {
+                data = await _recordingRepository.GetByIdGuid(id);
+
+                if(data == null)
+                {
+                    return new ResponseResult<RecordingViewModel>()
+                    {
+                        Message = Constraints.EMPTY_INPUT_INFORMATION,
+                        result = false,
+                    };
+                }
+            }catch(Exception)
+            {
+                return new ResponseResult<RecordingViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                    result = false,
+                };
+            }
+
+            return new ResponseResult<RecordingViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                result = true,
+            };
+        }
+
         public async Task<DynamicModelResponse.DynamicModelsResponse<RecordingViewModel>> GetRecordings(RecordingViewModel filter, PagingRequest paging, RecordingOrderFilter orderFilter)
         {
             (int, IQueryable<RecordingViewModel>) result;

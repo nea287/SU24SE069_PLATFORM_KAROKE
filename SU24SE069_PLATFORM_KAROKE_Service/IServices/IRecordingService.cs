@@ -17,6 +17,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<RecordingViewModel>> UpdateRecording(Guid id, UpdateRecording1RequestModel request);
         public Task<DynamicModelResponse.DynamicModelsResponse<RecordingViewModel>> GetRecordings(RecordingViewModel filter, PagingRequest paging, RecordingOrderFilter orderFilter);
         public Task<ResponseResult<RecordingViewModel>> Delete(Guid id);
+        public Task<ResponseResult<RecordingViewModel>> GetRecording(Guid id);
+
   
     }
 }
