@@ -11,6 +11,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
     {
         public Task<bool> CreatePurchasedSong(PurchasedSong purchasedSong);
         public bool CheckPurchasedSong(Guid memberId, Guid songId);
-
+        Task<bool> HasUserPurchaseSong(Guid? userId, Guid? songId);
     }
 }

@@ -28,6 +28,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);  
         }
 
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetRecordingById(Guid id)
+        {
+            var rs = await _recordingService.GetRecording(id);  
+
+            return rs.result.HasValue ? (rs.result.Value? Ok(rs) : BadRequest(rs)): BadRequest(rs);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateRecording([FromBody] CreateRecordingRequestModel request)
         {
