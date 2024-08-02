@@ -149,6 +149,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 Message = Constraints.INFORMATION,
                 result = true,
+                Value = _mapper.Map<RecordingViewModel>(data)
             };
         }
 
