@@ -63,7 +63,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 //endMonth = startMonth?? DateTime.Now.Month;
                 if (month.HasValue)
                 {
-                    var data = GetAll(x => x.CreatedDate.Month == month.Value && x.CreatedDate.Year == year.Value)
+
+                     var data = GetAll(x => x.CreatedDate.Month == month.Value && x.CreatedDate.Year == year.Value)
                                  .GroupBy(transaction => transaction.CreatedDate.Month)
                                  .Select(group => new
                                  {
@@ -78,6 +79,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 }
                 else
                 {
+                    var data1 = Enumerable.Range(1, 12);
+
                     var data = GetAll(x => x.CreatedDate.Month >= startMonth && x.CreatedDate.Month <= endMonth
                                        && x.CreatedDate.Year == year)
                         .GroupBy(transaction => transaction.CreatedDate.Month)
@@ -87,10 +90,22 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                             TotalAmount = group.Sum(transaction => transaction.MoneyAmount)
                         });
 
-                    await data.ForEachAsync(x =>
+                    data = data1.GroupJoin(data, month => month, data => data.Month, (month, data) => new
                     {
-                        result.Add(x.Month, x.TotalAmount);
-                    });
+                        Month = month,
+                        TotalAmount = data.FirstOrDefault()?.TotalAmount ?? 0
+                    }).AsQueryable();
+
+
+                    foreach(var item in data)
+                    {
+                        result.Add(item.Month, item.TotalAmount);
+                    }
+
+                    //await data.ForEachAsync(x => 
+                    //{
+                    //    result.Add(x.Month, x.TotalAmount);
+                    //});
                 }
             }
             catch (Exception)

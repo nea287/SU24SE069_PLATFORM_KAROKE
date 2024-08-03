@@ -71,6 +71,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                                      TotalAmount = group.Sum(transaction => transaction.UpTotalAmount)
                                  });
 
+                    
+
                     await data.ForEachAsync(x =>
                     {
                         result.Add(x.Month, x.TotalAmount);
@@ -78,6 +80,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 }
                 else
                 {
+
+                    var data1 = Enumerable.Range(0, 12);
+
                     var data = GetAll(x => x.CreatedDate.Month >= startMonth && x.CreatedDate.Month <= endMonth
                                        && x.CreatedDate.Year == year)
                         .GroupBy(transaction => transaction.CreatedDate.Month)
@@ -87,10 +92,21 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                             TotalAmount = group.Sum(transaction => transaction.UpTotalAmount)
                         });
 
-                    await data.ForEachAsync(x =>
+                    data = data1.GroupJoin(data, month => month, data => data.Month, (month, data) => new
+                    {
+                        Month = month,
+                        TotalAmount = data.FirstOrDefault()?.TotalAmount?? 0
+                    }).AsQueryable();
+
+                    //await data.ForEachAsync(x =>
+                    //{
+                    //    result.Add(x.Month, x.TotalAmount);
+                    //});
+
+                    foreach (var x in data)
                     {
                         result.Add(x.Month, x.TotalAmount);
-                    });
+                    }
                 }
             }
             catch (Exception)
