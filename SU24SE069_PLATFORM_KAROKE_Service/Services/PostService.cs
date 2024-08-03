@@ -39,6 +39,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 data.UploadTime = DateTime.Now;
                 data.UpdateTime = DateTime.Now;
 
+                data.Status = (int)PostStatus.ACTIVE;
+
                 if (!data.PostShares.IsNullOrEmpty())
                 {
 
@@ -160,7 +162,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public async Task<ResponseResult<PostViewModel>> UpdatePost(Guid id)
+        public async Task<ResponseResult<PostViewModel>> UpdatePost(Guid id, string? caption)
         {
             PostViewModel result = new PostViewModel();
             try
@@ -181,6 +183,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     var data = _mapper.Map<Post>(data1);
 
                     data.UpdateTime = DateTime.Now;
+                    data.Caption = caption??data.Caption;
 
                     if (data == null)
                     {

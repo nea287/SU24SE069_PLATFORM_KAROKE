@@ -35,9 +35,9 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdatePost(Guid id)
+        public async Task<IActionResult> UpdatePost(Guid id, [FromBody] string? caption)
         {
-            var rs = await _postService.UpdatePost(id);
+            var rs = await _postService.UpdatePost(id, caption);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }

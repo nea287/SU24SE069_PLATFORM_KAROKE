@@ -1,4 +1,5 @@
-﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PostRate;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PostShare;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Report;
@@ -17,6 +18,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post
         //public DateTime UpdateTime { get; set; }
         public Guid MemberId { get; set; }
         public Guid RecordingId { get; set; }
+        public PostType PostType { get; set; }
+        public Guid? OriginPostId { get; set; }
         public ICollection<CreatePostShareRequestModel>? PostShares { get; set; }
         //public ICollection<CreatePostRateRequestModel>? PostRates { get; set; }
         public ICollection<CreateReportRequestModel>? Reports { get; set; }
