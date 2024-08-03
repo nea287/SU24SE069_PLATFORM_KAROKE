@@ -444,6 +444,18 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     }
     #endregion
     #region Post
+
+    public enum PostStatus
+    {
+        ACTIVE,
+        DEACTIVE,
+    }
+    public enum PostType
+    {
+        POST,
+        SHARE,
+    }
+
     public enum PostCommentType
     {
         PARENT,
