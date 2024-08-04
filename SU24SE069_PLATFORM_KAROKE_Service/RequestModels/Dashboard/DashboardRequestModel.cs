@@ -22,6 +22,18 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Dashboard
         public int EndMonth { get; set; } = (int)SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons.Month.December;
         [InRangeOneHundred(ErrorMessage = Constraints.OVER_100_YEARS)]
         public int Year { get; set; } = DateTime.Now.Year;
+        private int? _startYear;
+        private int? _endYear;
+        public int? StartYear
+        {
+            get => _startYear ?? Year;
+            set => _startYear = value;
+        }
+        public int? EndYear
+        {
+            get => _endYear ?? Year;
+            set => _endYear = value;
+        }
     }
 
     public class DateRequestModel
