@@ -163,7 +163,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
         {
             IQueryable<TEntity> result;
             try
-            {
+           {
                 result = BaseDAO<TEntity>.Instance.GetAll(filter, orderBy, includeProperties);
             }
             catch (Exception ex)
