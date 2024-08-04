@@ -15,7 +15,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
         public AccountGender Gender { get; set; }
         //public string AccountName { get; set; } = null!;
         [RegularExpression(Constraints.VALIDATE_AMOUNT, ErrorMessage = Constraints.STAR_INVALID)]
-        public decimal Star { get; set; }
+        public decimal UpBalance { get; set; }
         public string? Fullname { get; set; }
         [InRangeOneHundredAttribute(ErrorMessage = Constraints.INFORMATION_INVALID)]
         public int? Yob { get; set; }
