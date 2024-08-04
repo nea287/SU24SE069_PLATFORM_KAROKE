@@ -72,6 +72,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     result = false
                 };
             }
+            finally
+            {
+                _accountRepository.DisponseAsync();
+            }
 
             return new ResponseResult<InAppTransactionViewModel>()
             {
@@ -197,6 +201,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     result = false,
                 };
             }
+            finally
+            {
+               await _accountRepository.DisponseAsync();
+            }
 
             return new ResponseResult<InAppTransactionViewModel>()
             {
@@ -283,6 +291,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Message = Constraints.PURCHASE_SONG_FAILED,
                     result = false,
                 };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
             }
 
             return new ResponseResult<InAppTransactionViewModel>()
@@ -383,6 +395,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Message = Constraints.PURCHASE_ITEM_FAILED,
                     result = false,
                 };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
             }
 
             return new ResponseResult<InAppTransactionViewModel>()
