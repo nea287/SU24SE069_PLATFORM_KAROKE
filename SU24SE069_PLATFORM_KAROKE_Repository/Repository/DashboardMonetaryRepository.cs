@@ -53,7 +53,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return result;
         }
 
-        public async Task<Dictionary<int, decimal>> GetDashboardByMonth(int? month = null, int? startMonth = null, int? endMonth = null, int? year = null)
+        public async Task<Dictionary<int, decimal>> GetDashboardByMonth(int? month = null, int? startMonth = null, int? endMonth = null, int? startYear = null, int? endYear = null)
         {
             Dictionary<int, decimal> result = new Dictionary<int, decimal>();
 
@@ -61,10 +61,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             {
                 //startMonth = startMonth?? DateTime.Now.Month;
                 //endMonth = startMonth?? DateTime.Now.Month;
+
                 if (month.HasValue)
                 {
 
-                     var data = GetAll(x => x.CreatedDate.Month == month.Value && x.CreatedDate.Year == year.Value)
+                     var data = GetAll(x => x.CreatedDate.Month == month.Value && x.CreatedDate.Year >= startYear && x.CreatedDate.Year <= endYear)
                                  .GroupBy(transaction => transaction.CreatedDate.Month)
                                  .Select(group => new
                                  {
@@ -82,7 +83,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                     var data1 = Enumerable.Range(1, 13);
 
                     var data = GetAll(x => x.CreatedDate.Month >= startMonth && x.CreatedDate.Month <= endMonth
-                                       && x.CreatedDate.Year == year)
+                                       && x.CreatedDate.Year >= startYear && x.CreatedDate.Year <= endYear)
                         .GroupBy(transaction => transaction.CreatedDate.Month)
                         .Select(group => new
                         {
