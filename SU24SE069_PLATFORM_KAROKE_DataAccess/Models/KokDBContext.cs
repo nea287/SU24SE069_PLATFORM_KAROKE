@@ -118,6 +118,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.Fullname)
                     .HasMaxLength(150)
                     .HasColumnName("fullname");
+                
+                entity.Property(e => e.Description)
+                    .HasMaxLength(500)
+                    .HasColumnName("description");
 
                 entity.Property(e => e.Gender).HasColumnName("gender");
 

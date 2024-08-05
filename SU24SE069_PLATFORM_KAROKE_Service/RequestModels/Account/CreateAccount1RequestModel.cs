@@ -25,5 +25,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account
         [InRangeOneHundredAttribute(ErrorMessage = Constraints.INFORMATION_INVALID)]
         public int? Yob { get; set; }
         //public AccountStatus AccountStatus { get; set; }
+        public string? Description { get; set; }
+
     }
 }
