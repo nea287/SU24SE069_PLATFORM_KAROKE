@@ -55,6 +55,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels
         public Guid? CharacterItemId { get; set; }
         public Guid? RoomItemId { get; set; }
         public AccountStatus? AccountStatus { get; set; }
+        public string? Description { get; set; }
+
 
         //public ICollection<AccountInventoryItem>? AccountInventoryItems { get; set; }
         //public ICollection<Conversation>? ConversationMemberId1Navigations { get; set; }

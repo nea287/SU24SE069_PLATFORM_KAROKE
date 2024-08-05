@@ -50,6 +50,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public Guid? RoomItemId { get; set; }
         public int? AccountStatus { get; set; }
         public decimal UpBalance { get; set; }
+        public string? Description { get; set; }   
 
 
         public virtual AccountItem? CharacterItem { get; set; }
