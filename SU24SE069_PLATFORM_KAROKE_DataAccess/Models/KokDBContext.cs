@@ -118,7 +118,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.Fullname)
                     .HasMaxLength(150)
                     .HasColumnName("fullname");
-                
+
                 entity.Property(e => e.Description)
                     .HasMaxLength(500)
                     .HasColumnName("description");
@@ -409,7 +409,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.UpAmountBefore)
                     .HasColumnType("money")
                     .HasColumnName("up_amount_before");
-                
+
                 entity.Property(e => e.UpTotalAmount)
                     .HasColumnType("money")
                     .HasColumnName("up_total_amount");
@@ -441,7 +441,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .WithMany(p => p.InAppTransactions)
                     .HasForeignKey(p => p.MonetaryTransactionId)
                     .HasConstraintName("FK_InAppTransaction_MonetaryTransaction_MonetaryTransactionId");
-                   
+
 
             });
 
@@ -902,6 +902,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnType("datetime")
                     .HasColumnName("updated_date");
 
+                entity.Property(e => e.Volume)
+    .HasColumnType("float")
+    .HasColumnName("volume");
+
                 entity.HasOne(d => d.Host)
                     .WithMany(p => p.RecordingHosts)
                     .HasForeignKey(d => d.HostId)
@@ -1160,10 +1164,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.StartTime)
                     .HasColumnType("float")
                     .HasColumnName("start_time");
-                
-                entity.Property(e => e.Volume)
-                    .HasColumnType("float")
-                    .HasColumnName("volume");
+
+
 
                 entity.Property(e => e.UploadTime)
                     .HasColumnType("datetime")
