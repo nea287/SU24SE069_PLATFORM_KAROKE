@@ -75,7 +75,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     request.EndYear = year;
                 }
 
-                var data = await _gameRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.Year) ?? throw new Exception();
+                var data = await _gameRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.StartYear, request.EndYear) ?? throw new Exception();
 
                 result = data.Where(x => Enum.IsDefined(typeof(Month), x.Key))
                              .ToDictionary(k => (Month)k.Key, k => k.Value);
