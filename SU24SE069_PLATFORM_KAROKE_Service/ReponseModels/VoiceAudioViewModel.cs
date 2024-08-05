@@ -17,5 +17,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public int? Pitch { get; set; }
         public Guid? RecordingId { get; set; }
         public Guid? MemberId { get; set; }
+        public float? Volume { get; set; }
     }
 }

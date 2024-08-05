@@ -1149,9 +1149,17 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.RecordingId).HasColumnName("recording_id");
 
+                entity.Property(e => e.Volume)
+                .HasColumnType("float")
+                .HasColumnName("volume");
+
                 entity.Property(e => e.StartTime)
                     .HasColumnType("float")
                     .HasColumnName("start_time");
+                
+                entity.Property(e => e.Volume)
+                    .HasColumnType("float")
+                    .HasColumnName("volume");
 
                 entity.Property(e => e.UploadTime)
                     .HasColumnType("datetime")

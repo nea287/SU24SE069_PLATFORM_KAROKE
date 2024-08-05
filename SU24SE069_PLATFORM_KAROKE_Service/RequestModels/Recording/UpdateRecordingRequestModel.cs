@@ -24,7 +24,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public Guid OwnerId { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
+        public float Volume { get; set; } = 1.0f;
+        [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public Guid KaraokeRoomId { get; set; }
+
 
     }
 }

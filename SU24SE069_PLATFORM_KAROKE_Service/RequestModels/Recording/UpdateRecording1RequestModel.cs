@@ -15,6 +15,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording
         public float StartTime { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public float EndTime { get; set; }
+        public float Volume { get; set; } = 1.0f;
 
         public ICollection<UpdateVoiceAudioRequestModel>? VoiceAudios { get; set; }
 
