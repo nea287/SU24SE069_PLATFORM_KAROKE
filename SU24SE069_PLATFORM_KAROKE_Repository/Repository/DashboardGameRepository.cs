@@ -81,7 +81,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 else
                 {
 
-                    var data1 = Enumerable.Range(1, 13);
+                    var data1 = Enumerable.Range(startYear.Value, endYear.Value);
 
                     var data = GetAll(x => x.CreatedDate.Month >= startMonth && x.CreatedDate.Month <= endMonth
                                        && x.CreatedDate.Year >= startYear && x.CreatedDate.Year <= endYear)
