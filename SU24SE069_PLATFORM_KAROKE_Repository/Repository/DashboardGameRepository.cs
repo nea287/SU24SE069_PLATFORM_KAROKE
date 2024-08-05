@@ -81,7 +81,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 else
                 {
 
-                    var data1 = Enumerable.Range(0, 13);
+                    var data1 = Enumerable.Range(1, 13);
 
                     var data = GetAll(x => x.CreatedDate.Month >= startMonth && x.CreatedDate.Month <= endMonth
                                        && x.CreatedDate.Year >= startYear && x.CreatedDate.Year <= endYear)
@@ -126,7 +126,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 //toYear = toYear ?? DateTime.Now.Year;
                 if (year.HasValue)
                 {
-                    var data = GetAll(x => x.CreatedDate.Year == year.Value && x.CreatedDate.Year == year.Value)
+                    var data = GetAll(x => x.CreatedDate.Year == year && x.CreatedDate.Year == year)
                                  .GroupBy(transaction => transaction.CreatedDate.Year)
                                  .Select(group => new
                                  {
