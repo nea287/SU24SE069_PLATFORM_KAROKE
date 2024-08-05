@@ -15,8 +15,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 //endDate = endDate ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
                 if (date.HasValue)
                 {
-                    var data = GetAll(x => x.CreatedDate == date)
-                        .GroupBy(transaction => transaction.CreatedDate)
+                    var data = GetAll(x => x.CreatedDate.Date == date)
+                        .GroupBy(transaction => transaction.CreatedDate.Date)
                         .Select(group => new
                         {
                             Date = group.Key,
@@ -30,8 +30,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 }
                 else
                 {
-                    var data = GetAll(x => x.CreatedDate >= startDate && x.CreatedDate <= endDate)
-                          .GroupBy(transaction => transaction.CreatedDate)
+                    var data = GetAll(x => x.CreatedDate.Date >= startDate && x.CreatedDate.Date <= endDate)
+                          .GroupBy(transaction => transaction.CreatedDate.Date)
                           .Select(group => new
                           {
                               Date = group.Key,
