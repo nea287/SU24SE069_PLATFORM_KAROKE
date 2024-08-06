@@ -10,6 +10,7 @@ using System.Text.Json.Serialization;
 using SU24SE069_PLATFORM_KAROKE_Service;
 using SU24SE069_PLATFORM_KAROKE_Service.Validator;
 using SU24SE069_PLATFORM_KAROKE_Service.Commons;
+using SU24SE069_PLATFORM_KAROKE_API.AppStarts.OptionSetup;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 #region Momo
-builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
+//builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
+builder.Services.ConfigureOptions<MoMoOptionsSetup>();
 #endregion
 
 #region AppStarts
