@@ -6,6 +6,8 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Momo;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoMo;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using System;
 using System.Net.Http;
@@ -20,7 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
     {
         private readonly IMomoService _momoService;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IMapper _mapper; // Assuming you inject AutoMapper here
+        private readonly IMapper _mapper;
 
         public MomoController(IMomoService momoService, IHttpClientFactory httpClientFactory, IMapper mapper)
         {
@@ -30,53 +32,33 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpPost]
-        [Route("CreatePaymentUrl")]
+        [Route("create-payment/up-package-purchase")]
         public async Task<IActionResult> CreatePaymentUrl([FromBody] MonetaryTransactionRequestModel transactionRequest)
         {
-            var client = _httpClientFactory.CreateClient();
-            var response = await client.PostAsJsonAsync("https://localhost:7017/api/transactions", transactionRequest);
-
-            if (!response.IsSuccessStatusCode)
+            var result = await _momoService.CreatePaymentAsync(transactionRequest);
+            if(result == null)
             {
-                return BadRequest("Failed to create transaction");
-            }
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            try
-            {
-                var transactionResponse = JsonConvert.DeserializeObject<ResponseResult<MonetaryTransactionViewModel>>(responseContent);
-                if (transactionResponse == null || transactionResponse.Value == null)
+                return BadRequest(new ResponseResult<MoMoCreatePaymentResponse>()
                 {
-                    return BadRequest("Failed to deserialize transaction response");
-                }
-
-                var monetaryTransaction = _mapper.Map<MonetaryTransactionViewModel>(transactionResponse.Value);
-
-                var paymentResponse = await _momoService.CreatePaymentAsync(monetaryTransaction);
-
-                return Ok(paymentResponse.PayUrl);
+                    Message = $"Tạo yêu cầu thanh toán bằng MoMo thất bại. Vui lòng thử lại!",
+                    Value = null,
+                    result = false,
+                });
             }
-            catch (Exception ex)
+            return Ok(new ResponseResult<MoMoCreatePaymentResponse>()
             {
-                return BadRequest($"Error deserializing transaction response: {ex.Message}");
-            }
-        }
-
-        [HttpGet]
-        [Route("PaymentCallback")]
-        public IActionResult PaymentCallBack()
-        {
-            var response = _momoService.PaymentExecuteAsync(HttpContext.Request.Query);
-            return Ok(response);
+                Message = $"Tạo yêu cầu thanh toán bằng MoMo thành công!",
+                Value = result,
+                result = true,
+            });
         }
 
         [HttpPost]
-        [Route("NotifyCallback")]
-        public IActionResult NotifyCallBack()
+        [Route("ipn")]
+        public async Task<IActionResult> ProcessMoMoIpnRequest([FromBody] MoMoIpnRequest ipnRequest)
         {
-            var response = _momoService.PaymentNotifyAsync(HttpContext.Request.Query);
-            return Ok(response);
+            await _momoService.ProcessMoMoIpnRequest(ipnRequest);
+            return NoContent();
         }
 
     }

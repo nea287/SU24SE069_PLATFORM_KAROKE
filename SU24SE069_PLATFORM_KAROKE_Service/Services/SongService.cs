@@ -221,7 +221,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         {
             try
             {
-                if (!_songRepository.DeleteSong(id).Result)
+                if (!await _songRepository.DeleteSong(id))
                 {
                     throw new Exception();
                 }

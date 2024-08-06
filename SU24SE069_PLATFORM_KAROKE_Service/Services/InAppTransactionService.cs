@@ -255,7 +255,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 data.UpBalance = data.UpBalance - dataSong.Price;
                 transaction = new InAppTransaction()
                 {
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.Now,
                     MemberId = request.MemberId,
                     SongId = request.SongId,
                     Status = (int)PaymentStatus.COMPLETE,
