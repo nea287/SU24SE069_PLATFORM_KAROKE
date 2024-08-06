@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers.DynamicModelResponse;
 
 namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices
 {
@@ -23,7 +24,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices
         public Task<ResponseResult<AccountViewModel>> UpdateMemberAccount(Guid id, UpdateAccountByMailRequestModel request);
         public Task<ResponseResult<AccountViewModel>> UpdatePassword(Guid id, string password);
         public Task<ResponseResult<AccountViewModel>> UpdateAccount(Guid id, UpdateAccountRequestModel request);
-        //public Task<ResponseResult<AccountViewModel>> UpdateStatusOnline(Guid );
+        public Task<ResponseResult<AccountViewModel>> UpdateStatusOnline(Guid id,bool statusOnline);
+        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccountFilterByStatusOnline(PagingRequest paging);
 
         public Task<ResponseResult<AccountViewModel>> DeleteAccount(Guid id); 
         public Task<ResponseResult<AccountViewModel>> ActiveAccount(Guid id);

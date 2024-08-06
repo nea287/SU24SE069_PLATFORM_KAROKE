@@ -45,6 +45,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Value is null ? NotFound(rs) : Ok(rs);
         }
+        
+        [HttpGet("get-online-account")]
+        public async Task<IActionResult> GetOnlineAccount([FromQuery] PagingRequest paging)
+        {
+            var rs = _service.GetAccountFilterByStatusOnline( paging);
+
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        }
 
         //[Authorize(Policy = Constraints.ADMIN_STAFF_ROLE)]
         [HttpGet]
@@ -94,6 +102,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             var rs = await _service.UpdateAccount(id, request);
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
         }
+
+        
         
     }
 }
