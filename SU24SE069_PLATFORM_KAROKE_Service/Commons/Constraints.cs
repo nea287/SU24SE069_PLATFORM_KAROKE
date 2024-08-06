@@ -76,6 +76,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
         #region name key of cache
         public const string ACCOUNTS = "ACCOUNTS";
+        public const string ONLINE_ACCOUNTS = "ONLINE_ACCOUNTS";
         public const string ACCOUNT = "account, id: ";
         public const string SONGS = "SONGS";
         public const string SONG = "song, id: ";

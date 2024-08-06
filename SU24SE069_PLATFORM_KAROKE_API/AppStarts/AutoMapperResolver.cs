@@ -18,6 +18,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.KaraokeRoom;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.LoginActivity;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Message;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MonetaryTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Package;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
@@ -47,6 +48,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<AccountViewModel, CreateAccount1RequestModel>().ReverseMap();
             CreateMap<AccountViewModel, CreateAccountRequestModel>().ReverseMap();
             CreateMap<Account, UpdateAccountByMailRequestModel>().ReverseMap();
+            CreateMap<Account, UpdateAccountRequestModel>().ReverseMap();
             #endregion
 
             #region Song
@@ -227,6 +229,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<MonetaryTransaction, MonetaryTransactionViewModel>()
                 .ForMember(x => x.Status, dest => dest.MapFrom(src => (PaymentStatus)src.Status))
                 .ForMember(x => x.PaymentType, dest => dest.MapFrom(src => (PaymentType)src.PaymentType))
+                .ForMember(x => x.PackageMoneyAmount, dest => dest.MapFrom(src => src.Package.MoneyAmount))
                 .ReverseMap();
 
             CreateMap<MonetaryTransaction, MonetaryTransactionRequestModel>().ReverseMap();

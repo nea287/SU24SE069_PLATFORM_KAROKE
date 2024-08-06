@@ -10,6 +10,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
     public class MonetaryTransactionRepository : BaseRepository<MonetaryTransaction>, IMonetaryTransactionRepository
     {
+
+
         public async Task<bool> CreateMoneyTransaction(MonetaryTransaction transaction)
         {
             try

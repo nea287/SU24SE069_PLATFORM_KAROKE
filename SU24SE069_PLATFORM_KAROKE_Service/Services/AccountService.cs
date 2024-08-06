@@ -16,6 +16,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
+using System.Net.NetworkInformation;
 using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -134,6 +135,49 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 
             return result;
         }
+
+        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccountFilterByStatusOnline(PagingRequest paging)
+        {
+            (int, IQueryable<AccountViewModel>) result;
+            try
+            {
+
+                lock (_accountRepository)
+                {
+                    IQueryable<AccountViewModel>? data = _accountRepository.GetAccountFilterByStatusOnline(true)
+
+                   .ProjectTo<AccountViewModel>(_mapper.ConfigurationProvider);
+
+
+                    result = data.PagingIQueryable(paging.page, paging.pageSize,
+                            Constraints.LimitPaging, Constraints.DefaultPaging);
+                }
+
+
+            }
+            catch (Exception)
+            {
+                //await _accountRepository.DisponseAsync();
+                return new DynamicModelResponse.DynamicModelsResponse<AccountViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+
+            return new DynamicModelResponse.DynamicModelsResponse<AccountViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
+            };
+        }
+
+
 
         public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccounts(
             AccountViewModel filter, PagingRequest paging, AccountOrderFilter orderFilter)
@@ -258,31 +302,209 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
         #endregion
 
         #region Update
-        public async Task<ResponseResult<AccountViewModel>> UpdateAccountByEmail(string email, UpdateAccountByMailRequestModel request)
+
+        public async Task<ResponseResult<AccountViewModel>> UpdateStatusOnline(Guid id, bool statusOnline)
         {
             AccountViewModel result = new AccountViewModel();
             try
             {
                 lock (_accountRepository)
                 {
-                    var data1 = _accountRepository.GetAccountByMail(email).Result;
+                    var data = _accountRepository.GetByIdGuid(id).Result;
 
 
+                    data.IsOnline = statusOnline;   
+                    _accountRepository.MotifyEntity(data);
 
-                    var data = _mapper.Map<Account>(request);
+                    if (data == null)
+                    {
+                        return new ResponseResult<AccountViewModel>()
+                        {
+                            Message = Constraints.NOT_FOUND,
+                            result = false,
+                            Value = _mapper.Map<AccountViewModel>(data)
+                        };
+                    }
 
-                    data.UserName = data1.UserName;
-                    data.Email = data1.Email;
-                    data.Role = data1.Role;
-                    data.IsOnline = true;
-                    data.Role = data1.Role;
-                    data.AccountId = data1.AccountId;
-                    data.CreatedTime = data1.CreatedTime;
-                    data.AccountStatus = (int)AccountStatus.ACTIVE;
+                    if (!_accountRepository.UpdateAccount(data).Result)
+                    {
+                        _accountRepository.DetachEntity(data);
+                        throw new Exception();
+                    }
 
-                    data.Password = BCrypt.Net.BCrypt.HashPassword(request.Password, 12);
+                    result = _mapper.Map<AccountViewModel>(data);
+                    SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, Constraints.ACCOUNTS);
 
-                    _accountRepository.DetachEntity(data1);
+                };
+
+
+            }
+            catch (Exception)
+            {
+                await _accountRepository.DisponseAsync();
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false,
+                    Value = result
+                };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
+
+            }
+
+            return new ResponseResult<AccountViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+                Value = result
+            };
+        }
+        public async Task<ResponseResult<AccountViewModel>> UpdateAccount(Guid id, UpdateAccountRequestModel request)
+        {
+            AccountViewModel result = new AccountViewModel();
+            try
+            {
+                lock (_accountRepository)
+                {
+                    var data = _accountRepository.GetByIdGuid(id).Result;
+
+                    data.Fullname = request.Fullname;
+                    data.IdentityCardNumber = request.IdentityCardNumber;
+                    data.Gender = (int)request.Gender;
+                    data.Fullname = request.Fullname;
+                    data.Role = (int)request.Role;
+                    data.Yob = request.Yob;
+                    data.Description = request.Description;
+
+                    _accountRepository.MotifyEntity(data);
+
+                    if (data == null)
+                    {
+                        return new ResponseResult<AccountViewModel>()
+                        {
+                            Message = Constraints.NOT_FOUND,
+                            result = false,
+                            Value = _mapper.Map<AccountViewModel>(data)
+                        };
+                    }
+
+                    if (!_accountRepository.UpdateAccount(data).Result)
+                    {
+                        _accountRepository.DetachEntity(data);
+                        throw new Exception();
+                    }
+
+                    result = _mapper.Map<AccountViewModel>(data);
+                    SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, Constraints.ACCOUNTS);
+
+                };
+
+
+            }
+            catch (Exception)
+            {
+                await _accountRepository.DisponseAsync();
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false,
+                    Value = result
+                };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
+
+            }
+
+            return new ResponseResult<AccountViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+                Value = result
+            };
+        }
+
+        public async Task<ResponseResult<AccountViewModel>> UpdatePassword(Guid id, string password)
+        {
+            AccountViewModel result = new AccountViewModel();
+            try
+            {
+                lock (_accountRepository)
+                {
+                    var data = _accountRepository.GetByIdGuid(id).Result;
+
+
+                    data.Password = BCrypt.Net.BCrypt.HashPassword(password, 12);
+
+                    _accountRepository.MotifyEntity(data);
+
+                    if (data == null)
+                    {
+                        return new ResponseResult<AccountViewModel>()
+                        {
+                            Message = Constraints.NOT_FOUND,
+                            result = false,
+                            Value = _mapper.Map<AccountViewModel>(data)
+                        };
+                    }
+
+                    if (!_accountRepository.UpdateAccount(data).Result)
+                    {
+                        _accountRepository.DetachEntity(data);
+                        throw new Exception();
+                    }
+
+                    result = _mapper.Map<AccountViewModel>(data);
+                    SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, Constraints.ACCOUNTS);
+
+                };
+
+
+            }
+            catch (Exception)
+            {
+                await _accountRepository.DisponseAsync();
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false,
+                    Value = result
+                };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
+
+            }
+
+            return new ResponseResult<AccountViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+                Value = result
+            };
+        }
+
+        public async Task<ResponseResult<AccountViewModel>> UpdateMemberAccount(Guid id, UpdateAccountByMailRequestModel request)
+        {
+            AccountViewModel result = new AccountViewModel();
+            try
+            {
+                lock (_accountRepository)
+                {
+                    var data = _accountRepository.GetByIdGuid(id).Result;
+                    
+                    data.UserName = request.UserName;
+                    data.PhoneNumber = request.PhoneNumber;
+                    data.Gender = (int)request.Gender;
+                    data.UpBalance = request.UpBalance;
+                    data.CharacterItemId = request.CharacterItemId;
+                    data.RoomItemId = request.RoomItemId;
+
                     _accountRepository.MotifyEntity(data);
 
                     if (data == null)
@@ -717,6 +939,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 Value = accountModel,
             };
         }
+
+
 
         #endregion
     }

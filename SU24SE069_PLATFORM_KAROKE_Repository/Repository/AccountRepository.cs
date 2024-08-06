@@ -6,6 +6,21 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
     public class AccountRepository : BaseRepository<Account>, IAccountRepository
     {
         #region Read
+        public IQueryable<Account> GetAccountFilterByStatusOnline(bool status)
+        {
+            IQueryable<Account> accounts;
+            try
+            {
+                accounts = GetAll(x => x.IsOnline == status);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            return accounts;    
+        }
+
         public async Task<Account> GetAccount(Guid id)
         {
             Account result = new Account();
@@ -110,6 +125,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
         {
             return Any(a => a.UserName.Trim().ToLower() == username.Trim().ToLower());
         }
+
 
         #endregion
     }

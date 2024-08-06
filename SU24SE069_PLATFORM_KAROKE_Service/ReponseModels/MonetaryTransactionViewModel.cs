@@ -13,7 +13,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public Guid? MonetaryTransactionId { get; set; }
         public PaymentType? PaymentType { get; set; }
         public string? PaymentCode { get; set; }
-        public decimal? MoneyAmount { get; set; }
+        //public decimal? MoneyAmount { get; set; }
+        public decimal? PackageMoneyAmount { get; set; }
         public string? Currency { get; set; }
         public PaymentStatus? Status { get; set; }
         public DateTime? CreatedDate { get; set; }

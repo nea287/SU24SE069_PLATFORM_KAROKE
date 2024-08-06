@@ -9,6 +9,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
 using System.Net.NetworkInformation;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
@@ -44,6 +45,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Value is null ? NotFound(rs) : Ok(rs);
         }
+        
+        [HttpGet("get-online-account")]
+        public async Task<IActionResult> GetOnlineAccount([FromQuery] PagingRequest paging)
+        {
+            var rs = _service.GetAccountFilterByStatusOnline( paging);
+
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        }
 
         //[Authorize(Policy = Constraints.ADMIN_STAFF_ROLE)]
         [HttpGet]
@@ -55,10 +64,10 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
 
-        [HttpPut("{email}")]
-        public async Task<IActionResult> UpdateAccount(string email, [FromBody] UpdateAccountByMailRequestModel request)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateAccount(Guid id, [FromBody] UpdateAccountByMailRequestModel request)
         {
-            var rs = await _service.UpdateAccountByEmail(email, request);
+            var rs = await _service.UpdateMemberAccount( id, request);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
 
@@ -80,6 +89,22 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
 
         }
+        [HttpPut("change-password/{id:guid}")]
+        public async Task<IActionResult> ChangePassword(Guid id,[FromBody] string password)
+        {
+            var rs = await _service.UpdatePassword(id, password);
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
+        }
+        
+        [HttpPut("update-account/{id:guid}")]
+        public async Task<IActionResult> UpdateAccountById(Guid id,[FromBody] UpdateAccountRequestModel request)
+        {
+            var rs = await _service.UpdateAccount(id, request);
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
+        }
+
+        
+        
     }
 }
 

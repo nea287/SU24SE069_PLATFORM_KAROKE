@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers.DynamicModelResponse;
 
 namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices
 {
@@ -20,9 +21,15 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices
         public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccounts(AccountViewModel filter,
             PagingRequest paging, AccountOrderFilter orderFilter);
         public Task<ResponseResult<AccountViewModel>> CreateAccount(CreateAccountRequestModel request);
-        public Task<ResponseResult<AccountViewModel>> UpdateAccountByEmail(string email, UpdateAccountByMailRequestModel request);
-        public Task<ResponseResult<AccountViewModel>> DeleteAccount(Guid id);
+        public Task<ResponseResult<AccountViewModel>> UpdateMemberAccount(Guid id, UpdateAccountByMailRequestModel request);
+        public Task<ResponseResult<AccountViewModel>> UpdatePassword(Guid id, string password);
+        public Task<ResponseResult<AccountViewModel>> UpdateAccount(Guid id, UpdateAccountRequestModel request);
+        public Task<ResponseResult<AccountViewModel>> UpdateStatusOnline(Guid id,bool statusOnline);
+        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccountFilterByStatusOnline(PagingRequest paging);
+
+        public Task<ResponseResult<AccountViewModel>> DeleteAccount(Guid id); 
         public Task<ResponseResult<AccountViewModel>> ActiveAccount(Guid id);
+    
         public bool SendVerificationCode(string receiverMail);
         public Task<ResponseResult<AccountViewModel>> CreateNewMemberAccount(MemberSignUpRequest signUpRequest);
         public Task<(bool, string)> SendVerificationEmail(string accountEmail);
