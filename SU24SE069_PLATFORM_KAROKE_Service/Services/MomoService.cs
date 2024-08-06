@@ -1,5 +1,6 @@
 ﻿using AutoMapper.Execution;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Crmf;
@@ -10,6 +11,7 @@ using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Momo;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoMo;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MonetaryTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using System;
@@ -36,8 +38,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         {
             //model.MonetaryTransactionId = new Guid();
             //model.OrderInfo = "Khách hàng: " + model.FullName + ". Nội dung: " + model.OrderInfo;
+
+            
+            long moneyAmount = (long)model.PackageMoneyAmount;
+            string stringMoneyAmount = moneyAmount.ToString();
             var rawData =
-                $"partnerCode={_options.Value.PartnerCode}&accessKey={_options.Value.AccessKey}&requestId={model.MonetaryTransactionId}&amount={model.PackageMoneyAmount}&orderId={model.MonetaryTransactionId}&orderInfo={model.MonetaryTransactionId}&returnUrl={_options.Value.ReturnUrl}&notifyUrl={_options.Value.NotifyUrl}&extraData=";
+                $"partnerCode={_options.Value.PartnerCode}&accessKey={_options.Value.AccessKey}&requestId={model.MonetaryTransactionId}&amount={stringMoneyAmount}&orderId={model.MonetaryTransactionId}&orderInfo={model.MonetaryTransactionId}&returnUrl={_options.Value.ReturnUrl}&ipnUrl={_options.Value.IpnUrl}&extraData=";
 
             var signature = ComputeHmacSha256(rawData, _options.Value.SecretKey);
 
@@ -62,16 +68,17 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 signature = signature
             };*/
 
+            
             var requestData = new
             {
                 accessKey = _options.Value.AccessKey,
                 partnerCode = _options.Value.PartnerCode,
                 requestType = _options.Value.RequestType,
-                notifyUrl = _options.Value.NotifyUrl,
+                ipnUrl = _options.Value.IpnUrl,
                 returnUrl = _options.Value.ReturnUrl,
                 orderId = model.MonetaryTransactionId,
-                amount = model.PackageMoneyAmount.ToString(),
-                orderInfo = model.MonetaryTransactionId,
+                amount = moneyAmount.ToString(),
+                orderInfo = model.MonetaryTransactionId.ToString(),
                 requestId = model.MonetaryTransactionId,
                 extraData = "",
                 signature = signature
@@ -84,6 +91,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             return JsonConvert.DeserializeObject<MomoCreatePaymentResponseModel>(response.Content);
         }
 
+        // K can function nay lam, dung de y'
         public MonetaryTransactionViewModel PaymentExecuteAsync(IQueryCollection collection)
         {
             var amount = collection.First(s => s.Key == "amount").Value;
@@ -91,7 +99,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             var orderId = collection.First(s => s.Key == "orderId").Value;
             var localMessage = collection.First(s => s.Key == "localMessage").Value;
             var errorCode = collection.First(s => s.Key == "errorCode").Value;
-            if(errorCode != 0)
+            if (errorCode != 0)
             {
                 // transaction failed
             }
@@ -114,6 +122,32 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
         }
 
+        /*public async Task<ResponseResult<MonetaryTransactionViewModel>> PaymentExecuteAsync(IQueryCollection collection)
+        {
+            var orderId = Guid.Parse(collection.First(s => s.Key == "orderId").Value);
+            var errorCode = collection.First(s => s.Key == "errorCode").Value;
+            if (errorCode != 0)
+            {
+                // transaction failed
+                var update = await _monetaryTransactionService.UpdateStatusTransaction(orderId, PaymentStatus.CANCELLED);
+                return new ResponseResult<MonetaryTransactionViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false
+                };
+            }
+            else
+            {
+                // transaction success
+                var update = await _monetaryTransactionService.UpdateStatusTransaction(orderId, PaymentStatus.COMPLETE);
+                return new ResponseResult<MonetaryTransactionViewModel>()
+                {
+                    Message = Constraints.UPDATE_SUCCESS,
+                    result = false
+                };
+            }
+        }*/
+
         private string ComputeHmacSha256(string message, string secretKey)
         {
             var keyBytes = Encoding.UTF8.GetBytes(secretKey);
@@ -131,11 +165,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             return hashString;
         }
 
-        public async Task<ResponseResult<MonetaryTransactionViewModel>> PaymentNotifyAsync(IQueryCollection collection)
+        public async Task<ResponseResult<MonetaryTransactionViewModel>> PaymentNotifyAsync(MoMoIpnRequest moMoIpnRequest)
         {
-            var orderId = Guid.Parse(collection.First(s => s.Key == "orderId").Value);
-            var errorCode = collection.First(s => s.Key == "errorCode").Value;
-            if (errorCode != 0)
+            var orderId = Guid.Parse(moMoIpnRequest.orderId);
+            var resultCode = moMoIpnRequest.resultCode;
+            if (resultCode != 0)
             {
                 // transaction failed
                 var update = await _monetaryTransactionService.UpdateStatusTransaction(orderId, PaymentStatus.CANCELLED);

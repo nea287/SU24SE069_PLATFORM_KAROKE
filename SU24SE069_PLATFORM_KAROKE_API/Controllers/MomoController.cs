@@ -6,6 +6,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoMo;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using System;
 using System.Net.Http;
@@ -19,14 +20,16 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
     public class MomoController : ControllerBase
     {
         private readonly IMomoService _momoService;
+        private readonly IMonetaryTransactionService _monetaryTransactionService;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IMapper _mapper; // Assuming you inject AutoMapper here
 
-        public MomoController(IMomoService momoService, IHttpClientFactory httpClientFactory, IMapper mapper)
+        public MomoController(IMomoService momoService, IHttpClientFactory httpClientFactory, IMapper mapper, IMonetaryTransactionService monetaryTransactionService)
         {
             _momoService = momoService;
             _httpClientFactory = httpClientFactory;
             _mapper = mapper;
+            _monetaryTransactionService = monetaryTransactionService;
         }
 
         [HttpPost]
@@ -34,14 +37,15 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         public async Task<IActionResult> CreatePaymentUrl([FromBody] MonetaryTransactionRequestModel transactionRequest)
         {
             var client = _httpClientFactory.CreateClient();
-            var response = await client.PostAsJsonAsync("https://localhost:7017/api/transactions", transactionRequest);
+            var response = await _monetaryTransactionService.CreateTransaction(transactionRequest);
+            //var response = await client.PostAsJsonAsync("https://localhost:7017/api/transactions", transactionRequest);
 
-            if (!response.IsSuccessStatusCode)
+            if (!response.result == true)
             {
                 return BadRequest("Failed to create transaction");
             }
 
-            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContent = JsonConvert.SerializeObject(response);
 
             try
             {
@@ -55,7 +59,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
                 var paymentResponse = await _momoService.CreatePaymentAsync(monetaryTransaction);
 
-                return Ok(paymentResponse.PayUrl);
+                return Ok(paymentResponse);
             }
             catch (Exception ex)
             {
@@ -73,10 +77,10 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
         [HttpPost]
         [Route("NotifyCallback")]
-        public IActionResult NotifyCallBack()
+        public IActionResult NotifyCallBack([FromBody]MoMoIpnRequest moMoIpnRequest)
         {
-            var response = _momoService.PaymentNotifyAsync(HttpContext.Request.Query);
-            return Ok(response);
+            var response = _momoService.PaymentNotifyAsync(moMoIpnRequest);
+            return NoContent();
         }
 
     }

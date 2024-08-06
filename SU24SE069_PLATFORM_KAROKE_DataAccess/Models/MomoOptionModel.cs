@@ -13,6 +13,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public string AccessKey { get; set; }
         public string ReturnUrl { get; set; }
         public string NotifyUrl { get; set; }
+        public string IpnUrl { get; set; }
         public string PartnerCode { get; set; }
         public string RequestType { get; set; }
     }
