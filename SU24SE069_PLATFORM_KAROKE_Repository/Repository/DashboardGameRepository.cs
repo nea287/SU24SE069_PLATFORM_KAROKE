@@ -11,8 +11,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             Dictionary<DateTime, decimal> result = new Dictionary<DateTime, decimal>();
             try
             {
-                //startDate = startDate ?? DateTime.Now;
-                //endDate = endDate ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
                 if (date.HasValue)
                 {
                     var data = GetAll(x => x.CreatedDate.Date == date)
@@ -59,8 +57,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 
             try
             {
-                //startMonth = startMonth?? DateTime.Now.Month;
-                //endMonth = startMonth?? DateTime.Now.Month;
+
                 if (month.HasValue)
                 {
                     var data = GetAll(x => x.CreatedDate.Month == month.Value && x.CreatedDate.Year >= startYear && x.CreatedDate.Year <= endYear)
@@ -98,10 +95,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                         TotalAmount = data.FirstOrDefault()?.TotalAmount?? 0
                     }).AsQueryable();
 
-                    //await data.ForEachAsync(x =>
-                    //{
-                    //    result.Add(x.Month, x.TotalAmount);
-                    //});
 
                     foreach (var x in data)
                     {
@@ -122,8 +115,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             Dictionary<int, decimal> result = new Dictionary<int, decimal>();
             try
             {
-                //fromYear = fromYear ?? DateTime.Now.Year;
-                //toYear = toYear ?? DateTime.Now.Year;
                 if (year.HasValue)
                 {
                     var data = GetAll(x => x.CreatedDate.Year == year && x.CreatedDate.Year == year)

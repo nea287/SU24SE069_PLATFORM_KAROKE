@@ -258,31 +258,150 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
         #endregion
 
         #region Update
-        public async Task<ResponseResult<AccountViewModel>> UpdateAccountByEmail(string email, UpdateAccountByMailRequestModel request)
+
+        public async Task<ResponseResult<AccountViewModel>> UpdateAccount(Guid id, UpdateAccountRequestModel request)
         {
             AccountViewModel result = new AccountViewModel();
             try
             {
                 lock (_accountRepository)
                 {
-                    var data1 = _accountRepository.GetAccountByMail(email).Result;
+                    var data = _accountRepository.GetByIdGuid(id).Result;
+
+                    data.Fullname = request.Fullname;
+                    data.IdentityCardNumber = request.IdentityCardNumber;
+                    data.Gender = (int)request.Gender;
+                    data.Fullname = request.Fullname;
+                    data.Role = (int)request.Role;
+                    data.Yob = request.Yob;
+                    data.Description = request.Description;
+
+                    _accountRepository.MotifyEntity(data);
+
+                    if (data == null)
+                    {
+                        return new ResponseResult<AccountViewModel>()
+                        {
+                            Message = Constraints.NOT_FOUND,
+                            result = false,
+                            Value = _mapper.Map<AccountViewModel>(data)
+                        };
+                    }
+
+                    if (!_accountRepository.UpdateAccount(data).Result)
+                    {
+                        _accountRepository.DetachEntity(data);
+                        throw new Exception();
+                    }
+
+                    result = _mapper.Map<AccountViewModel>(data);
+                    SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, Constraints.ACCOUNTS);
+
+                };
 
 
+            }
+            catch (Exception)
+            {
+                await _accountRepository.DisponseAsync();
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false,
+                    Value = result
+                };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
 
-                    var data = _mapper.Map<Account>(request);
+            }
 
-                    data.UserName = data1.UserName;
-                    data.Email = data1.Email;
-                    data.Role = data1.Role;
-                    data.IsOnline = true;
-                    data.Role = data1.Role;
-                    data.AccountId = data1.AccountId;
-                    data.CreatedTime = data1.CreatedTime;
-                    data.AccountStatus = (int)AccountStatus.ACTIVE;
+            return new ResponseResult<AccountViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+                Value = result
+            };
+        }
 
-                    data.Password = BCrypt.Net.BCrypt.HashPassword(request.Password, 12);
+        public async Task<ResponseResult<AccountViewModel>> UpdatePassword(Guid id, string password)
+        {
+            AccountViewModel result = new AccountViewModel();
+            try
+            {
+                lock (_accountRepository)
+                {
+                    var data = _accountRepository.GetByIdGuid(id).Result;
 
-                    _accountRepository.DetachEntity(data1);
+
+                    data.Password = BCrypt.Net.BCrypt.HashPassword(password, 12);
+
+                    _accountRepository.MotifyEntity(data);
+
+                    if (data == null)
+                    {
+                        return new ResponseResult<AccountViewModel>()
+                        {
+                            Message = Constraints.NOT_FOUND,
+                            result = false,
+                            Value = _mapper.Map<AccountViewModel>(data)
+                        };
+                    }
+
+                    if (!_accountRepository.UpdateAccount(data).Result)
+                    {
+                        _accountRepository.DetachEntity(data);
+                        throw new Exception();
+                    }
+
+                    result = _mapper.Map<AccountViewModel>(data);
+                    SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, Constraints.ACCOUNTS);
+
+                };
+
+
+            }
+            catch (Exception)
+            {
+                await _accountRepository.DisponseAsync();
+                return new ResponseResult<AccountViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false,
+                    Value = result
+                };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
+
+            }
+
+            return new ResponseResult<AccountViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+                Value = result
+            };
+        }
+
+        public async Task<ResponseResult<AccountViewModel>> UpdateMemberAccount(Guid id, UpdateAccountByMailRequestModel request)
+        {
+            AccountViewModel result = new AccountViewModel();
+            try
+            {
+                lock (_accountRepository)
+                {
+                    var data = _accountRepository.GetByIdGuid(id).Result;
+                    
+                    data.UserName = request.UserName;
+                    data.PhoneNumber = request.PhoneNumber;
+                    data.Gender = (int)request.Gender;
+                    data.UpBalance = request.UpBalance;
+                    data.CharacterItemId = request.CharacterItemId;
+                    data.RoomItemId = request.RoomItemId;
+
                     _accountRepository.MotifyEntity(data);
 
                     if (data == null)

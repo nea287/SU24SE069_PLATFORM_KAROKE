@@ -47,6 +47,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<AccountViewModel, CreateAccount1RequestModel>().ReverseMap();
             CreateMap<AccountViewModel, CreateAccountRequestModel>().ReverseMap();
             CreateMap<Account, UpdateAccountByMailRequestModel>().ReverseMap();
+            CreateMap<Account, UpdateAccountRequestModel>().ReverseMap();
             #endregion
 
             #region Song
