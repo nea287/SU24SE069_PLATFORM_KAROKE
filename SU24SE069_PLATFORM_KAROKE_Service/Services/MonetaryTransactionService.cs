@@ -58,7 +58,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     _repository.DetachEntity(rs);
                     throw new Exception();
                 }
-
+                
             }
             catch (Exception)
             {

@@ -51,7 +51,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
                     return BadRequest("Failed to deserialize transaction response");
                 }
 
-                var monetaryTransaction = _mapper.Map<MonetaryTransaction>(transactionResponse.Value);
+                var monetaryTransaction = _mapper.Map<MonetaryTransactionViewModel>(transactionResponse.Value);
 
                 var paymentResponse = await _momoService.CreatePaymentAsync(monetaryTransaction);
 
