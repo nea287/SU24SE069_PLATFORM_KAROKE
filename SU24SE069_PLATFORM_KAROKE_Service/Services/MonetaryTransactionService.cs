@@ -44,11 +44,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         }
         public async Task<ResponseResult<MonetaryTransactionViewModel>> CreateTransaction(MonetaryTransactionRequestModel request)
         {
-            MonetaryTransaction rs = new MonetaryTransaction();
+            MonetaryTransactionViewModel rs1 = new MonetaryTransactionViewModel();
             try
             {
 
-                rs = _mapper.Map<MonetaryTransaction>(request);
+                var rs = _mapper.Map<MonetaryTransaction>(request);
 
                 rs.CreatedDate = DateTime.Now;
                 rs.Status = (int)PaymentStatus.PENDING;
@@ -58,7 +58,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     _repository.DetachEntity(rs);
                     throw new Exception();
                 }
-
+                rs1 = _mapper.Map<MonetaryTransactionViewModel>(rs);
             }
             catch (Exception)
             {
@@ -73,7 +73,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 Message = Constraints.CREATE_SUCCESS,
                 result = true,
-                Value = _mapper.Map<MonetaryTransactionViewModel>(rs)
+                Value = _mapper.Map<MonetaryTransactionViewModel>(rs1)
             };
         }
 
