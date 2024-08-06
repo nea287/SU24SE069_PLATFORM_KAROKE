@@ -19,5 +19,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
         public string? PhoneNumber { get; set; }
         public Guid? CharacterItemId { get; set; }
         public Guid? RoomItemId { get; set; }
+        public string? Description {  get; set; }   
     }
 }

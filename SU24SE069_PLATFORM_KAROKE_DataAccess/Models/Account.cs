@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 {
@@ -55,6 +56,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
         public virtual AccountItem? CharacterItem { get; set; }
         public virtual AccountItem? RoomItem { get; set; }
+        //[JsonIgnore]
         public virtual ICollection<AccountItem> AccountInventoryItems { get; set; }
         public virtual ICollection<Conversation> ConversationMemberId1Navigations { get; set; }
         public virtual ICollection<Conversation> ConversationMemberId2Navigations { get; set; }
