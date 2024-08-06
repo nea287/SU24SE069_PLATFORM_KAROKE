@@ -22,18 +22,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Filters
         public string? GenreName { get; set; }
         public string? SingerName { get; set; }
         public string? ArtistName { get; set; }
-        [SwaggerIgnore]
-        public ICollection<string>? Genre { get; set; }
-        [SwaggerIgnore]
-        public ICollection<string>? Singer { get; set; }
-        [SwaggerIgnore]
-        public ICollection<string>? Artist { get; set; }
-        [SwaggerIgnore]
-        public ICollection<FavouriteSongViewModel>? FavouriteSongs { get; set; }
-        [SwaggerIgnore]
-        public ICollection<InAppTransactionViewModel>? InAppTransactions { get; set; }
-        [SwaggerIgnore]
-        public ICollection<PurchasedSongViewModel>? PurchasedSongs { get; set; }
+        //[SwaggerIgnore]
+        //public ICollection<string>? Genre { get; set; }
+        //[SwaggerIgnore]
+        //public ICollection<string>? Singer { get; set; }
+        //[SwaggerIgnore]
+        //public ICollection<string>? Artist { get; set; }
         [SwaggerIgnore]
         public ICollection<SongArtistViewModel>? SongArtists { get; set; }
         [SwaggerIgnore]

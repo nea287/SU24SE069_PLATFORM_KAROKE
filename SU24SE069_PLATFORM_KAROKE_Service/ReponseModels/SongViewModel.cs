@@ -39,14 +39,13 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public ICollection<string>? Artist { get; set; }
         [SwaggerIgnore]
 
-        public ICollection<FavouriteSongViewModel>? FavouriteSongs { get; set; }
-        [SwaggerIgnore]
-        public ICollection<InAppTransactionViewModel>? InAppTransactions { get; set; }
-        [SwaggerIgnore] 
-        public ICollection<PurchasedSongViewModel>? PurchasedSongs { get; set; }
-        [SwaggerIgnore] 
+        //public ICollection<FavouriteSongViewModel>? FavouriteSongs { get; set; }
+        //[SwaggerIgnore]
+        //public ICollection<InAppTransactionViewModel>? InAppTransactions { get; set; }
+        //[SwaggerIgnore] 
+        //public ICollection<PurchasedSongViewModel>? PurchasedSongs { get; set; }
         public ICollection<SongArtistViewModel>? SongArtists { get; set; }
-            [SwaggerIgnore]
+        [SwaggerIgnore]
         public ICollection<SongGenreViewModel>? SongGenres { get; set; }
         [SwaggerIgnore]
         public ICollection<SongSingerViewModel>? SongSingers { get; set; }

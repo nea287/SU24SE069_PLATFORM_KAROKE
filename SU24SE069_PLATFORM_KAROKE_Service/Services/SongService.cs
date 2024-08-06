@@ -61,8 +61,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 lock (_songRepository)
                 {
                     var data1 = _songRepository.GetAll(
-                                                includeProperties: String.Join(",",
-                                                SupportingFeature.GetNameIncludedProperties<Song>()))
+                                                includeProperties: "SongArtists,SongGenres,SongSingers")
                         .ProjectTo<SongFilter>(_mapper.ConfigurationProvider)
                         .DynamicFilter(filter).ToList();
 
