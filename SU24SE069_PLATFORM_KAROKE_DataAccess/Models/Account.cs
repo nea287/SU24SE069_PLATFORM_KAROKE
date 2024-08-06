@@ -53,7 +53,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public decimal UpBalance { get; set; }
         public string? Description { get; set; }   
 
-
         public virtual AccountItem? CharacterItem { get; set; }
         public virtual AccountItem? RoomItem { get; set; }
         //[JsonIgnore]
