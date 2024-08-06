@@ -742,8 +742,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 await _accountRepository.SaveChagesAsync();
                 result = _mapper.Map<AccountViewModel>(data);
 
-
-
             }
             catch (Exception)
             {
@@ -756,7 +754,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             }
             finally
             {
-                lock (_accountRepository) { };
+                await _accountRepository.DisponseAsync();
             }
 
             return new ResponseResult<AccountViewModel>()
