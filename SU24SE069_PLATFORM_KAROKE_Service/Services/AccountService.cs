@@ -739,7 +739,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     _accountRepository.DetachEntity(data);
                     throw new Exception();
                 }
-
+                await _accountRepository.SaveChagesAsync();
                 result = _mapper.Map<AccountViewModel>(data);
 
 
