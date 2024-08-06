@@ -19,6 +19,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
         public string? PhoneNumber { get; set; }
         public Guid? CharacterItemId { get; set; }
         public Guid? RoomItemId { get; set; }
+        [InRangeOneHundredAttribute(ErrorMessage = Constraints.INFORMATION_INVALID)]
+        public int? Yob {  get; set; }  
         public string? Description {  get; set; }   
     }
 }
