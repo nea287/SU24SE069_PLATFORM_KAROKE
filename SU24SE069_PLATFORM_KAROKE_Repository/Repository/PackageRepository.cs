@@ -10,6 +10,20 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
     public class PackageRepository : BaseRepository<Package>, IPackageRepository
     {
+        public async Task<decimal?> AmountTotalPackage(Guid id)
+        {
+            decimal? rs;
+            try
+            {
+                rs = FirstOrDefaultAsync(x => x.PackageId == id).Result.MoneyAmount;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+            return rs;
+        }
+
         public async Task<bool> CreatePackage(Package package)
         {
             try

@@ -59,6 +59,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     throw new Exception();
                 }
                 rs1 = _mapper.Map<MonetaryTransactionViewModel>(rs);
+                rs1.PackageMoneyAmount = _packageRepository.GetByIdGuid(rs.PackageId).Result.MoneyAmount;
             }
             catch (Exception)
             {
@@ -67,6 +68,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Message = Constraints.CREATE_FAILED,
                     result = false
                 };
+            }
+            finally
+            {
+                await _accountRepository.DisponseAsync();
             }
 
             return new ResponseResult<MonetaryTransactionViewModel>()
