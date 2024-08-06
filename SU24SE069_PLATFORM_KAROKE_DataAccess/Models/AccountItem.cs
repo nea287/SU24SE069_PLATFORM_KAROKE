@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 {
@@ -22,9 +23,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public Guid? InAppTransactionId { get; set; }
 
         public virtual Item Item { get; set; } = null!;
+        //[JsonIgnore]
         public virtual Account Member { get; set; } = null!;
         public virtual InAppTransaction? InAppTransaction { get; set; }
+        //[JsonIgnore]
         public virtual ICollection<Account> AccountCharacterItems { get; set; }
+        //[JsonIgnore]
         public virtual ICollection<Account> AccountRoomItems { get; set; }
     }
 }

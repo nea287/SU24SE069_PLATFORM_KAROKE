@@ -67,7 +67,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateAccount(Guid id, [FromBody] UpdateAccountByMailRequestModel request)
         {
-            var rs = await _service.UpdateMemberAccount( id, request);
+            var rs = await _service.UpdateMemberAccount(id, request);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
 
