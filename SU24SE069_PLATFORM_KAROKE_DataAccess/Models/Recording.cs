@@ -23,6 +23,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public Guid HostId { get; set; }
         public Guid OwnerId { get; set; }
         public Guid KaraokeRoomId { get; set; }
+        public float? Volume { get; set; }
 
         public virtual Account Host { get; set; } = null!;
         public virtual KaraokeRoom KaraokeRoom { get; set; } = null!;

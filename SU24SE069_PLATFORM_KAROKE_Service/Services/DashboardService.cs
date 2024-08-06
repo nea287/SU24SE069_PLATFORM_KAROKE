@@ -32,7 +32,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 //request.StartDate = request.StartDate ?? DateTime.Now;
                 //request.EndDate = request.EndDate ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
 
-                result = await _gameRepository.GetDashboardByDate(request.Date, request.StartDate, request.EndDate)??throw new Exception();
+                result = await _gameRepository.GetDashboardByDate(request.Date, request.StartDate, request.EndDate) ?? throw new Exception();
 
             }
             catch (Exception)
@@ -58,7 +58,24 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 //request.StartMonth = request.Month ?? DateTime.Now.Month;
                 //request.EndMonth = request.Month?? DateTime.Now.Month;
 
-                var data = await _gameRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.Year) ?? throw new Exception();
+                //if (request.StartYear == null)
+                //{
+                //    request.StartYear = request.Year;
+                //}
+
+                //if (request.EndYear == null)
+                //{
+                //    request.EndYear = request.Year;
+                //}
+                //else 
+                if (request.EndYear < request.StartYear)
+                {
+                    int? year = request.StartYear;
+                    request.StartYear = request.EndYear;
+                    request.EndYear = year;
+                }
+
+                var data = await _gameRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.StartYear, request.EndYear) ?? throw new Exception();
 
                 result = data.Where(x => Enum.IsDefined(typeof(Month), x.Key))
                              .ToDictionary(k => (Month)k.Key, k => k.Value);
@@ -113,7 +130,25 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 //request.StartMonth = request.Month ?? DateTime.Now.Month;
                 //request.EndMonth = request.Month ?? DateTime.Now.Month;
 
-                var data = await _monetaryRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.Year) ?? throw new Exception();
+                //if (request.StartYear == null)
+                //{
+                //    request.StartYear = request.Year;
+                //}
+
+                //if (request.EndYear == null)
+                //{
+                //    request.EndYear = request.Year;
+                //}
+                //else 
+                if (request.EndYear < request.StartYear)
+                {
+                    int? year = request.StartYear;
+                    request.StartYear = request.EndYear;
+                    request.EndYear = year;
+                }
+
+
+                var data = await _monetaryRepository.GetDashboardByMonth(request.Month, request.StartMonth, request.EndMonth, request.StartYear, request.EndYear) ?? throw new Exception();
 
                 result = data.Where(x => Enum.IsDefined(typeof(Month), x.Key))
                              .ToDictionary(k => (Month)k.Key, x => x.Value);

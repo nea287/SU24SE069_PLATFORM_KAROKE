@@ -14,6 +14,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.VoiceAudio
         public double DurationSecond { get; set; }
         //public DateTime UploadTime { get; set; }
         public float StartTime { get; set; }
+        public float Volume { get; set; } = 1.0f;
         //[GreaterThanOrEqualDate(nameof(StartTime), ErrorMessage = Constraints.VALIDATE_ENDDATE)]
         public float EndTime { get; set; }
         //public int Pitch { get; set; }
