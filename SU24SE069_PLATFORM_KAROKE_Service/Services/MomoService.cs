@@ -1,15 +1,20 @@
 ﻿using AutoMapper.Execution;
+using MailKit.Search;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Crmf;
+using Org.BouncyCastle.Asn1.Ocsp;
 using RestSharp;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
+using SU24SE069_PLATFORM_KAROKE_Service.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Momo;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoMo;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MonetaryTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using System;
@@ -23,137 +28,119 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
     public class MomoService : IMomoService
     {
-        private readonly IOptions<MomoOptionModel> _options;
+        private readonly MomoOptionModel _moMoOptions;
         private readonly IMonetaryTransactionService _monetaryTransactionService;
+        private readonly IPackageRepository _packageRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly IInAppTransactionRepository _inAppTransactionRepository;
+        private readonly IMonetaryTransactionRepository _monetaryTransactionRepository;
 
-        public MomoService(IOptions<MomoOptionModel> options, IMonetaryTransactionService monetaryTransactionService)
+        public MomoService(IOptions<MomoOptionModel> options,
+            IMonetaryTransactionService monetaryTransactionService,
+            IPackageRepository packageRepository,
+            IAccountRepository accountRepository,
+            IInAppTransactionRepository inAppTransactionRepository,
+            IMonetaryTransactionRepository monetaryTransactionRepository)
         {
-            _options = options;
+            _moMoOptions = options.Value;
             _monetaryTransactionService = monetaryTransactionService;
+            _packageRepository = packageRepository;
+            _accountRepository = accountRepository;
+            _inAppTransactionRepository = inAppTransactionRepository;
+            _monetaryTransactionRepository = monetaryTransactionRepository;
         }
 
-        public async Task<MomoCreatePaymentResponseModel> CreatePaymentAsync(MonetaryTransactionViewModel model)
+        public async Task<MoMoCreatePaymentResponse?> CreatePaymentAsync(MonetaryTransactionRequestModel transactionRequest)
         {
-            //model.MonetaryTransactionId = new Guid();
-            //model.OrderInfo = "Khách hàng: " + model.FullName + ". Nội dung: " + model.OrderInfo;
-            var rawData =
-                $"partnerCode={_options.Value.PartnerCode}&accessKey={_options.Value.AccessKey}&requestId={model.MonetaryTransactionId}&amount={model.PackageMoneyAmount}&orderId={model.MonetaryTransactionId}&orderInfo={model.MonetaryTransactionId}&returnUrl={_options.Value.ReturnUrl}&notifyUrl={_options.Value.NotifyUrl}&extraData=";
-
-            var signature = ComputeHmacSha256(rawData, _options.Value.SecretKey);
-
-            var client = new RestClient(_options.Value.MomoApiUrl);
-            var request = new RestRequest() { Method = Method.Post };
-            request.AddHeader("Content-Type", "application/json; charset=UTF-8");
-
-            /*var requestData = new
+            // Create monetary transaction
+            var transactionResult = await _monetaryTransactionService.CreateTransaction(transactionRequest);
+            if (transactionResult == null || transactionResult.Value == null)
             {
-                accessKey = _options.Value.AccessKey,
-                partnerCode = _options.Value.PartnerCode,
-                requestType = _options.Value.RequestType,
-                notifyUrl = _options.Value.NotifyUrl,
-                returnUrl = _options.Value.ReturnUrl,
-                orderId = model.MonetaryTransactionId, 
-                amount = model.MoneyAmount.ToString(),
-                //orderInfo = model.OrderInfo, //modify rawdata
-                requestId = model.MonetaryTransactionId,
-                extraData = "",
-                packageId = model.PackageId,
-                memberId = model.MemberId,
-                signature = signature
-            };*/
+                return null;
+            }
+            var transaction = transactionResult.Value;
 
-            var requestData = new
+            // Create MoMo payment request
+            string orderInfo = $"Người dùng '{transaction.MemberId}' nạp UP vào tài khoản.";
+            CreateMoMoPaymentRequest paymentRequest = new CreateMoMoPaymentRequest();
+            paymentRequest.SetMoMoOptions(_moMoOptions);
+
+            MoMoExtraData extraData = new MoMoExtraData()
             {
-                accessKey = _options.Value.AccessKey,
-                partnerCode = _options.Value.PartnerCode,
-                requestType = _options.Value.RequestType,
-                notifyUrl = _options.Value.NotifyUrl,
-                returnUrl = _options.Value.ReturnUrl,
-                orderId = model.MonetaryTransactionId,
-                amount = model.PackageMoneyAmount.ToString(),
-                orderInfo = model.MonetaryTransactionId,
-                requestId = model.MonetaryTransactionId,
-                extraData = "",
-                signature = signature
-            };           
+                PackageId = transaction.PackageId.ToString(),
+                AccountId = transaction.MemberId.ToString(),
+            };
 
-            request.AddParameter("application/json", JsonConvert.SerializeObject(requestData), ParameterType.RequestBody);
+            var extraDataString = HashHelper.EncodeToBase64(JsonConvert.SerializeObject(extraData));
 
-            var response = await client.ExecuteAsync(request);
-
-            return JsonConvert.DeserializeObject<MomoCreatePaymentResponseModel>(response.Content);
+            paymentRequest.SetTransactionData(transaction.MonetaryTransactionId.ToString(), (long)transaction.PackageMoneyAmount, transaction.MonetaryTransactionId.ToString(), orderInfo, extraDataString);
+            paymentRequest.MakeSignature(_moMoOptions.AccessKey, _moMoOptions.SecretKey);
+            (bool result, string? paymentData) = paymentRequest.GetPaymentMethod(_moMoOptions.PaymentUrl);
+            if (!result)
+            {
+                return null;
+                //throw new Exception($"Failed to retrieve MoMo payment method for transaction '{transaction.MonetaryTransactionId.ToString()}'");
+            }
+            return JsonConvert.DeserializeObject<MoMoCreatePaymentResponse>(paymentData!);
         }
 
-        public MonetaryTransactionViewModel PaymentExecuteAsync(IQueryCollection collection)
+        public async Task ProcessMoMoIpnRequest(MoMoIpnRequest ipnRequest)
         {
-            var amount = collection.First(s => s.Key == "amount").Value;
-            //var orderInfo = collection.First(s => s.Key == "orderInfo").Value;
-            var orderId = collection.First(s => s.Key == "orderId").Value;
-            var localMessage = collection.First(s => s.Key == "localMessage").Value;
-            var errorCode = collection.First(s => s.Key == "errorCode").Value;
-            if(errorCode != 0)
+            // Transaction canceled by user
+            if (ipnRequest.resultCode == 1006)
             {
-                // transaction failed
+                await _monetaryTransactionService.UpdateStatusTransaction(Guid.Parse(ipnRequest.orderId), PaymentStatus.CANCELLED);
+                return;
             }
 
-            /*            var packageId = collection.First(s => s.Key == "packageId").Value;
-                        var memberId = collection.First(s => s.Key == "memberId").Value;*/
-            return null;
-
-            /*return new MonetaryTransactionViewModel()
+            // Transaction failed because of insufficient user's balance
+            if (ipnRequest.resultCode == 1001)
             {
-                MoneyAmount = decimal.Parse(amount),
-                PaymentType = PaymentType.MOMO,
-
-                Currency = "VND",
-                Status = PaymentStatus.COMPLETE,
-                CreatedDate = DateTime.Now,
-                PackageId = Guid.Parse(packageId),
-                MemberId = Guid.Parse(memberId)
-            };*/
-
-        }
-
-        private string ComputeHmacSha256(string message, string secretKey)
-        {
-            var keyBytes = Encoding.UTF8.GetBytes(secretKey);
-            var messageBytes = Encoding.UTF8.GetBytes(message);
-
-            byte[] hashBytes;
-
-            using (var hmac = new HMACSHA256(keyBytes))
-            {
-                hashBytes = hmac.ComputeHash(messageBytes);
+                await _monetaryTransactionService.UpdateStatusTransaction(Guid.Parse(ipnRequest.orderId), PaymentStatus.CANCELLED);
+                return;
             }
 
-            var hashString = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-
-            return hashString;
-        }
-
-        public async Task<ResponseResult<MonetaryTransactionViewModel>> PaymentNotifyAsync(IQueryCollection collection)
-        {
-            var orderId = Guid.Parse(collection.First(s => s.Key == "orderId").Value);
-            var errorCode = collection.First(s => s.Key == "errorCode").Value;
-            if (errorCode != 0)
+            // Transaction process successful
+            if (ipnRequest.resultCode == 0 || ipnRequest.resultCode == 9000)
             {
-                // transaction failed
-                var update = await _monetaryTransactionService.UpdateStatusTransaction(orderId, PaymentStatus.CANCELLED);
-                return new ResponseResult<MonetaryTransactionViewModel>()
+                // Change monetary transaction status to success and set transId
+                var monetaryTransaction = await _monetaryTransactionRepository.GetByIdGuid(Guid.Parse(ipnRequest.orderId));
+                monetaryTransaction.Status = (int)PaymentStatus.COMPLETE;
+                monetaryTransaction.PaymentCode = ipnRequest.transId.ToString();
+                await _monetaryTransactionRepository.SaveChagesAsync();
+                //await _monetaryTransactionService.UpdateStatusTransaction(Guid.Parse(ipnRequest.orderId), PaymentStatus.COMPLETE);
+
+                // Get package data
+                var extraData = JsonConvert.DeserializeObject<MoMoExtraData>(HashHelper.DecodeFromBase64(ipnRequest.extraData));
+                var upPackage = await _packageRepository.GetByIdGuid(Guid.Parse(extraData.PackageId));
+
+                // Fetch user information
+                var account = await _accountRepository.GetByIdGuid(Guid.Parse(extraData.AccountId));
+
+                // Create in-app transaction
+                var inAppTransaction = new InAppTransaction()
                 {
-                    Message = Constraints.UPDATE_FAILED,
-                    result = false
+                    CreatedDate = DateTime.Now,
+                    MemberId = account.AccountId,
+                    SongId = null,
+                    ItemId = null,
+                    MonetaryTransactionId = Guid.Parse(ipnRequest.orderId),
+                    Status = (int)PaymentStatus.COMPLETE,
+                    UpAmountBefore = account.UpBalance,
+                    UpTotalAmount = upPackage.StarNumber,
+                    TransactionType = (int)InAppTransactionType.RECHARGE_UP_BALANCE,
                 };
-            }
-            else
-            {
-                // transaction success
-                var update = await _monetaryTransactionService.UpdateStatusTransaction(orderId, PaymentStatus.COMPLETE);
-                return new ResponseResult<MonetaryTransactionViewModel>()
+
+                var addInAppTransaction = await _inAppTransactionRepository.CreateInAppTransaction(inAppTransaction);
+
+                if (!addInAppTransaction)
                 {
-                    Message = Constraints.UPDATE_SUCCESS,
-                    result = false
-                };
+                    // Failed to add in-app transaction
+                    return;
+                }
+                // Update user's UP balance
+                account.UpBalance += upPackage.StarNumber;
+                await _accountRepository.SaveChagesAsync();
             }
         }
     }
