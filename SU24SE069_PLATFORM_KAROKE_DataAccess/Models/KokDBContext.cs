@@ -124,7 +124,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("description");
 
                 entity.Property(e => e.Image)
-                     .IsUnicode(true)
                      .HasColumnName("image");
 
                 entity.Property(e => e.Gender).HasColumnName("gender");
@@ -258,7 +257,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("artist_name");
 
                 entity.Property(e => e.Image)
-                       .IsUnicode(true)
                        .HasColumnName("image");
             });
 
@@ -390,7 +388,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Image)
-                    .IsUnicode(true)
                    .HasColumnName("image");
 
 
@@ -1012,7 +1009,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("singer_name");
 
                 entity.Property(e => e.Image)
-                     .IsUnicode(true)
                      .HasColumnName("image");
             });
 
