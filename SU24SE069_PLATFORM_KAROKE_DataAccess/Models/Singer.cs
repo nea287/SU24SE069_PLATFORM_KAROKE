@@ -12,7 +12,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
         public string SingerName { get; set; } = null!;
         public Guid SingerId { get; set; }
-
+        public string? Image { get; set; }
         public virtual ICollection<SongSinger> SongSingers { get; set; }
     }
 }

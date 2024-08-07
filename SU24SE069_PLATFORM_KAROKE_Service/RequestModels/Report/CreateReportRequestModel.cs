@@ -12,7 +12,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Report
         public Guid ReporterId { get; set; }
         public Guid ReportedAccountId { get; set; }
         public int ReportCategory { get; set; }
-        public int Status { get; set; }
+       // public int Status { get; set; }
         public string? Reason { get; set; }
         //public DateTime CreateTime { get; set; }
         public int ReportType { get; set; }

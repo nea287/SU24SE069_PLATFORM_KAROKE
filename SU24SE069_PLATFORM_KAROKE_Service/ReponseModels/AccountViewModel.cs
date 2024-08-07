@@ -56,6 +56,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels
         public Guid? RoomItemId { get; set; }
         public string? CharaterItemCode { get; set; }
         public string? RoomItemCode { get; set; }
+        public string? Image { get; set; }
 
         public AccountStatus? AccountStatus { get; set; }
         public string? Description { get; set; }

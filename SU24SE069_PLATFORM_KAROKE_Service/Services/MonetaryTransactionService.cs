@@ -157,9 +157,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 lock (_repository)
                 {
-                    var data = _repository.GetAll(
-                                                includeProperties: String.Join(",",
-                                                SupportingFeature.GetNameIncludedProperties<MonetaryTransaction>()))
+                    var data = _repository.GetAll()
+                                                //includeProperties: String.Join(",",
+                                                //SupportingFeature.GetNameIncludedProperties<MonetaryTransaction>()))
                         .AsQueryable()
                         .ProjectTo<MonetaryTransactionViewModel>(_mapper.ConfigurationProvider)
                         .DynamicFilter(filter);
