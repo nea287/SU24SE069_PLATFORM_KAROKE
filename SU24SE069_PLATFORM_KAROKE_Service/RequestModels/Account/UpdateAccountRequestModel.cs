@@ -16,5 +16,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account
         public string? IdentityCardNumber { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Description { get; set; }
+        public string? Image { get; set; }
+
     }
 }

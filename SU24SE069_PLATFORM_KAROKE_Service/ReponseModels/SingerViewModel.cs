@@ -13,6 +13,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
 
         public Guid? SingerId { get; set; }
         public string? SingerName { get; set; }
+        public string? Image { get; set; }
         [SwaggerIgnore]
         public ICollection<SongSingerViewModel>? SongSingers { get; set; }
     }

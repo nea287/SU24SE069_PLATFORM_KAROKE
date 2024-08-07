@@ -13,5 +13,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Singer
     {
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public string SingerName { get; set; } = null!;
+        public string? Image { get; set; }
     }
 }

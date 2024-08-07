@@ -237,6 +237,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.Status, dest => dest.MapFrom(src => (PaymentStatus)src.Status))
                 .ForMember(x => x.PaymentType, dest => dest.MapFrom(src => (PaymentType)src.PaymentType))
                 .ForMember(x => x.PackageMoneyAmount, dest => dest.MapFrom(src => src.Package.MoneyAmount))
+                .ForMember(x => x.PackageName, dest => dest.MapFrom(src => src.Package.PackageName))
+                .ForMember(x => x.Username, dest => dest.MapFrom(src => src.Member.UserName))
                 .ReverseMap();
 
             CreateMap<MonetaryTransaction, MonetaryTransactionRequestModel>().ReverseMap();

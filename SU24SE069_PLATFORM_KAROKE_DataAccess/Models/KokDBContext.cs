@@ -87,7 +87,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
                 .Build();
-            var strConn = config.GetConnectionString("Database");
+            var strConn = config.GetConnectionString("localDatabase");
             return strConn;
         }
 
@@ -122,6 +122,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.Description)
                     .HasMaxLength(500)
                     .HasColumnName("description");
+
+                entity.Property(e => e.Image)
+                     .IsUnicode(true)
+                     .HasColumnName("image");
 
                 entity.Property(e => e.Gender).HasColumnName("gender");
 
@@ -252,6 +256,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.ArtistName)
                     .HasMaxLength(150)
                     .HasColumnName("artist_name");
+
+                entity.Property(e => e.Image)
+                       .IsUnicode(true)
+                       .HasColumnName("image");
             });
 
             modelBuilder.Entity<Song>(entity =>
@@ -380,6 +388,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.GenreId)
                     .HasColumnName("genre_id")
                     .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Image)
+                    .IsUnicode(true)
+                   .HasColumnName("image");
 
 
                 entity.Property(e => e.GenreName)
@@ -998,6 +1010,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.SingerName)
                     .HasMaxLength(150)
                     .HasColumnName("singer_name");
+
+                entity.Property(e => e.Image)
+                     .IsUnicode(true)
+                     .HasColumnName("image");
             });
 
             modelBuilder.Entity<FavouriteSong>(entity =>

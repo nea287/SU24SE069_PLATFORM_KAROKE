@@ -35,6 +35,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
         public Guid? RoomItemId { get; set; }
         public AccountStatus AccountStatus { get; set; }
         public string? Description { get; set; }
+        public string? Image { get; set; }
+
 
     }
 }

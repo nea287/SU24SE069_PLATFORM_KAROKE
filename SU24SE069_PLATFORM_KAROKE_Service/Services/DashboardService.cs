@@ -49,6 +49,29 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Values = result
             };
         }
+        public async Task<DashboardResponse<DateTime>> GetDashboardGameByTransaction(DateRequestModel request)
+        {
+            Dictionary<DateTime, decimal> result = new Dictionary<DateTime, decimal>();
+            try
+            {
+
+                result = await _gameRepository.GetDashboardByTransaction(request.Date, request.StartDate, request.EndDate) ?? throw new Exception();
+
+            }
+            catch (Exception)
+            {
+                return new DashboardResponse<DateTime>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+
+            return new DashboardResponse<DateTime>()
+            {
+                Message = Constraints.INFORMATION,
+                Values = result
+            };
+        }
 
         public async Task<DashboardResponse<Month>> GetDashboardGameByMonth(MonthRequestModel request)
         {
@@ -68,6 +91,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 //    request.EndYear = request.Year;
                 //}
                 //else 
+                if(request.StartMonth > request.EndMonth)
+                {
+                    int month = request.StartMonth;
+                    request.StartMonth = request.EndMonth;
+                    request.EndMonth = month;
+                }
                 if (request.EndYear < request.StartYear)
                 {
                     int? year = request.StartYear;
@@ -140,6 +169,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 //    request.EndYear = request.Year;
                 //}
                 //else 
+                if (request.StartMonth > request.EndMonth)
+                {
+                    int month = request.StartMonth;
+                    request.StartMonth = request.EndMonth;
+                    request.EndMonth = month;
+                }
                 if (request.EndYear < request.StartYear)
                 {
                     int? year = request.StartYear;
@@ -204,6 +239,30 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 //request.EndDate = request.EndDate ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
 
                 result = await _monetaryRepository.GetDashboardByDate(request.Date, request.StartDate, request.EndDate) ?? throw new Exception();
+
+            }
+            catch (Exception)
+            {
+                return new DashboardResponse<DateTime>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+
+            return new DashboardResponse<DateTime>()
+            {
+                Message = Constraints.INFORMATION,
+                Values = result
+            };
+        }
+        
+        public async Task<DashboardResponse<DateTime>> GetDashboardByTransaction(DateRequestModel request)
+        {
+            Dictionary<DateTime, decimal> result = new Dictionary<DateTime, decimal>();
+            try
+            {
+
+                result = await _monetaryRepository.GetDashboardByTransaction(request.Date, request.StartDate, request.EndDate) ?? throw new Exception();
 
             }
             catch (Exception)

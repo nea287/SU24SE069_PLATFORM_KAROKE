@@ -24,6 +24,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Values.IsNullOrEmpty()? BadRequest(rs) : Ok(rs);
         }
+        
+        [HttpGet("get-transactions")]
+        public async Task<IActionResult> GetDashboardTransactions([FromQuery] DateRequestModel request)
+        {
+            var rs = await _service.GetDashboardByTransaction(request);
+
+            return rs.Values.IsNullOrEmpty()? BadRequest(rs) : Ok(rs);
+        }
 
         [HttpGet("get-month-transactions")]
         public async Task<IActionResult> GetDashboardMonthTransactions([FromQuery] MonthRequestModel request)
@@ -45,6 +53,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         public async Task<IActionResult> GetDashboardDateGametransactions([FromQuery] DateRequestModel request)
         {
             var rs = await _service.GetDashboardGamebyDate(request);
+
+            return rs.Values.IsNullOrEmpty() ? BadRequest(rs) : Ok(rs);
+        }
+        
+        [HttpGet("get-game-transactions")]
+        public async Task<IActionResult> GetDashboardGameTransactions([FromQuery] DateRequestModel request)
+        {
+            var rs = await _service.GetDashboardGameByTransaction(request);
 
             return rs.Values.IsNullOrEmpty() ? BadRequest(rs) : Ok(rs);
         }

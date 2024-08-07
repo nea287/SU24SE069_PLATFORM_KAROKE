@@ -40,6 +40,12 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         RecordingId,
     }
 
+
+    public enum ReportOrderFilter
+    {
+        ReportId, ReporterId, ReportedAccountId, ReportCategory, Status, Reason, CreateTime, ReportType, CommentId, PostId, RoomId
+    }
+
     public enum PostRateOrderFilter
     {
         RateId,
@@ -60,20 +66,20 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         PostId,
     }
 
-    public enum ReportOrderFilter
-    {
-        ReportId,
-        ReporterId,
-        ReportedAccountId,
-        ReportCategory,
-        Status,
-        Reason,
-        CreateTime,
-        ReportType,
-        CommentId,
-        PostId,
-        RoomId,
-    }
+    //public enum ReportOrderFilter
+    //{
+    //    ReportId,
+    //    ReporterId,
+    //    ReportedAccountId,
+    //    ReportCategory,
+    //    Status,
+    //    Reason,
+    //    CreateTime,
+    //    ReportType,
+    //    CommentId,
+    //    PostId,
+    //    RoomId,
+    //}
 
 
 
@@ -97,6 +103,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         CreatedTime,
         AccountStatus,
         UpBalance,
+        Image,
     }
     public enum SongOrderFilter
     {
@@ -274,19 +281,23 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     public enum SingerOrderFilter
     {
         SingerId,
-        SingerName
+        SingerName,
+        Image
     }
 
     public enum ArtistOrderFilter
     {
         ArtistId,
-        ArtistName
+        ArtistName,
+        Image
     }
 
     public enum GenreOrderFilter
     {
         GenreId,
-        GenreName
+        GenreName,
+        Image
+
     }
 
     public enum PostCommentFilter
@@ -469,6 +480,34 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     {
         DEACTIVE,
         ACTIVE,
+    }
+    #endregion
+
+    #region Report
+    public enum ReportStatus
+    {
+        PROCCESSING,
+        COMPLETE,
+        CANCELED,
+    }
+    public enum ReportType
+    {
+        INAPPROPRIATE_CONTENT,
+        SPAM,
+        HARASSMENT,
+        VIOLENCE,
+        HATE_SPEECH,
+        SELF_HARM,
+        TERRORISM,
+        NUDITY,
+        GRAPHIC_CONTENT,
+        MISINFORMATION
+    }
+    public enum ReportCatagory
+    {
+        POST,
+        COMMENT,
+        ROOM
     }
     #endregion
 }

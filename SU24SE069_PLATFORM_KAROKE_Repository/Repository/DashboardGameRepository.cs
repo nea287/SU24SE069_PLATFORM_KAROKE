@@ -50,6 +50,51 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             }
             return result;
         }
+        
+        public async Task<Dictionary<DateTime, decimal>> GetDashboardByTransaction(DateTime? date = null, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            Dictionary<DateTime, decimal> result = new Dictionary<DateTime, decimal>();
+            try
+            {
+                if (date.HasValue)
+                {
+                    var data = GetAll(x => x.CreatedDate == date)
+                        .GroupBy(transaction => transaction.CreatedDate)
+                        .Select(group => new
+                        {
+                            Date = group.Key,
+                            TotalAmount = group.Sum(transaction => transaction.UpTotalAmount)
+                        });
+
+                    await data.ForEachAsync(x =>
+                    {
+                        result.Add(x.Date, x.TotalAmount);
+                    });
+                }
+                else
+                {
+                    var data = GetAll(x => x.CreatedDate >= startDate && x.CreatedDate <= endDate)
+                          .GroupBy(transaction => transaction.CreatedDate)
+                          .Select(group => new
+                          {
+                              Date = group.Key,
+                              TotalAmount = group.Sum(transaction => transaction.UpTotalAmount)
+                          });
+
+
+                    await data.ForEachAsync(x =>
+                    {
+                        result.Add(x.Date, x.TotalAmount);
+                    });
+                }
+
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return result;
+        }
 
         public async Task<Dictionary<int, decimal>> GetDashboardByMonth(int? month = null, int? startMonth = null, int? endMonth = null, int? startYear = null, int? endYear = null)
         {
@@ -78,7 +123,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 else
                 {
 
-                    var data1 = Enumerable.Range(startMonth.Value, endMonth.Value);
+                    var data1 = Enumerable.Range(startMonth.Value, (endMonth.Value - startMonth.Value + 1));
+                    //var data1 = Enumerable.Range(startMonth.Value, (endMonth.Value - (startMonth.Value == 1 ? 0 : startMonth.Value)));
 
                     var data = GetAll(x => x.CreatedDate.Month >= startMonth && x.CreatedDate.Month <= endMonth
                                        && x.CreatedDate.Year >= startYear && x.CreatedDate.Year <= endYear)

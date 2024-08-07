@@ -18,7 +18,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Dashboard
         public int StartMonth { get; set; } = (int)SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons.Month.January;
 
         [RegularExpression(Constraints.VALIDATE_ONE_TO_TWELVE, ErrorMessage = Constraints.ONE_TO_TWELVE)]
-        [GreaterThanOrEqualByInt(nameof(StartMonth), ErrorMessage = Constraints.START_MONTH_END_MONTH)]
+        //[GreaterThanOrEqualByInt(nameof(StartMonth), ErrorMessage = Constraints.START_MONTH_END_MONTH)]
         public int EndMonth { get; set; } = (int)SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons.Month.December;
         [InRangeOneHundred(ErrorMessage = Constraints.OVER_100_YEARS)]
         public int Year { get; set; } = DateTime.Now.Year;
