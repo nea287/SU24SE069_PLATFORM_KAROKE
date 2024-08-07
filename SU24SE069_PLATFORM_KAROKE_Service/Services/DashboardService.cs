@@ -68,6 +68,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 //    request.EndYear = request.Year;
                 //}
                 //else 
+                if(request.StartMonth < request.EndMonth)
+                {
+                    int month = request.StartMonth;
+                    request.StartMonth = request.EndMonth;
+                    request.EndMonth = month;
+                }
                 if (request.EndYear < request.StartYear)
                 {
                     int? year = request.StartYear;
@@ -140,6 +146,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 //    request.EndYear = request.Year;
                 //}
                 //else 
+                if (request.StartMonth < request.EndMonth)
+                {
+                    int month = request.StartMonth;
+                    request.StartMonth = request.EndMonth;
+                    request.EndMonth = month;
+                }
                 if (request.EndYear < request.StartYear)
                 {
                     int? year = request.StartYear;
