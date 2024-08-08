@@ -87,7 +87,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
                 .Build();
-            var strConn = config.GetConnectionString("localDatabase");
+            var strConn = config.GetConnectionString("Database");
             return strConn;
         }
 
@@ -1008,8 +1008,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasMaxLength(150)
                     .HasColumnName("singer_name");
 
-                entity.Property(e => e.Image)
-                     .HasColumnName("image");
+                entity.Property(e => e.Image).HasColumnName("image");
             });
 
             modelBuilder.Entity<FavouriteSong>(entity =>

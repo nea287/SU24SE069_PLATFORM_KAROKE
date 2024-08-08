@@ -160,6 +160,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Message = Constraints.LOAD_FAILED,
                 };
             }
+            finally
+            {
+                await _repository.DisponseAsync();
+            }
 
             return new DynamicModelResponse.DynamicModelsResponse<SingerViewModel>()
             {

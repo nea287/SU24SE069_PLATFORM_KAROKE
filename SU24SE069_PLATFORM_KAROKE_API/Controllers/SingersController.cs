@@ -30,6 +30,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetSingers([FromQuery] SingerViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] SingerOrderFilter orderFilter = SingerOrderFilter.SingerId)
+        
         {
             var rs = await _service.GetSingers(filter, paging, orderFilter);
 
