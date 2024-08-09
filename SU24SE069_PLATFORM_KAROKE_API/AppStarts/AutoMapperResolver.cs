@@ -104,18 +104,21 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<SongArtist, SongArtistViewModel>()
                 .ForMember(x => x.SongName, dest => dest.MapFrom(opt => opt.Song.SongName))
                 .ForMember(x => x.ArtistName, dest => dest.MapFrom(opt => opt.Artist.ArtistName))
+                .ForMember(x => x.Image, dest => dest.MapFrom(opt => opt.Artist.Image))
                 .ReverseMap();
             CreateMap<SongArtist, SongArtistRequestModel>().ReverseMap();
 
             CreateMap<SongGenre, SongGenreViewModel>()
                 .ForMember(x => x.SongName, dest => dest.MapFrom(opt => opt.Song.SongName))
                 .ForMember(x => x.GenreName, dest => dest.MapFrom(opt => opt.Genre.GenreName))
+                .ForMember(x => x.Image, dest => dest.MapFrom(opt => opt.Genre.Image))
                 .ReverseMap();
             CreateMap<SongGenre, SongGenreRequestModel>().ReverseMap();
 
             CreateMap<SongSinger, SongSingerViewModel>()
                 .ForMember(x => x.SongName, dest => dest.MapFrom(opt => opt.Song.SongName))
                 .ForMember(x => x.SingerName, dest => dest.MapFrom(opt => opt.Singer.SingerName))
+                .ForMember(x => x.Image, dest => dest.MapFrom(opt => opt.Singer.Image))
                 .ReverseMap();
             CreateMap<SongSinger, SongSingerRequestModel>().ReverseMap();
 
