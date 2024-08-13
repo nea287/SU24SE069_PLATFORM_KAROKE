@@ -132,6 +132,51 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
+        public DynamicModelResponse.DynamicModelsResponse<ItemViewModel> GetItemsForAdmin(string filter, PagingRequest request, ItemOrderFilter orderFilter)
+        {
+            (int, IQueryable<ItemViewModel>) result;
+            try
+            {
+                lock (_itemRepository)
+                {
+                    var data1 = _itemRepository.GetAll(
+                                                includeProperties: String.Join(",",
+                                                SupportingFeature.GetNameIncludedProperties<Item>()))
+                        .ProjectTo<ItemFilter>(_mapper.ConfigurationProvider)
+                        .DynamicFilterForAdmin(filter).ToList();
+
+                    var data = _mapper.Map<List<ItemViewModel>>(data1).AsQueryable();
+
+                    string? colName = Enum.GetName(typeof(ItemOrderFilter), orderFilter);
+                    data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)request.OrderType, colName).AsQueryable();
+
+                    result = data.PagingIQueryable(request.page, request.pageSize,
+                            Constraints.LimitPaging, Constraints.DefaultPaging);
+                }
+
+            }
+            catch (Exception)
+            {
+                return new DynamicModelResponse.DynamicModelsResponse<ItemViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+
+            return new DynamicModelResponse.DynamicModelsResponse<ItemViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = request.page,
+                    Size = request.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
+            };
+        }
+
+
         public DynamicModelResponse.DynamicModelsResponse<ItemViewModel> GetItems(ItemFilter filter, PagingRequest request, ItemOrderFilter orderFilter)
         {
             (int, IQueryable<ItemViewModel>) result;
@@ -175,6 +220,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Results = result.Item2.ToList()
             };
         }
+
 
         public async Task<ResponseResult<ItemViewModel>> UpdateItem(Guid id, UpdateItemRequestModel request)
         {
