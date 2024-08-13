@@ -52,6 +52,50 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
+        public DynamicModelResponse.DynamicModelsResponse<SongViewModel> GetSongsForAdmin(string filter, PagingRequest paging, SongOrderFilter orderFilter)
+        {
+            (int, IQueryable<SongViewModel>) result;
+            try
+            {
+                lock (_songRepository)
+                {
+                    var data1 = _songRepository.GetAll(
+                                                includeProperties: "SongArtists,SongGenres,SongSingers")
+                        .ProjectTo<SongFilter>(_mapper.ConfigurationProvider)
+                        .DynamicFilterForAdmin(filter).ToList();
+
+                    var data = _mapper.Map<ICollection<SongViewModel>>(data1).AsQueryable();
+
+                    string? colName = Enum.GetName(typeof(SongOrderFilter), orderFilter);
+
+                    data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
+
+                    result = data.PagingIQueryable(paging.page, paging.pageSize,
+                            Constraints.LimitPaging, Constraints.DefaultPaging);
+                }
+
+
+            }
+            catch (Exception)
+            {
+                return new DynamicModelResponse.DynamicModelsResponse<SongViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+
+            return new DynamicModelResponse.DynamicModelsResponse<SongViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
+            };
+        }
         public DynamicModelResponse.DynamicModelsResponse<SongViewModel> GetSongs(
             SongFilter filter, PagingRequest paging, SongOrderFilter orderFilter)
         {
@@ -323,6 +367,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 return q => q.OrderByDescending(orderByExpression);
             }
         }
+
+
 
         #endregion
     }

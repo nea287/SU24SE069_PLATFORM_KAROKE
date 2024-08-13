@@ -29,6 +29,15 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
+        
+        
+        [HttpGet]
+        public async Task<IActionResult> GetPackagesForAdmin([FromQuery] string filter, [FromQuery] PagingRequest paging, PackageOrderFilter orderFilter = PackageOrderFilter.CreatedDate)
+        {
+            var rs = await _service.GetPackagesForAdmin(filter, paging, orderFilter);
+
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreatePackge([FromBody] PackageRequestModel request)

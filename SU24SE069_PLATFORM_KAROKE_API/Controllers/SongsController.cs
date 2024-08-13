@@ -41,6 +41,15 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
+        
+        [HttpGet]
+        public IActionResult GetSongsForAdmin([FromQuery]string filter,
+            [FromQuery]PagingRequest paging,[FromQuery] SongOrderFilter orderFilter = SongOrderFilter.UpdatedDate)
+        {
+            DynamicModelResponse.DynamicModelsResponse<SongViewModel> rs = _songService.GetSongsForAdmin(filter, paging, orderFilter);
+
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateSong([FromBody] CreateSongRequestModel request)
