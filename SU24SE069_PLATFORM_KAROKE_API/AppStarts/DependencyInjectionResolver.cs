@@ -148,6 +148,10 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region AudioVoice
             services.AddScoped<IVoiceAudioRepository, VoiceAudioRepository>();
             #endregion
+
+            #region FirebaseStorage
+            services.AddScoped<IFirebaseStorageService, FirebaseStorageService>();
+            #endregion
         }
 
     }
