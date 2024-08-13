@@ -184,7 +184,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
         
-        public async Task<DynamicModelResponse.DynamicModelsResponse<ArtistViewModel>> GetArtistsForAdmin(string filter, PagingRequest paging, ArtistOrderFilter orderFilter)
+        public async Task<DynamicModelResponse.DynamicModelsResponse<ArtistViewModel>> GetArtistsForAdmin(string? filter, PagingRequest paging, ArtistOrderFilter orderFilter)
         {
             (int, IQueryable<ArtistViewModel>) result;
             try

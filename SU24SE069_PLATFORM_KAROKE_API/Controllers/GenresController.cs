@@ -36,7 +36,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
         
         [HttpGet("get-genres")]
-        public async Task<IActionResult> GetGenresForAdmin([FromQuery] string filter, [FromQuery] PagingRequest paging, [FromQuery] GenreOrderFilter orderFilter = GenreOrderFilter.GenreId)
+        public async Task<IActionResult> GetGenresForAdmin([FromQuery] string? filter, [FromQuery] PagingRequest paging, [FromQuery] GenreOrderFilter orderFilter = GenreOrderFilter.GenreId)
         {
             var rs = await _service.GetGenresForAdmin(filter, paging, orderFilter);
 

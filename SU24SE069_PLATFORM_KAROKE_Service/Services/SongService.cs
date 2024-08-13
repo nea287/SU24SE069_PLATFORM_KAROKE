@@ -52,7 +52,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public DynamicModelResponse.DynamicModelsResponse<SongViewModel> GetSongsForAdmin(string filter, PagingRequest paging, SongOrderFilter orderFilter)
+        public DynamicModelResponse.DynamicModelsResponse<SongViewModel> GetSongsForAdmin(string? filter, PagingRequest paging, SongOrderFilter orderFilter)
         {
             (int, IQueryable<SongViewModel>) result;
             try

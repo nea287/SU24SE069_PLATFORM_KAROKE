@@ -161,6 +161,50 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Results = result.Item2.ToList()
             };
         }
+        public async Task<DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>> GetTransactionsForAdmin(string? filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter)
+        {
+            (int, IQueryable<InAppTransactionViewModel>) result;
+            try
+            {
+                lock (_repository)
+                {
+                    var data = _repository.GetAll(
+                                                includeProperties: String.Join(",",
+                                                SupportingFeature.GetNameIncludedProperties<InAppTransaction>()))
+                        .AsQueryable()
+                        .ProjectTo<InAppTransactionViewModel>(_mapper.ConfigurationProvider)
+                        .DynamicFilterForAdmin(filter);
+
+                    string? colName = Enum.GetName(typeof(InAppTransactionOrderFilter), orderFilter);
+
+                    data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
+
+                    result = data.PagingIQueryable(paging.page, paging.pageSize,
+                            Constraints.LimitPaging, Constraints.DefaultPaging);
+                }
+
+
+            }
+            catch (Exception)
+            {
+                return new DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+
+            return new DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
+            };
+        }
 
         public async Task<ResponseResult<InAppTransactionViewModel>> UpdateInAppTransaction(UpdateInAppTransactionRequestModel request, Guid id)
         {

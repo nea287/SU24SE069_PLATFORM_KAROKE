@@ -43,7 +43,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
         
         [HttpGet("get-songs")]
-        public IActionResult GetSongsForAdmin([FromQuery]string filter,
+        public IActionResult GetSongsForAdmin([FromQuery]string? filter,
             [FromQuery]PagingRequest paging,[FromQuery] SongOrderFilter orderFilter = SongOrderFilter.UpdatedDate)
         {
             DynamicModelResponse.DynamicModelsResponse<SongViewModel> rs = _songService.GetSongsForAdmin(filter, paging, orderFilter);

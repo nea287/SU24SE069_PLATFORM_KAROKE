@@ -194,6 +194,51 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Results = result.Item2.ToList()
             };
         }
+        
+        public async Task<DynamicModelResponse.DynamicModelsResponse<MonetaryTransactionViewModel>> GetTransactionsForAdmin(string? filter, PagingRequest paging, MonetaryTransactionOrderFilter orderFilter)
+        {
+            (int, IQueryable<MonetaryTransactionViewModel>) result;
+            try
+            {
+                lock (_repository)
+                {
+                    var data = _repository.GetAll()
+                                                //includeProperties: String.Join(",",
+                                                //SupportingFeature.GetNameIncludedProperties<MonetaryTransaction>()))
+                        .AsQueryable()
+                        .ProjectTo<MonetaryTransactionViewModel>(_mapper.ConfigurationProvider)
+                        .DynamicFilterForAdmin(filter);
+
+                    string? colName = Enum.GetName(typeof(MonetaryTransactionOrderFilter), orderFilter);
+
+                    data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
+
+                    result = data.PagingIQueryable(paging.page, paging.pageSize,
+                            Constraints.LimitPaging, Constraints.DefaultPaging);
+                }
+
+
+            }
+            catch (Exception)
+            {
+                return new DynamicModelResponse.DynamicModelsResponse<MonetaryTransactionViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+
+            return new DynamicModelResponse.DynamicModelsResponse<MonetaryTransactionViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
+            };
+        }
 
         public async Task<ResponseResult<MonetaryTransactionViewModel>> UpdateStatusTransaction(Guid id, PaymentStatus status)
         {

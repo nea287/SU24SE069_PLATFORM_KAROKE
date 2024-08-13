@@ -176,7 +176,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
         
-        public async Task<DynamicModelResponse.DynamicModelsResponse<GenreViewModel>> GetGenresForAdmin(string filter, PagingRequest paging, GenreOrderFilter orderFilter)
+        public async Task<DynamicModelResponse.DynamicModelsResponse<GenreViewModel>> GetGenresForAdmin(string? filter, PagingRequest paging, GenreOrderFilter orderFilter)
         {
             (int, IQueryable<GenreViewModel>) result;
             try

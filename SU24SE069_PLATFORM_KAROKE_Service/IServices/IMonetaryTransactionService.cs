@@ -15,6 +15,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
     public interface IMonetaryTransactionService
     {
         public Task<DynamicModelResponse.DynamicModelsResponse<MonetaryTransactionViewModel>> GetTransactions(MonetaryTransactionViewModel filter, PagingRequest paging, MonetaryTransactionOrderFilter orderFilter);
+        public Task<DynamicModelResponse.DynamicModelsResponse<MonetaryTransactionViewModel>> GetTransactionsForAdmin(string? filter, PagingRequest paging, MonetaryTransactionOrderFilter orderFilter);
         public Task<ResponseResult<MonetaryTransactionViewModel>> CreateTransaction(MonetaryTransactionRequestModel request);
         public Task<ResponseResult<MonetaryTransactionViewModel>> UpdateStatusTransaction(Guid id, PaymentStatus status);
         public Task<ResponseResult<MonetaryTransactionViewModel>> BuyPackageTransaction(MonetaryTransactionRequestModel request);
