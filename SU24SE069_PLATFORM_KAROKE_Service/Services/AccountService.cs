@@ -218,7 +218,65 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             }
             catch (Exception)
             {
-                //await _accountRepository.DisponseAsync();
+                return new DynamicModelResponse.DynamicModelsResponse<AccountViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+
+            return new DynamicModelResponse.DynamicModelsResponse<AccountViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
+            };
+        }
+
+
+        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccountsForAdmin(
+    string? filter, PagingRequest paging, AccountOrderFilter orderFilter)
+        {
+            (int, IQueryable<AccountViewModel>) result;
+            try
+            {
+                IQueryable<AccountViewModel>? data = JsonConvert.DeserializeObject<List<AccountViewModel>>(SupportingFeature.Instance.GetDataFromCache(_memoryCache, Constraints.ACCOUNTS))?.AsQueryable();
+
+                if (data.IsNullOrEmpty())
+                {
+                    data = _accountRepository.GetAll(
+                            includeProperties: String.Join(",",
+                            SupportingFeature.GetNameIncludedProperties<Account>()))
+                            .AsQueryable()
+
+                            .ProjectTo<AccountViewModel>(_mapper.ConfigurationProvider);
+
+
+
+                    SupportingFeature.Instance.SetDataToCache(_memoryCache, Constraints.ACCOUNTS, JsonConvert.SerializeObject(data.ToList()), 10);
+                }
+                lock (_accountRepository)
+                {
+
+
+                    data = data.DynamicFilterForAdmin<AccountViewModel>(filter);
+
+                    string? colName = Enum.GetName(typeof(AccountOrderFilter), orderFilter);
+
+                    data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
+
+                    result = data.PagingIQueryable(paging.page, paging.pageSize,
+                            Constraints.LimitPaging, Constraints.DefaultPaging);
+                }
+
+
+            }
+            catch (Exception)
+            {
                 return new DynamicModelResponse.DynamicModelsResponse<AccountViewModel>()
                 {
                     Message = Constraints.LOAD_FAILED,

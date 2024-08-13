@@ -63,6 +63,15 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
+        
+        [HttpGet("get-accounts")]
+        public IActionResult GetAccountsForAdmin([FromQuery] string? filter,
+                [FromQuery] PagingRequest paging, [FromQuery] AccountOrderFilter orderFilter = AccountOrderFilter.CreatedTime)
+        {
+            var rs = _service.GetAccountsForAdmin(filter, paging, orderFilter);
+
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        }
 
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateAccount(Guid id, [FromBody] UpdateAccountByMailRequestModel request)

@@ -187,7 +187,6 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
 
             #region Post
             CreateMap<Post, CreatePostRequestModel>()
-                //.ForMember(e => e.PostType, dest => dest.MapFrom(opt => (PostType)opt.PostType))
                 .ReverseMap();
             #endregion
 
