@@ -1,4 +1,6 @@
-﻿using MailKit.Search;
+﻿using AutoMapper.Execution;
+using MailKit.Search;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -101,6 +103,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         {
             if (!string.IsNullOrEmpty(search))
             {
+                //string x = BuildDynamicFilter<TEntity>(search).ToString();
                 source = source.Where(BuildDynamicFilter<TEntity>(search));
             }
 
@@ -118,23 +121,28 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
             {
                 if (property.PropertyType == typeof(string))
                 {
-                    var propertyExpression = Expression.Property(parameter, property);
-                    var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
-                    var searchExpression = Expression.Constant(searchTerm, typeof(string));
+                    var propertyExpression = Expression.Property(parameter, property); // x.UserName
 
+                    // Kiểm tra null: x.UserName != null
+                    var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(string)));
+
+                    var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+                    var searchExpression = Expression.Constant(searchTerm, typeof(string)); // "Test Create Account2"
+
+                    // Gọi Contains: x.UserName.Contains("searchTerm")
                     var containsExpression = Expression.Call(propertyExpression, containsMethod, searchExpression);
 
+                    // Kết hợp điều kiện null và Contains: (x.UserName != null) && x.UserName.Contains("searchTerm")
+                    var notNullAndContainsExpression = Expression.AndAlso(notNullExpression, containsExpression);
 
-                    if(orExpression == null)
+                    if (orExpression == null)
                     {
-                        orExpression = containsExpression;
+                        orExpression = notNullAndContainsExpression;
                     }
                     else
                     {
-                        orExpression = Expression.OrElse(orExpression, containsExpression);
-
+                        orExpression = Expression.OrElse(orExpression, notNullAndContainsExpression);
                     }
-
                 }
             }
 
@@ -147,5 +155,50 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
             return Expression.Lambda<Func<T, bool>>(orExpression, parameter);
         }
+
+        //public static Expression<Func<T, bool>> BuildDynamicFilter<T>(string searchTerm)
+        //{
+        //    var parameter = Expression.Parameter(typeof(T), "x");
+        //    var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        //    Expression orExpression = null;
+
+        //    foreach (var property in properties)
+        //    {
+        //        //var propertyVal = property.GetValue(property, null);
+        //        //if (propertyVal == null) continue;
+        //        if (property.PropertyType == typeof(string))
+        //        {
+        //            var propertyExpression = Expression.Property(parameter, property); //$x.UserName
+        //            var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+        //            var searchExpression = Expression.Constant(searchTerm, typeof(string)); //"Test Create Account2"
+
+        //            var containsExpression = Expression.Call(propertyExpression, containsMethod, searchExpression); //.Call ($x.UserName).Contains("Test Create Account2")
+
+
+        //            if (orExpression == null)
+        //            {
+        //                orExpression = containsExpression;
+        //            }
+        //            else
+        //            {
+        //                orExpression = Expression.OrElse(orExpression, containsExpression);
+
+        //            }
+
+        //        }
+        //    }
+
+        //    // Nếu không có thuộc tính nào để lọc, trả về biểu thức "true" (để không lọc gì cả).
+        //    if (orExpression == null)
+        //    {
+        //        var trueConstant = Expression.Constant(true);
+        //        orExpression = trueConstant;
+        //    }
+
+
+
+        //    return Expression.Lambda<Func<T, bool>>(orExpression, parameter);
+        //}
     }
 }
