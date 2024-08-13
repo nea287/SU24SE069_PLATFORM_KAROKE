@@ -28,6 +28,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
+        
+        [HttpGet("get-in-apps")]
+        public async Task<IActionResult> GetInAppTransactionsForAdmin([FromQuery] string? filter, [FromQuery] PagingRequest paging, [FromQuery] InAppTransactionOrderFilter orderFilter = InAppTransactionOrderFilter.CreatedDate)
+        {
+            var rs = await _service.GetTransactionsForAdmin(filter, paging, orderFilter);
+
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetTransaction(Guid id)

@@ -32,7 +32,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         
         
         [HttpGet("get-packages")]
-        public async Task<IActionResult> GetPackagesForAdmin([FromQuery] string filter, [FromQuery] PagingRequest paging, PackageOrderFilter orderFilter = PackageOrderFilter.CreatedDate)
+        public async Task<IActionResult> GetPackagesForAdmin([FromQuery] string? filter, [FromQuery] PagingRequest paging, PackageOrderFilter orderFilter = PackageOrderFilter.CreatedDate)
         {
             var rs = await _service.GetPackagesForAdmin(filter, paging, orderFilter);
 

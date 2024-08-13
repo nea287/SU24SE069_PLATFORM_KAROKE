@@ -146,7 +146,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public async Task<DynamicModelResponse.DynamicModelsResponse<PackageViewModel>> GetPackagesForAdmin(string filter, PagingRequest paging, PackageOrderFilter orderFilter)
+        public async Task<DynamicModelResponse.DynamicModelsResponse<PackageViewModel>> GetPackagesForAdmin(string? filter, PagingRequest paging, PackageOrderFilter orderFilter)
         {
             (int, IQueryable<PackageViewModel>) result;
             try

@@ -132,7 +132,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public DynamicModelResponse.DynamicModelsResponse<ItemViewModel> GetItemsForAdmin(string filter, PagingRequest request, ItemOrderFilter orderFilter)
+        public DynamicModelResponse.DynamicModelsResponse<ItemViewModel> GetItemsForAdmin(string? filter, PagingRequest request, ItemOrderFilter orderFilter)
         {
             (int, IQueryable<ItemViewModel>) result;
             try

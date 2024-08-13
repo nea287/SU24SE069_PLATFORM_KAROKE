@@ -174,7 +174,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Results = result.Item2.ToList()
             };
         }
-        public async Task<DynamicModelResponse.DynamicModelsResponse<SingerViewModel>> GetSingersForAdmin(string filter, PagingRequest paging, SingerOrderFilter orderFilter)
+        public async Task<DynamicModelResponse.DynamicModelsResponse<SingerViewModel>> GetSingersForAdmin(string? filter, PagingRequest paging, SingerOrderFilter orderFilter)
         {
             (int, IQueryable<SingerViewModel>) result;
             try

@@ -38,7 +38,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
         
         [HttpGet("get-singers")]
-        public async Task<IActionResult> GetSingersForAdmin([FromQuery] string filter, [FromQuery] PagingRequest paging, [FromQuery] SingerOrderFilter orderFilter = SingerOrderFilter.SingerId)
+        public async Task<IActionResult> GetSingersForAdmin([FromQuery] string? filter, [FromQuery] PagingRequest paging, [FromQuery] SingerOrderFilter orderFilter = SingerOrderFilter.SingerId)
         
         {
             var rs = await _service.GetSingersForAdmin(filter, paging, orderFilter);

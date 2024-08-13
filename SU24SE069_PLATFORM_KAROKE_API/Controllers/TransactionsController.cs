@@ -27,6 +27,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
+        
+        [HttpGet("get-transactions")]
+        public async Task<IActionResult> GetTransactionsForAdmin([FromQuery] string? filter, [FromQuery] PagingRequest paging, MonetaryTransactionOrderFilter orderFilter = MonetaryTransactionOrderFilter.CreatedDate)
+        {
+            var rs = await _service.GetTransactionsForAdmin(filter, paging, orderFilter);
+
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateTransaction([FromBody] MonetaryTransactionRequestModel request)

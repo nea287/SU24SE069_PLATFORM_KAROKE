@@ -19,6 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<InAppTransactionViewModel>> CreateInAppTransaction(CrreateInAppTransactionRequestModel request);
         public Task<ResponseResult<InAppTransactionViewModel>> UpdateInAppTransaction(UpdateInAppTransactionRequestModel request, Guid id);
         public Task<DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>> GetTransactions(InAppTransactionViewModel filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter);
+        public Task<DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>> GetTransactionsForAdmin(string? filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter);
 
         public Task<ResponseResult<InAppTransactionViewModel>> PurchaseSong(PurchasedSongRequestModel request);
         public Task<ResponseResult<InAppTransactionViewModel>> PurchaseItem(PurchaseItemRequestModel request);

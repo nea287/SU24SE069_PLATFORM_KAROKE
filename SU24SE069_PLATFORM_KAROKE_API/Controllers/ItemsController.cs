@@ -39,7 +39,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.Results.IsNullOrEmpty()? NotFound(rs) : Ok(rs);
         }
         [HttpGet("get-items")]
-        public IActionResult GetItemsForAdmin([FromQuery] string filter, [FromQuery] PagingRequest paging, [FromQuery] ItemOrderFilter orderFilter = ItemOrderFilter.CreatedDate)
+        public IActionResult GetItemsForAdmin([FromQuery] string? filter, [FromQuery] PagingRequest paging, [FromQuery] ItemOrderFilter orderFilter = ItemOrderFilter.CreatedDate)
         {
             var rs = _itemService.GetItemsForAdmin(filter, paging, orderFilter);
 
