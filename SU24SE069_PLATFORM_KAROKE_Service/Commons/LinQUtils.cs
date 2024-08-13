@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
@@ -119,7 +120,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
             foreach (var property in properties)
             {
-                if (property.PropertyType == typeof(string))
+                if (property.PropertyType == typeof(Guid?) || property.PropertyType == typeof(Guid)) continue;
+                else if (property.PropertyType == typeof(string))
                 {
                     var propertyExpression = Expression.Property(parameter, property); // x.UserName
 
@@ -142,6 +144,80 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
                     else
                     {
                         orExpression = Expression.OrElse(orExpression, notNullAndContainsExpression);
+                    }
+                }
+                else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
+                {
+                    if (!bool.TryParse(searchTerm, out bool searchValue))
+                        continue;
+
+                    var propertyExpression = Expression.Property(parameter, property); // x.SomeBoolProperty
+
+                    // Tạo biểu thức so sánh: x.SomeBoolProperty == searchValue
+                    var equalsExpression = Expression.Equal(
+                        Expression.Convert(propertyExpression, typeof(bool)),
+                        Expression.Constant(searchValue, typeof(bool))
+                    );
+
+                    // Nếu là Nullable<bool>, cần kiểm tra null trước khi so sánh
+                    Expression notNullAndEqualsExpression = equalsExpression;
+                    if (property.PropertyType == typeof(bool?))
+                    {
+                        var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(bool?)));
+                        notNullAndEqualsExpression = Expression.AndAlso(notNullExpression, equalsExpression);
+                    }
+
+                    if (orExpression == null)
+                    {
+                        orExpression = notNullAndEqualsExpression;
+                    }
+                    else
+                    {
+                        orExpression = Expression.OrElse(orExpression, notNullAndEqualsExpression);
+                    }
+                }
+                else if (property.PropertyType == typeof(int) ||
+                         property.PropertyType == typeof(float) ||
+                         property.PropertyType == typeof(double) ||
+                         property.PropertyType == typeof(decimal) ||
+                        property.PropertyType == typeof(int?) ||
+                         property.PropertyType == typeof(float?) ||
+                         property.PropertyType == typeof(double?) ||
+                         property.PropertyType == typeof(decimal?))
+                {
+                    var numericRegex = new Regex(@"^-?\d+(\.\d+)?$");
+
+                    if (!numericRegex.IsMatch(searchTerm))
+                    {
+                        continue; // Bỏ qua nếu searchTerm không phải là số
+                    }
+
+                    // Sử dụng Convert.ChangeType để chuyển đổi searchTerm sang kiểu phù hợp
+                    var searchValue = Convert.ChangeType(searchTerm, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType);
+
+                    var propertyExpression = Expression.Property(parameter, property); // x.SomeNumericProperty
+
+                    // Tạo biểu thức so sánh: x.SomeNumericProperty == searchValue
+                    var equalsExpression = Expression.Equal(
+                        Expression.Convert(propertyExpression, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType),
+                        Expression.Constant(searchValue)
+                    );
+
+                    // Nếu là nullable, cần kiểm tra null trước khi so sánh
+                    Expression notNullAndEqualsExpression = equalsExpression;
+                    if (Nullable.GetUnderlyingType(property.PropertyType) != null)
+                    {
+                        var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, property.PropertyType));
+                        notNullAndEqualsExpression = Expression.AndAlso(notNullExpression, equalsExpression);
+                    }
+
+                    if (orExpression == null)
+                    {
+                        orExpression = notNullAndEqualsExpression;
+                    }
+                    else
+                    {
+                        orExpression = Expression.OrElse(orExpression, notNullAndEqualsExpression);
                     }
                 }
             }
