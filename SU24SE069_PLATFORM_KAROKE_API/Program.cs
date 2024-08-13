@@ -25,6 +25,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 //builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.ConfigureOptions<MoMoOptionsSetup>();
 #endregion
+#region FirebaseStorage
+builder.Services.ConfigureOptions<FirebaseCredentialOptionSetup>();
+#endregion
 
 #region AppStarts
 builder.Services.ConfigDI();
