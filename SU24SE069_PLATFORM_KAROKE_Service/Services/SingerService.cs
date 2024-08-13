@@ -174,6 +174,51 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Results = result.Item2.ToList()
             };
         }
+        public async Task<DynamicModelResponse.DynamicModelsResponse<SingerViewModel>> GetSingersForAdmin(string filter, PagingRequest paging, SingerOrderFilter orderFilter)
+        {
+            (int, IQueryable<SingerViewModel>) result;
+            try
+            {
+                lock (_repository)
+                {
+                    var data = _repository.GetAll(
+                                                includeProperties: String.Join(",",
+                                                SupportingFeature.GetNameIncludedProperties<Singer>()))
+                        .AsQueryable()
+                        .ProjectTo<SingerViewModel>(_mapper.ConfigurationProvider)
+                        .DynamicFilterForAdmin(filter);
+
+                    string? colName = Enum.GetName(typeof(SingerOrderFilter), orderFilter);
+
+                    data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
+
+                    result = data.PagingIQueryable(paging.page, paging.pageSize,
+                            Constraints.LimitPaging, Constraints.DefaultPaging);
+                }
+
+
+            }
+            catch (Exception)
+            {
+                return new DynamicModelResponse.DynamicModelsResponse<SingerViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+           
+
+            return new DynamicModelResponse.DynamicModelsResponse<SingerViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
+            };
+        }
 
         public async Task<ResponseResult<SingerViewModel>> UpdateSinger(Guid id, SingerRequestModel request)
         {

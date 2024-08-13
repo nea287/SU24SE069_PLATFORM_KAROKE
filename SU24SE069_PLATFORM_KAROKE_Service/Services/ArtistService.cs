@@ -183,6 +183,55 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Results = result.Item2.ToList()
             };
         }
+        
+        public async Task<DynamicModelResponse.DynamicModelsResponse<ArtistViewModel>> GetArtistsForAdmin(string filter, PagingRequest paging, ArtistOrderFilter orderFilter)
+        {
+            (int, IQueryable<ArtistViewModel>) result;
+            try
+            {
+                lock (_repository)
+                {
+                    var data = _repository.GetAll(
+                                                includeProperties: String.Join(",",
+                                                SupportingFeature.GetNameIncludedProperties<Artist>()))
+                        .AsQueryable()
+                        .ProjectTo<ArtistViewModel>(_mapper.ConfigurationProvider)
+                        .DynamicFilterForAdmin(filter);
+
+                    string? colName = Enum.GetName(typeof(ArtistOrderFilter), orderFilter);
+
+                    data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
+
+                    result = data.PagingIQueryable(paging.page, paging.pageSize,
+                            Constraints.LimitPaging, Constraints.DefaultPaging);
+                }
+
+
+            }
+            catch (Exception)
+            {
+                return new DynamicModelResponse.DynamicModelsResponse<ArtistViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+            finally
+            {
+                //await _repository.DisponseAsync();
+            }
+
+            return new DynamicModelResponse.DynamicModelsResponse<ArtistViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
+            };
+        }
 
         public async Task<ResponseResult<ArtistViewModel>> UpdateArtist(Guid id, ArtistRequestModel request)
         {

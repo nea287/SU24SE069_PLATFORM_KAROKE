@@ -34,6 +34,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
+        
+        [HttpGet("get-genres")]
+        public async Task<IActionResult> GetGenresForAdmin([FromQuery] string filter, [FromQuery] PagingRequest paging, [FromQuery] GenreOrderFilter orderFilter = GenreOrderFilter.GenreId)
+        {
+            var rs = await _service.GetGenresForAdmin(filter, paging, orderFilter);
+
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateGenre([FromBody] GenreRequestModel request)

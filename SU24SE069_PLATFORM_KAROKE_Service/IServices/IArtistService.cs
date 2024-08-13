@@ -15,6 +15,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
     {
         public Task<ResponseResult<ArtistViewModel>> GetArtist(Guid id);
         public Task<DynamicModelResponse.DynamicModelsResponse<ArtistViewModel>> GetArtists(ArtistViewModel filter, PagingRequest paging, ArtistOrderFilter orderFilter);
+        public Task<DynamicModelResponse.DynamicModelsResponse<ArtistViewModel>> GetArtistsForAdmin(string filter, PagingRequest paging, ArtistOrderFilter orderFilter);
         public Task<ResponseResult<ArtistViewModel>> CreateArtist(ArtistRequestModel request);
         public Task<ResponseResult<ArtistViewModel>> DeleteArtist(Guid id);
         public Task<ResponseResult<ArtistViewModel>> UpdateArtist(Guid id, ArtistRequestModel request);

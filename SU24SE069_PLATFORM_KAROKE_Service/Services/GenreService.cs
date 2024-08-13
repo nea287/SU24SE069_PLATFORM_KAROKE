@@ -175,6 +175,51 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Results = result.Item2.ToList()
             };
         }
+        
+        public async Task<DynamicModelResponse.DynamicModelsResponse<GenreViewModel>> GetGenresForAdmin(string filter, PagingRequest paging, GenreOrderFilter orderFilter)
+        {
+            (int, IQueryable<GenreViewModel>) result;
+            try
+            {
+                lock (_repository)
+                {
+                    var data = _repository.GetAll(
+                                                includeProperties: String.Join(",",
+                                                SupportingFeature.GetNameIncludedProperties<Genre>()))
+                        .AsQueryable()
+                        .ProjectTo<GenreViewModel>(_mapper.ConfigurationProvider)
+                        .DynamicFilterForAdmin(filter);
+
+                    string? colName = Enum.GetName(typeof(GenreOrderFilter), orderFilter);
+
+                    data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
+
+                    result = data.PagingIQueryable(paging.page, paging.pageSize,
+                            Constraints.LimitPaging, Constraints.DefaultPaging);
+                }
+
+
+            }
+            catch (Exception)
+            {
+                return new DynamicModelResponse.DynamicModelsResponse<GenreViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+
+            return new DynamicModelResponse.DynamicModelsResponse<GenreViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
+            };
+        }
 
         public async Task<ResponseResult<GenreViewModel>> UpdateGenre(Guid id, GenreRequestModel request)
         {
