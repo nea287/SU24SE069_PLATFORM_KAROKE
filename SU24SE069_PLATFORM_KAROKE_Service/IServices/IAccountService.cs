@@ -20,6 +20,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices
         public Task<ResponseResult<AccountViewModel>> GetAccount(Guid accountId);
         public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccounts(AccountViewModel filter,
             PagingRequest paging, AccountOrderFilter orderFilter);
+        
+        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccountsForAdmin(string? filter,
+            PagingRequest paging, AccountOrderFilter orderFilter);
         public Task<ResponseResult<AccountViewModel>> CreateAccount(CreateAccountRequestModel request);
         public Task<ResponseResult<AccountViewModel>> UpdateMemberAccount(Guid id, UpdateAccountByMailRequestModel request);
         public Task<ResponseResult<AccountViewModel>> UpdatePassword(Guid id, string password);
