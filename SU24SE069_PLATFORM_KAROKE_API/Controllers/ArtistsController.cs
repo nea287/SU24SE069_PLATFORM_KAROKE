@@ -36,6 +36,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
+        
+        [HttpGet("get-artists")]
+        public async Task<IActionResult> GetArtistsForAdmin([FromQuery] string filter, [FromQuery] PagingRequest paging, [FromQuery] ArtistOrderFilter orderFilter = ArtistOrderFilter.ArtistId)
+        {
+            var rs = await _service.GetArtistsForAdmin(filter, paging, orderFilter);
+
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateArtist([FromBody] ArtistRequestModel request)

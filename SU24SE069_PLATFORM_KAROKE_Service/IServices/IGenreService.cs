@@ -15,6 +15,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
     {
         public Task<ResponseResult<GenreViewModel>> GetGenre(Guid id);
         public Task<DynamicModelResponse.DynamicModelsResponse<GenreViewModel>> GetGenres(GenreViewModel filter, PagingRequest paging, GenreOrderFilter orderFilter);
+        public Task<DynamicModelResponse.DynamicModelsResponse<GenreViewModel>> GetGenresForAdmin(string filter, PagingRequest paging, GenreOrderFilter orderFilter);
         public Task<ResponseResult<GenreViewModel>> CreateGenre(GenreRequestModel request);
         public Task<ResponseResult<GenreViewModel>> DeleteGenre(Guid id);
         public Task<ResponseResult<GenreViewModel>> UpdateGenre(Guid id, GenreRequestModel request);
