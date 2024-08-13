@@ -219,6 +219,54 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
                     {
                         orExpression = Expression.OrElse(orExpression, notNullAndEqualsExpression);
                     }
+                }else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
+                {
+                    // Giả sử bạn có các biến 'startDate' và 'endDate' là kiểu string và chứa ngày
+                    if (!DateTime.TryParse(searchTerm, out DateTime searchDate))
+                    {
+                        continue; // Bỏ qua nếu searchTerm không phải là ngày hợp lệ
+                    }
+
+                    var propertyExpression = Expression.Property(parameter, property); // x.SomeDateTimeProperty
+
+                    // Kiểm tra kiểu Nullable<DateTime>
+                    var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+                    Expression notNullExpression = null;
+
+                    // Tạo biểu thức so sánh: x.SomeDateTimeProperty >= searchDate
+                    var greaterThanOrEqualExpression = Expression.GreaterThanOrEqual(
+                        Expression.Convert(propertyExpression, propertyType),
+                        Expression.Constant(searchDate, propertyType)
+                    );
+
+                    // Tạo biểu thức so sánh: x.SomeDateTimeProperty <= searchDate
+                    var lessThanOrEqualExpression = Expression.LessThanOrEqual(
+                        Expression.Convert(propertyExpression, propertyType),
+                        Expression.Constant(searchDate, propertyType)
+                    );
+
+                    // Tạo biểu thức lọc lớn hơn hoặc bằng và nhỏ hơn hoặc bằng cho khoảng ngày
+                    var dateRangeExpression = Expression.AndAlso(
+                        greaterThanOrEqualExpression,
+                        lessThanOrEqualExpression
+                    );
+
+                    // Nếu là Nullable<DateTime>, cần kiểm tra null trước khi so sánh
+                    if (property.PropertyType == typeof(DateTime?))
+                    {
+                        notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(DateTime?)));
+                        dateRangeExpression = Expression.AndAlso(notNullExpression, dateRangeExpression);
+                    }
+
+                    if (orExpression == null)
+                    {
+                        orExpression = dateRangeExpression;
+                    }
+                    else
+                    {
+                        orExpression = Expression.OrElse(orExpression, dateRangeExpression);
+                    }
                 }
             }
 
