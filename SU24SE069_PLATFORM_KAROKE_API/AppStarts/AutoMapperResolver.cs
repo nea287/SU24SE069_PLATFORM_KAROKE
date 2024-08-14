@@ -25,6 +25,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PostComment;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PostRating;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PurchasedSong;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Report;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Singer;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.SupportRequest;
@@ -337,6 +338,18 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
             #region VoiceAudio
             CreateMap<VoiceAudio, VoiceAudioViewModel>().ReverseMap();
+            #endregion
+
+            #region Report
+            CreateMap<Report, ReportViewModel>()
+                .ForMember(x => x.ReportType, dest => dest.MapFrom(src => (ReportType)src .ReportType))
+                .ForMember(x => x.ReportCategory, dest => dest.MapFrom(src => (ReportCatagory)src.ReportCategory))
+                .ForMember(x => x.Status, dest => dest.MapFrom(src => (ReportStatus)src.Status))
+                .ReverseMap();
+
+            CreateMap<Report, CreateReportForMemberRequestModel>().ReverseMap();
+            CreateMap<Report,  UpdateReportForMemberRequestModel>().ReverseMap();   
+            CreateMap<Report, CreateReportRequestModel>().ReverseMap();
             #endregion
         }
     }

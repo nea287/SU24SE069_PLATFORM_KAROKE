@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Report
 {
-    public class CreateReportForMemberRequestModel
+    public class UpdateReportForMemberRequestModel
     {
-       // public Guid ReporterId { get; set; } 
+        // public Guid ReporterId { get; set; } 
         //public Guid ReportedAccountId { get; set; }
         public ReportCatagory ReportCategory { get; set; }
         //public int Status { get; set; }
