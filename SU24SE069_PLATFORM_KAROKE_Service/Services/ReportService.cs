@@ -1,6 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
+using SU24SE069_PLATFORM_KAROKE_Service.IServices;
+using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Report;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,226 +20,276 @@ using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
-    public class ReportService : IReportRepository
+    public class ReportService : IReportService
     {
-        public Task<bool> AddReport(Report report)
+        private readonly IMapper _mapper;
+        private readonly IReportRepository _repository;
+
+        public ReportService(IMapper mapper, IReportRepository reportRepository)
         {
-            throw new NotImplementedException();
+            _mapper = mapper;
+            _repository = reportRepository;
+        }
+        public async Task<ResponseResult<ReportViewModel>> AddReport(CreateReportRequestModel request)
+        {
+            Report rs = new Report();
+            try
+            {
+                rs = _mapper.Map<Report>(request);
+
+                rs.Status = (int)ReportStatus.PROCCESSING;
+                rs.CreateTime = DateTime.Now;
+
+                if (!await _repository.AddReport(rs))
+                {
+                    _repository.DetachEntity(rs);
+                    throw new Exception();
+                }
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<ReportViewModel>()
+                {
+                    Message = Constraints.CREATE_FAILED,
+                    result = false
+                };
+            }
+            finally { lock (_repository) { } }
+
+            return new ResponseResult<ReportViewModel>()
+            {
+                Message = Constraints.CREATE_SUCCESS,
+                result = true,
+                Value = _mapper.Map<ReportViewModel>(rs)
+            };
         }
 
-        public bool Any(Func<Report, bool> predicate)
+        public async Task<ResponseResult<ReportViewModel>> GetReportById(Guid id)
         {
-            throw new NotImplementedException();
+            Report rs = new Report();
+            try
+            {
+                rs = await _repository.GetByIdGuid(id);
+
+                if (rs is null)
+                {
+                    return new ResponseResult<ReportViewModel>()
+                    {
+                        Message = Constraints.NOT_FOUND,
+                        result = false,
+                    };
+                }
+
+
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<ReportViewModel>()
+                {
+                    Message = Constraints.NOT_FOUND,
+                    result = false,
+
+                };
+            }
+
+            return new ResponseResult<ReportViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                result = true,
+                Value = _mapper.Map<ReportViewModel>(rs)
+            };
         }
 
-        public void AttrachEntity(Report entity)
+        public DynamicModelResponse.DynamicModelsResponse<ReportViewModel> GetReports(ReportViewModel filter, PagingRequest paging, ReportOrderFilter orderFilter = ReportOrderFilter.CreateTime)
         {
-            throw new NotImplementedException();
+            (int, IQueryable<ReportViewModel>) result;
+            try
+            {
+                var data = _repository.GetAll(includeProperties: string.Join(",", SupportingFeature.GetNameIncludedProperties<Report>()))
+                                      .ProjectTo<ReportViewModel>(_mapper.ConfigurationProvider).DynamicFilter(filter);
+                                      //.PagingIQueryable(paging.page, paging.pageSize, Constraints.DefaultPaging, Constraints.DefaultPage);
+
+                string? collName = Enum.GetName(typeof(ReportOrderFilter), orderFilter);
+
+                data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, collName).AsQueryable();
+
+                result = data.PagingIQueryable(paging.page, paging.pageSize, Constraints.LimitPaging, Constraints.DefaultPaging);
+
+                if(result.Item2 == null)
+                {
+                    return new DynamicModelResponse.DynamicModelsResponse<ReportViewModel>()
+                    {
+                        Message = Constraints.NOT_FOUND,
+
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                return new DynamicModelResponse.DynamicModelsResponse<ReportViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+
+                };
+            }
+
+            return new DynamicModelResponse.DynamicModelsResponse<ReportViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
+
+            };
         }
 
-        public int Count(Func<Report, bool> predicate)
+        public DynamicModelResponse.DynamicModelsResponse<ReportViewModel> GetReportsForAdmin(string? filter, PagingRequest paging, ReportOrderFilter orderFilter = ReportOrderFilter.CreateTime)
         {
-            throw new NotImplementedException();
+            (int, IQueryable<ReportViewModel>) result;
+            try
+            {
+                var data = _repository.GetAll(includeProperties: string.Join(",", SupportingFeature.GetNameIncludedProperties<Report>()))
+                                      .ProjectTo<ReportViewModel>(_mapper.ConfigurationProvider).DynamicFilterForAdmin(filter);
+                //.PagingIQueryable(paging.page, paging.pageSize, Constraints.DefaultPaging, Constraints.DefaultPage);
+
+                string? collName = Enum.GetName(typeof(ReportOrderFilter), orderFilter);
+
+                data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, collName).AsQueryable();
+
+                result = data.PagingIQueryable(paging.page, paging.pageSize, Constraints.LimitPaging, Constraints.DefaultPaging);
+
+                if (result.Item2 == null)
+                {
+                    return new DynamicModelResponse.DynamicModelsResponse<ReportViewModel>()
+                    {
+                        Message = Constraints.NOT_FOUND,
+
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                return new DynamicModelResponse.DynamicModelsResponse<ReportViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+
+                };
+            }
+
+            return new DynamicModelResponse.DynamicModelsResponse<ReportViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
+
+            };
         }
 
-        public int Count()
+        public async Task<ResponseResult<ReportViewModel>> UpdateReportByMemberAccount(Guid reportId, UpdateReportForMemberRequestModel request)
         {
-            throw new NotImplementedException();
+            Report rs = new Report();
+            try
+            {
+                var data = await _repository.GetByIdGuid(reportId);
+                if (data is null)
+                {
+                    return new ResponseResult<ReportViewModel>()
+                    {
+                        Message = Constraints.NOT_FOUND,
+                        result = false,
+                    };
+                }
+
+                //rs = _mapper.Map<Report>(request);
+                //rs.ReportId = reportId;
+
+                //_repository.DetachEntity(data);
+                data.ReportCategory = (int)request.ReportCategory;
+                data.Reason = request.Reason;
+                data.ReportType = (int)request.ReportType;
+
+                _repository.MotifyEntity(data);
+
+                if (!await _repository.UpdateReport(rs))
+                {
+                    _repository.DetachEntity(rs);
+                    throw new Exception();
+                }
+
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<ReportViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false,
+                };
+            }
+            finally { lock (_repository) { } }
+
+            return new ResponseResult<ReportViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+                Value = _mapper.Map<ReportViewModel>(rs)
+            };
         }
 
-        public void Delete(Report entity)
+        public async Task<ResponseResult<ReportViewModel>> UpdateStatusReport(Guid id, ReportStatus status)
         {
-            throw new NotImplementedException();
-        }
+            Report rs = new Report();
+            try
+            {
+                var data = await _repository.GetByIdGuid(id);
+                if (data is null)
+                {
+                    return new ResponseResult<ReportViewModel>()
+                    {
+                        Message = Constraints.NOT_FOUND,
+                        result = false,
+                    };
+                }
 
-        public void DeleteRange(IQueryable<Report> entities)
-        {
-            throw new NotImplementedException();
-        }
+                //rs = _mapper.Map<Report>(request);
+                //rs.ReportId = reportId;
 
-        public Task<bool> DeleteReport(Report report)
-        {
-            throw new NotImplementedException();
-        }
+                //_repository.DetachEntity(data);
+                data.Status = (int)status;
 
-        public void DetachEntity(Report entity)
-        {
-            throw new NotImplementedException();
-        }
+                _repository.MotifyEntity(data);
 
-        public Task DisponseAsync()
-        {
-            throw new NotImplementedException();
-        }
+                if (!await _repository.UpdateReport(rs))
+                {
+                    _repository.DetachEntity(rs);
+                    throw new Exception();
+                }
 
-        public Report Find(Func<Report, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<ReportViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false,
+                };
+            }
+            finally { lock (_repository) { } }
 
-        public IQueryable<Report> FindAll(Func<Report, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Report> FindAsync(Expression<Func<Report, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Report? FindEntity(params object[] data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Report> FirstOrDefaultAsync(Expression<Func<Report, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Report FistOrDefault(Func<Report, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public DbSet<Report> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQueryable<Report> GetAll(Expression<Func<Report, bool>>? filter = null, Func<IQueryable<Report>, IOrderedQueryable<Report>>? orderBy = null, string? includeProperties = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Report> GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Report> GetByIdGuid(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public DbSet<Report> GetDbSet()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Report GetFirstOrDefault(Expression<Func<Report, bool>>? filter = null, string? includeProperties = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Report GetMax()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Report GetMax(Func<Report, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Report GetMin()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Report GetMin(Func<Report, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Report>> GetWhere(Expression<Func<Report, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task HardDelete(int key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task HardDeleteGuid(Guid key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Insert(Report entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task InsertAsync(Report entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void InsertRangeAsync(IQueryable<Report> entities)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsMax(Func<Report, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> IsMaxAsync(Expression<Func<Report, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsMin(Func<Report, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> IsMinAsync(Expression<Func<Report, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MotifyEntity(Report entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SaveChages()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SaveChagesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Update(Report entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateById(Report entity, int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateGuid(Report entity, Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateRange(IQueryable<Report> entities)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> UpdateReport(Report report)
-        {
-            throw new NotImplementedException();
+            return new ResponseResult<ReportViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+                Value = _mapper.Map<ReportViewModel>(rs)
+            };
         }
     }
 }

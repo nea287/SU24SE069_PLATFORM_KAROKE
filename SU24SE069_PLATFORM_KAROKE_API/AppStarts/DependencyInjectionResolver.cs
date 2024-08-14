@@ -152,6 +152,11 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #region FirebaseStorage
             services.AddScoped<IFirebaseStorageService, FirebaseStorageService>();
             #endregion
+
+            #region Report
+            services.AddScoped<IReportRepository, ReportRepository>();
+            services.AddScoped<IReportService, ReportService>();    
+            #endregion
         }
 
     }
