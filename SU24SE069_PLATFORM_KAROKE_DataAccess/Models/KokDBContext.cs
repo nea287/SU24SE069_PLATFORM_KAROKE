@@ -87,7 +87,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
                 .Build();
-            var strConn = config.GetConnectionString("localDatabase");
+            var strConn = config.GetConnectionString("Database");
             return strConn;
         }
 

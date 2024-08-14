@@ -243,7 +243,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
                     // Tạo biểu thức so sánh: x.SomeDateTimeProperty <= searchDate
                     var lessThanOrEqualExpression = Expression.LessThanOrEqual(
                         Expression.Convert(propertyExpression, propertyType),
-                        Expression.Constant(searchDate, propertyType)
+                        Expression.Constant(searchDate.AddDays(1), propertyType)
                     );
 
                     // Tạo biểu thức lọc lớn hơn hoặc bằng và nhỏ hơn hoặc bằng cho khoảng ngày
