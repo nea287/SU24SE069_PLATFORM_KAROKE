@@ -33,6 +33,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             SupportRequests = new HashSet<Ticket>();
             VoiceAudios = new HashSet<VoiceAudio>();
             Songs = new HashSet<Song>();
+            Notifications = new HashSet<Notification>();
         }
 
         public Guid AccountId { get; set; }
@@ -82,6 +83,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual ICollection<VoiceAudio> VoiceAudios { get; set; }
 
         public virtual ICollection<Song> Songs { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; }
     }
 }
 

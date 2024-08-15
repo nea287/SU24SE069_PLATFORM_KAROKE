@@ -155,7 +155,12 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
 
             #region Report
             services.AddScoped<IReportRepository, ReportRepository>();
-            services.AddScoped<IReportService, ReportService>();    
+            services.AddScoped<IReportService, ReportService>();
+            #endregion
+
+            #region Notification
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<INotificationService, NotificationService>();
             #endregion
         }
 
