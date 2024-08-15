@@ -8,6 +8,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public PostComment()
         {
             InverseParentComment = new HashSet<PostComment>();
+            Reports = new HashSet<Report>();
         }
 
         public Guid CommentId { get; set; } 
@@ -22,5 +23,6 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual Account Member { get; set; } = null!;
         public virtual PostComment? ParentComment { get; set; }
         public virtual ICollection<PostComment> InverseParentComment { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
     }
 }

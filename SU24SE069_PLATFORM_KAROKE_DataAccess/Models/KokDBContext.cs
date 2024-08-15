@@ -20,6 +20,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         }
 
         public virtual DbSet<Account> Accounts { get; set; } = null!;
+        public virtual DbSet<Notification> Notifications { get; set; } = null!;
         public virtual DbSet<AccountItem> AccountInventoryItems { get; set; } = null!;
         public virtual DbSet<Artist> Artists { get; set; } = null!;
         public virtual DbSet<Conversation> Conversations { get; set; } = null!;
@@ -94,6 +95,26 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                // Đặt khóa chính và tự động tăng cho NotificationId
+                entity.HasKey(e => e.NotificationId);
+                entity.Property(e => e.NotificationId).UseIdentityColumn();
+
+                // Cấu hình các cột khác
+                entity.Property(e => e.Description).IsRequired().HasMaxLength(500);
+                entity.Property(e => e.NotificationType).IsRequired();
+                entity.Property(e => e.Status).IsRequired();
+                entity.Property(e => e.CreateDate).IsRequired();
+                entity.Property(e => e.AccountId).IsRequired();
+
+                // Định nghĩa khóa ngoại với bảng Account
+                entity.HasOne(e => e.Account)
+                    .WithMany(a => a.Notifications)  // Nếu Account có nhiều Notifications
+                    .HasForeignKey(e => e.AccountId)
+                    .OnDelete(DeleteBehavior.Cascade); // Hành vi khi xóa tài khoản
+            });
+
             modelBuilder.Entity<Account>(entity =>
             {
                 entity.ToTable("Account");
@@ -976,6 +997,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasForeignKey(d => d.PostId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__Report__post_id__2180FB33");
+
+                entity.HasOne(d => d.Comment)
+                .WithMany(p => p.Reports)
+                .HasForeignKey(d => d.CommentId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Report_PostComment");
 
                 entity.HasOne(d => d.ReportedAccount)
                     .WithMany(p => p.ReportReportedAccounts)

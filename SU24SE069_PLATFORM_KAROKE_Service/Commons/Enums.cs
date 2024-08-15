@@ -334,6 +334,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         INACTIVE = 2,
     }
 
+
+
     #endregion
 
     #region Song
@@ -508,6 +510,22 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         POST,
         COMMENT,
         ROOM
+    }
+    #endregion
+
+    #region Notification 
+    public enum NotificationType
+    {
+        FRIEND_REQUEST,
+        MESSAGE_COMMING,
+        TRANSACTION_NOTI,
+    }
+
+    public enum NotificationStatus
+    {
+        READ,
+        UNREAD,
+        DELETE,
     }
     #endregion
 }

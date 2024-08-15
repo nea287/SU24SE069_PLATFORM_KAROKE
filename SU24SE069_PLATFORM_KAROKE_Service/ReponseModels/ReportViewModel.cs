@@ -20,5 +20,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public Guid? CommentId { get; set; }
         public Guid? PostId { get; set; }
         public Guid? RoomId { get; set; }
+        public string? Comment {  get; set; }   
+        public string? RoomLog { get; set; }
+        public string? PostCaption { get; set; }   
     }
 }
