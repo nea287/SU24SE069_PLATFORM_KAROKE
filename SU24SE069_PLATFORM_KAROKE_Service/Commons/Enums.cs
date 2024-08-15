@@ -81,7 +81,16 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     //    RoomId,
     //}
 
+    public enum NoticationFilter
+    {
+        NotificationId,
+        Description,
+        NotificationType,
+        Status,
+        CreateDate,
+        AccountId,
 
+    }
 
     public enum AccountOrderFilter
     {

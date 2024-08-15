@@ -97,16 +97,25 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         {
             modelBuilder.Entity<Notification>(entity =>
             {
+                entity.ToTable("Notification");
                 // Đặt khóa chính và tự động tăng cho NotificationId
                 entity.HasKey(e => e.NotificationId);
-                entity.Property(e => e.NotificationId).UseIdentityColumn();
+                entity.Property(e => e.NotificationId).UseIdentityColumn()
+                .HasColumnType("int")
+                .HasColumnName("notification_id");
 
                 // Cấu hình các cột khác
-                entity.Property(e => e.Description).IsRequired().HasMaxLength(500);
-                entity.Property(e => e.NotificationType).IsRequired();
-                entity.Property(e => e.Status).IsRequired();
-                entity.Property(e => e.CreateDate).IsRequired();
-                entity.Property(e => e.AccountId).IsRequired();
+                entity.Property(e => e.Description).IsRequired().HasMaxLength(500)
+                .HasColumnName("description");
+                entity.Property(e => e.NotificationType).IsRequired()
+                .HasColumnType("int")
+                .HasColumnName("notification_type");
+
+                entity.Property(e => e.Status).IsRequired()
+                .HasColumnType("int").HasColumnName("status");
+                entity.Property(e => e.CreateDate).IsRequired()
+                .HasColumnType("datetime").HasColumnName("create_date");
+                entity.Property(e => e.AccountId).IsRequired().HasColumnName("account_id");
 
                 // Định nghĩa khóa ngoại với bảng Account
                 entity.HasOne(e => e.Account)

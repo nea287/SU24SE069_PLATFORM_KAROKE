@@ -19,6 +19,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.KaraokeRoom;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.LoginActivity;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Message;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Notification;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Package;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PostComment;
@@ -353,6 +354,16 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<Report, CreateReportForMemberRequestModel>().ReverseMap();
             CreateMap<Report,  UpdateReportForMemberRequestModel>().ReverseMap();   
             CreateMap<Report, CreateReportRequestModel>().ReverseMap();
+            #endregion
+
+            #region Notification 
+            CreateMap<Notification, NotificationViewModel>()
+               // .ForMember(x => x.AccountEmail, dest => dest.MapFrom(src => src.Account.Email))
+                .ForMember(x => x.NotificationType, dest => dest.MapFrom(src => (NotificationType) src.NotificationType))
+                .ForMember(x => x.Status, dest => dest.MapFrom(src => (NotificationStatus) src.Status))
+                .ReverseMap();
+            CreateMap<Notification, CreateNotificationRequestModel>().ReverseMap();
+            CreateMap<NotificationFiilter, NotificationViewModel>().ReverseMap();
             #endregion
         }
     }
