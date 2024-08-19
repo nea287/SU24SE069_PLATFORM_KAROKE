@@ -12,6 +12,13 @@ using SU24SE069_PLATFORM_KAROKE_API.AppStarts.OptionSetup;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load configuration from appsettings.json and appsettings.{Environment}.json
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
+
 // Add services to the container.
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -165,6 +172,10 @@ builder.Services.AddMemoryCache();
 
 #region FluentValidator
 builder.Services.AddFluentValidator();
+builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
+{
+    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
+});
 #endregion
 var app = builder.Build();
 
