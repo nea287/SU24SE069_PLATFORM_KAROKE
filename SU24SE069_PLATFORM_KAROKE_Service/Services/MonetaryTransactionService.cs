@@ -44,14 +44,24 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         }
         public async Task<ResponseResult<MonetaryTransactionViewModel>> CreateTransaction(MonetaryTransactionRequestModel request)
         {
+            var package = await _packageRepository.GetByIdGuid(request.PackageId);
+            if(package == null)
+            {
+                return new ResponseResult<MonetaryTransactionViewModel>()
+                {
+                    Message = Constraints.CREATE_FAILED + "Không tìm thấy thông tin gói UP cần nạp.",
+                    result = false
+                };
+            }
             MonetaryTransactionViewModel rs1 = new MonetaryTransactionViewModel();
             try
             {
-
+                
                 var rs = _mapper.Map<MonetaryTransaction>(request);
 
                 rs.CreatedDate = DateTime.Now;
                 rs.Status = (int)PaymentStatus.PENDING;
+                rs.MoneyAmount = (decimal)package.MoneyAmount;
 
                 if (!await _repository.CreateMoneyTransaction(rs))
                 {
@@ -59,7 +69,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     throw new Exception();
                 }
                 rs1 = _mapper.Map<MonetaryTransactionViewModel>(rs);
-                rs1.PackageMoneyAmount = _packageRepository.GetByIdGuid(rs.PackageId).Result.MoneyAmount;
+                
+                rs1.PackageMoneyAmount = package.MoneyAmount;
+                rs1.MoneyAmount = package.MoneyAmount;
+                rs1.PackageName = package.PackageName;
             }
             catch (Exception)
             {
@@ -97,7 +110,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         result = false
                     };
                 }
-                
+
                 var Package = await _packageRepository.GetByIdGuid(request.PackageId);
 
                 if (Package == null)
@@ -158,8 +171,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 lock (_repository)
                 {
                     var data = _repository.GetAll()
-                                                //includeProperties: String.Join(",",
-                                                //SupportingFeature.GetNameIncludedProperties<MonetaryTransaction>()))
+                        //includeProperties: String.Join(",",
+                        //SupportingFeature.GetNameIncludedProperties<MonetaryTransaction>()))
                         .AsQueryable()
                         .ProjectTo<MonetaryTransactionViewModel>(_mapper.ConfigurationProvider)
                         .DynamicFilter(filter);
@@ -286,6 +299,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Value = _mapper.Map<MonetaryTransactionViewModel>(rs)
             };
         }
-        
+
     }
 }
