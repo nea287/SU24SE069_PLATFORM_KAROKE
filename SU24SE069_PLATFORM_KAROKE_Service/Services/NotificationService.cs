@@ -103,6 +103,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             return new ResponseResult<NotificationViewModel>()
             {
                 Message = Constraints.DELETE_SUCCESS,
+      
+                
                 result = true,
                 Value = _mapper.Map<NotificationViewModel>(data)
             };
