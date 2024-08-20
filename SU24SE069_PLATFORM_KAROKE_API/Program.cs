@@ -3,30 +3,38 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SU24SE069_PLATFORM_KAROKE_API.AppStarts;
 using SU24SE069_PLATFORM_KAROKE_DAO.DAO;
-using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json.Serialization;
-using SU24SE069_PLATFORM_KAROKE_Service;
 using SU24SE069_PLATFORM_KAROKE_Service.Validator;
 using SU24SE069_PLATFORM_KAROKE_Service.Commons;
 using SU24SE069_PLATFORM_KAROKE_API.AppStarts.OptionSetup;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Load configuration from appsettings.json and appsettings.{Environment}.json
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
 
+// Add services to the container.
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
 #region Momo
-//builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.ConfigureOptions<MoMoOptionsSetup>();
 #endregion
+
 #region FirebaseStorage
 builder.Services.ConfigureOptions<FirebaseCredentialOptionSetup>();
+#endregion
+
+#region payOS
+builder.Services.ConfigureOptions<PayOSCredentialOptionSetup>();
 #endregion
 
 #region AppStarts
@@ -164,6 +172,10 @@ builder.Services.AddMemoryCache();
 
 #region FluentValidator
 builder.Services.AddFluentValidator();
+builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
+{
+    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
+});
 #endregion
 var app = builder.Build();
 

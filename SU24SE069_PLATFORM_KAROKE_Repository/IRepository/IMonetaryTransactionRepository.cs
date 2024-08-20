@@ -11,5 +11,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
     {
         public Task<bool> CreateMoneyTransaction(MonetaryTransaction transaction);
         public Task<bool> UpdateMoneyTransaction(MonetaryTransaction transaction);
+        Task<MonetaryTransaction?> FindTransactionByPaymentCode(string paymentCode);
     }
 }

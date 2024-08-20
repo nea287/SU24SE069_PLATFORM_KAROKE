@@ -7,6 +7,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Package;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
@@ -72,5 +73,16 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
 
+        [HttpPost]
+        [Route("purchase/payos")]
+        public async Task<IActionResult> PurchasePackageWithPayOS([FromBody] MonetaryTransactionRequestModel transactionRequest)
+        {
+            var result = await _service.CreatePayOSPackagePurchasePayment(transactionRequest);
+            if (result.result == null || !result.result.Value)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 }

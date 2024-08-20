@@ -1,4 +1,5 @@
-﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,18 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             {
                 await InsertAsync(transaction);
                 await SaveChagesAsync();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return false;
             }
 
             return true;
+        }
+
+        public async Task<MonetaryTransaction?> FindTransactionByPaymentCode(string paymentCode)
+        {
+            return await GetDbSet().FirstOrDefaultAsync(t => t.PaymentCode == paymentCode);
         }
 
         public async Task<bool> UpdateMoneyTransaction(MonetaryTransaction transaction)
@@ -33,7 +40,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 await Update(transaction);
                 await SaveChagesAsync();
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return false;
             }

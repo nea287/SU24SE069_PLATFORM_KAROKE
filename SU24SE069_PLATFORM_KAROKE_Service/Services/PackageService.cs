@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Net.payOS.Types;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
@@ -8,6 +9,8 @@ using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.PayOS;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Package;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
@@ -16,11 +19,17 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
     {
         private readonly IMapper _mapper;
         private readonly IPackageRepository _repository;
+        private readonly IPayOSService _payOSService;
+        private readonly IMonetaryTransactionService _monetaryTransactionService;
+        private readonly IMonetaryTransactionRepository _monetaryTransactionRepository;
 
-        public PackageService(IPackageRepository repository, IMapper mapper)
+        public PackageService(IPackageRepository repository, IMapper mapper, IPayOSService payOSService, IMonetaryTransactionService monetaryTransactionService, IMonetaryTransactionRepository monetaryTransactionRepository)
         {
             _mapper = mapper;
             _repository = repository;
+            _payOSService = payOSService;
+            _monetaryTransactionService = monetaryTransactionService;
+            _monetaryTransactionRepository = monetaryTransactionRepository;
         }
         public async Task<ResponseResult<PackageViewModel>> CreatePackage(PackageRequestModel request)
         {
@@ -286,5 +295,67 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Value = _mapper.Map<PackageViewModel>(rs)
             };
         }
+
+        #region payOS
+
+        public async Task<ResponseResult<PayOSPackagePaymentResponse>> CreatePayOSPackagePurchasePayment(MonetaryTransactionRequestModel transactionRequest)
+        {
+            long orderCode = GenerateOrderCode();
+            transactionRequest.PaymentCode = orderCode.ToString();
+            // Create monetary transaction
+            var transactionResult = await _monetaryTransactionService.CreateTransaction(transactionRequest);
+            if (transactionResult == null || transactionResult.Value == null)
+            {
+                return new ResponseResult<PayOSPackagePaymentResponse>()
+                {
+                    Message = $"Tạo yêu cầu thanh toán bằng payOS thất bại. Vui lòng thử lại!",
+                    Value = null,
+                    result = false,
+                };
+            }
+            var transaction = transactionResult.Value;
+            var package = await _repository.GetByIdGuid((Guid)transaction.PackageId);
+
+            var listItems = GetTransactionListItemData(transaction);
+
+            string description = $"Người dùng nạp {package.StarNumber} UP";
+            var createPaymentLink = await _payOSService.CreatePaymentLink(orderCode, description, listItems);
+
+            if (createPaymentLink == null)
+            {
+                return new ResponseResult<PayOSPackagePaymentResponse>()
+                {
+                    Message = $"Tạo yêu cầu thanh toán bằng payOS thất bại. Vui lòng thử lại!",
+                    Value = null,
+                    result = false,
+                };
+            }
+
+            var paymentResponse = new PayOSPackagePaymentResponse();
+            paymentResponse.MapPayOSPaymentLink(createPaymentLink);
+            paymentResponse.MapTransactionData(transaction, package.StarNumber);
+            return new ResponseResult<PayOSPackagePaymentResponse>()
+            {
+                Message = "Thành công!",
+                result = true,
+                Value = paymentResponse
+            };
+        }
+
+        private List<ItemData> GetTransactionListItemData(MonetaryTransactionViewModel monetaryTransaction)
+        {
+            var list = new List<ItemData>();
+            ItemData item = new ItemData(monetaryTransaction.PackageName!, 1, (int)monetaryTransaction.MoneyAmount!);
+            list.Add(item);
+            return list;
+        }
+
+        private long GenerateOrderCode()
+        {
+            int count = _monetaryTransactionRepository.Count();
+            return count++;
+        }
+
+        #endregion
     }
 }
