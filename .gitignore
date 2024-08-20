@@ -371,3 +371,5 @@ FodyWeavers.xsd
 
 # Application's production environment configuration
 /SU24SE069_PLATFORM_KAROKE_API/appsettings.Production.json
+/SU24SE069_PLATFORM_KAROKE_API/Properties/ServiceDependencies/local/appInsights1.arm.json
+/SU24SE069_PLATFORM_KAROKE_API/Properties/serviceDependencies.local.json

@@ -1,14 +1,10 @@
 ﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
-using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.PayOS;
+using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Package;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
 {
@@ -20,5 +16,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<PackageViewModel>> EnablePackage(Guid id);
         public Task<DynamicModelResponse.DynamicModelsResponse<PackageViewModel>> GetPackages(PackageViewModel filter, PagingRequest paging, PackageOrderFilter orderFilter);
         public Task<DynamicModelResponse.DynamicModelsResponse<PackageViewModel>> GetPackagesForAdmin(string? filter, PagingRequest paging, PackageOrderFilter orderFilter);
+        Task<ResponseResult<PayOSPackagePaymentResponse>> CreatePayOSPackagePurchasePayment(MonetaryTransactionRequestModel transactionRequest);
     }
 }

@@ -162,6 +162,10 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<INotificationService, NotificationService>();
             #endregion
+
+            #region payOS
+            services.AddScoped<IPayOSService, PayOSService>();
+            #endregion
         }
 
     }

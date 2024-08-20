@@ -1,4 +1,5 @@
 ﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -20,6 +21,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public string? SongUrl { get; set; }
         public PostType? PostType { get; set; }
         public PostStatus? PostStatus { get; set; }
+        public AccountViewModel? Member { get; set; }
         [SwaggerIgnore]
         public  ICollection<PostViewModel>? InverseOriginPost { get; set; }
         [SwaggerIgnore]

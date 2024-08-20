@@ -433,6 +433,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     public enum PaymentType
     {
         MOMO = 1,
+        PAYOS = 2,
     }
 
     public enum PaymentStatus
