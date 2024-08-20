@@ -699,6 +699,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("caption");
 
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
+                entity.Property(e => e.Score).HasColumnType("float").HasColumnName("score");
 
                 entity.Property(e => e.OriginPostId).HasColumnName("origin_post_id");
 

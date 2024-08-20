@@ -22,6 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public int Status { get; set; }
         public int PostType { get; set; }
         public Guid? OriginPostId { get; set; }
+        public float? Score { get; set; }
 
         public virtual Account Member { get; set; } = null!;
         public virtual Post? OriginPost { get; set; }

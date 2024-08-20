@@ -21,13 +21,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public string? SongUrl { get; set; }
         public PostType? PostType { get; set; }
         public PostStatus? PostStatus { get; set; }
+        public float? Score { get; set; }
         public AccountViewModel? Member { get; set; }
         [SwaggerIgnore]
         public  ICollection<PostViewModel>? InverseOriginPost { get; set; }
         [SwaggerIgnore]
         public  ICollection<PostRatingViewModel>? PostRatings { get; set; }
         //[SwaggerIgnore]
-        //public  ICollection<PostShareViewModel>? PostShares { get; set; }
+        //public  ICollection<PostShareViewMode
+        //l>? PostShares { get; set; }
         //[SwaggerIgnore]
         //public  ICollection<ReportViewModel>? Reports { get; set; }
     }
