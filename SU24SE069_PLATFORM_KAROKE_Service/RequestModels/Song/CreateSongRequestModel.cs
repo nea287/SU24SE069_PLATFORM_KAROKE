@@ -1,4 +1,5 @@
-﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+﻿using Microsoft.AspNetCore.Http;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public string SongName { get; set; } = null!;
         public string? SongDescription { get; set; }
-        public string? SongUrl { get; set; }
+        public IFormFile? SongFile { get; set; }
+        //public string? SongUrl { get; set; }
         //public string? SongCode { get; set; }
         public DateTime? PublicDate { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
