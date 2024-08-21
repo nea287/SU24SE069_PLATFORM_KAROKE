@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using SU24SE069_PLATFORM_KAROKE_Service.Validator;
 using SU24SE069_PLATFORM_KAROKE_Service.Commons;
 using SU24SE069_PLATFORM_KAROKE_API.AppStarts.OptionSetup;
+using SU24SE069_PLATFORM_KAROKE_Service.BackgroundServices;
 using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -185,11 +186,19 @@ builder.Services.AddMemoryCache();
 
 #region FluentValidator
 builder.Services.AddFluentValidator();
+#endregion
+
+#region AzureInsight
 builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
 {
     ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
 });
 #endregion
+
+#region BackgroundServices
+builder.Services.AddHostedService<PendingMonetaryTransactionCancelService>();
+#endregion
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
