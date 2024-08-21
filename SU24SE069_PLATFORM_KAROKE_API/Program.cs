@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using SU24SE069_PLATFORM_KAROKE_Service.Validator;
 using SU24SE069_PLATFORM_KAROKE_Service.Commons;
 using SU24SE069_PLATFORM_KAROKE_API.AppStarts.OptionSetup;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,18 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
+#region FormFile
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 500 * 1024 * 1024; // Set file size limit to 500 MB
+});
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 500 * 1024 * 1024; // Set file size limit to 500 MB
+});
+#endregion
 
 #region Momo
 builder.Services.ConfigureOptions<MoMoOptionsSetup>();

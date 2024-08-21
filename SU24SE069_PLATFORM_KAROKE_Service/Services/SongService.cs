@@ -13,6 +13,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using System.Linq.Expressions;
 using SU24SE069_PLATFORM_KAROKE_Service.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Service.Filters.Song;
+using Microsoft.AspNetCore.Http;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
@@ -22,13 +23,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         private readonly ISongRepository _songRepository;
         private readonly IPurchasedSongRepository _purchasedSongRepository;
         private readonly IFavouriteSongRepository _favouriteSongRepository;
+        private readonly IFirebaseStorageService _firebaseStorageService;
 
-        public SongService(IMapper mapper, ISongRepository songRepository, IPurchasedSongRepository purchasedSongRepository, IFavouriteSongRepository favouriteSongRepository)
+        public SongService(IMapper mapper, ISongRepository songRepository, IPurchasedSongRepository purchasedSongRepository, IFavouriteSongRepository favouriteSongRepository, IFirebaseStorageService firebaseStorageService)
         {
             _mapper = mapper;
             _songRepository = songRepository;
             _purchasedSongRepository = purchasedSongRepository;
             _favouriteSongRepository = favouriteSongRepository;
+            _firebaseStorageService = firebaseStorageService;
         }
         #region Read
         public async Task<ResponseResult<SongDTO>> GetSong(Guid songId)
@@ -147,6 +150,17 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         public async Task<ResponseResult<SongViewModel>> CreateSong(CreateSongRequestModel request)
         {
             SongViewModel result = new SongViewModel();
+            // Handle file exceeding limitations
+            if(request.SongFile.Length > 500 * 1024 * 1024)
+            {
+                return new ResponseResult<SongViewModel>()
+                {
+                    Message = "File is larger than 500MB: " + request.SongFile.Length,
+                    result = false,
+                };
+            }
+            var (isSuccess, songUrl) = await _firebaseStorageService.UploadKaraokeVideoAsync(request.SongFile);
+
             try
             {
                 lock (_songRepository)
@@ -162,6 +176,30 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     }
 
                     var data = _mapper.Map<Song>(request);
+
+                    // Handle the file upload and generate the SongUrl internally
+                    if (request.SongFile != null)
+                    { 
+                        if (!isSuccess)
+                        {
+                            return new ResponseResult<SongViewModel>()
+                            {
+                                Message = "Failed to upload song video: " + songUrl,
+                                result = false,
+                            };
+                        }
+
+                        // Set the SongUrl to the URL of the uploaded file
+                        data.SongUrl = songUrl;
+                    }
+                    else
+                    {
+                        return new ResponseResult<SongViewModel>()
+                        {
+                            Message = "Song file is required.",
+                            result = false,
+                        };
+                    }
 
                     data.SongCode = songCode;
                     data.SongStatus = (int)SongStatus.ENABLE;

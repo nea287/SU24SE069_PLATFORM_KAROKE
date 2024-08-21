@@ -52,7 +52,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSong([FromBody] CreateSongRequestModel request)
+        public async Task<IActionResult> CreateSong([FromForm] CreateSongRequestModel request)
         {
             var rs = await _songService.CreateSong(request);
             
