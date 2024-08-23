@@ -1,5 +1,6 @@
 ﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels
         public AccountStatus? AccountStatus { get; set; }
         public string? Description { get; set; }
 
+        public AccountItemViewModel? CharacterItem { get; set; }
+        public AccountItemViewModel? RoomItem { get; set; }
 
         //public ICollection<AccountInventoryItem>? AccountInventoryItems { get; set; }
         //public ICollection<Conversation>? ConversationMemberId1Navigations { get; set; }

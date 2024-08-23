@@ -3,6 +3,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.IServices
         public Task<UserLoginResponse> Login(string username, string password);
         public Task<ResponseResult<AccountViewModel>> SignUp(CreateAccount1RequestModel request, string verifyCode);
         public Task<ResponseResult<AccountViewModel>> GetAccount(Guid accountId);
-        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccounts(AccountViewModel filter,
+        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccounts(AccountFilter filter,
             PagingRequest paging, AccountOrderFilter orderFilter);
         
         public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccountsForAdmin(string? filter,

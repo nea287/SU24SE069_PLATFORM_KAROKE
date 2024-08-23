@@ -24,10 +24,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song
         [RegularExpression(Constraints.VALIDATE_AMOUNT, ErrorMessage = Constraints.STAR_INVALID)]
         public decimal Price { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public ICollection<SongGenreRequestModel> SongGenres { get; set; }
+        public ICollection<SongGenreRequestModel> SongGenres { get; set; } = new List<SongGenreRequestModel>();
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public ICollection<SongArtistRequestModel> SongArtists { get; set; }
+        public ICollection<SongArtistRequestModel> SongArtists { get; set; } = new  List<SongArtistRequestModel>();
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
-        public ICollection<SongSingerRequestModel> SongSingers { get; set; }
+        public ICollection<SongSingerRequestModel> SongSingers { get; set; } = new List<SongSingerRequestModel>();
     }
 }

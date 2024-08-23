@@ -1,7 +1,9 @@
 ﻿using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
@@ -19,11 +21,19 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             _postService = postService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetPosts([FromQuery] PostViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] PostOrderFilter orderFilter = PostOrderFilter.UpdateTime) 
+        public async Task<IActionResult> GetPosts([FromQuery] PostFilter filter, [FromQuery] PagingRequest paging, [FromQuery] PostOrderFilter orderFilter = PostOrderFilter.UpdateTime) 
         {
             var rs = await _postService.GetPosts(filter, paging, orderFilter);
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        }
+
+        [HttpPut("update-score/{id:guid}")]
+        public async Task<IActionResult> UpdateScore(Guid id,[FromBody] float score)
+        {
+            var rs = await _postService.UpdateScore(id, score);
+
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
 
         [HttpPost]

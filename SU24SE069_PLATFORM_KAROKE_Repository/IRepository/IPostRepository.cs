@@ -14,5 +14,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
         public Task<bool> UpdatePost(Post post);
         public bool ExistedPost(Guid id);
         public Task<Post> GetPost(Guid id);
+        public Task<Post> GetPostOrign(Guid PostId);
     }
 }

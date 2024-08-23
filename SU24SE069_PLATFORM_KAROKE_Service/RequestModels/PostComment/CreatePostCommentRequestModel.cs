@@ -15,6 +15,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PostComment
         public PostCommentType CommentType { get; set; } = PostCommentType.PARENT;
         //public int Status { get; set; }
         //public DateTime CreateTime {get;set;}
+        public float? Score { get; set; }   
         public Guid? ParentCommentId { get; set; }
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public Guid MemberId { get; set; }

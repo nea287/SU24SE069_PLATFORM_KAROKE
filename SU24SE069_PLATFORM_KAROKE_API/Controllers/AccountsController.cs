@@ -9,6 +9,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
 using System.Net.NetworkInformation;
 
@@ -56,7 +57,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
         //[Authorize(Policy = Constraints.ADMIN_STAFF_ROLE)]
         [HttpGet]
-        public IActionResult GetAccounts([FromQuery] AccountViewModel filter,
+        public IActionResult GetAccounts([FromQuery] AccountFilter filter,
                 [FromQuery] PagingRequest paging, [FromQuery] AccountOrderFilter orderFilter = AccountOrderFilter.CreatedTime)
         {
             var rs = _service.GetAccounts(filter, paging, orderFilter);

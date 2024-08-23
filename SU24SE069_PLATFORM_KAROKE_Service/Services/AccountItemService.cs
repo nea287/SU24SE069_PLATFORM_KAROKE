@@ -10,6 +10,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
@@ -70,7 +71,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public DynamicModelResponse.DynamicModelsResponse<AccountItemViewModel> GetAccountInventories(AccountItemViewModel filter, PagingRequest paging, AccountInventoryItemOrderFilter orderFilter)
+        public DynamicModelResponse.DynamicModelsResponse<AccountItemViewModel> GetAccountInventories(AccountItemFilter filter, PagingRequest paging, AccountInventoryItemOrderFilter orderFilter)
         {
             (int, IQueryable<AccountItemViewModel>) result;
             try
@@ -91,7 +92,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                                .ProjectTo<AccountItemViewModel>(_mapper.ConfigurationProvider);
                     }
 
-                    data = data.DynamicFilter(filter);
+                    data = data.DynamicFilter(_mapper.Map<AccountItemViewModel>(filter));
 
                     string? colName = Enum.GetName(typeof(AccountInventoryItemOrderFilter), orderFilter);
 

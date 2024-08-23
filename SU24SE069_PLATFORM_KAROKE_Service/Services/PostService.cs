@@ -7,6 +7,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post;
@@ -119,7 +120,73 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public async Task<DynamicModelResponse.DynamicModelsResponse<PostViewModel>> GetPosts(PostViewModel filter, PagingRequest paging, PostOrderFilter orderFilter)
+        
+
+        public async Task<ResponseResult<PostViewModel>> UpdateScore(Guid id, float score)
+        {
+            PostViewModel result = new PostViewModel();
+            try
+            {
+                lock (_postRepository)
+                {
+                    var data1 = _postRepository.GetPost(id).Result;
+
+                    if (data1 is null)
+                    {
+                        return new ResponseResult<PostViewModel>()
+                        {
+                            Message = Constraints.NOT_FOUND,
+                            result = false,
+                        };
+                    }
+
+                    var data = _mapper.Map<Post>(data1);
+
+                    data.UpdateTime = DateTime.Now;
+                    data.Score = score; 
+
+                    if (data == null)
+                    {
+                        return new ResponseResult<PostViewModel>()
+                        {
+                            Message = Constraints.NOT_FOUND,
+                            result = false,
+                            Value = _mapper.Map<PostViewModel>(data)
+                        };
+                    }
+
+                    _postRepository.DetachEntity(data1);
+                    _postRepository.MotifyEntity(data);
+
+                    if (!_postRepository.UpdatePost(data1).Result)
+                    {
+                        _postRepository.DetachEntity(data);
+                        throw new Exception();
+                    }
+
+                    result = _mapper.Map<PostViewModel>(data);
+                };
+
+
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<PostViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false,
+                    Value = result
+                };
+            }
+
+            return new ResponseResult<PostViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+                Value = result
+            };
+        }
+        public async Task<DynamicModelResponse.DynamicModelsResponse<PostViewModel>> GetPosts(PostFilter filter, PagingRequest paging, PostOrderFilter orderFilter)
         {
             (int, IQueryable<PostViewModel>) result;
             try
@@ -131,7 +198,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                                                  SupportingFeature.GetNameIncludedProperties<Post>()))
                         .AsQueryable()
                         .ProjectTo<PostViewModel>(_mapper.ConfigurationProvider)
-                        .DynamicFilter(filter);
+                        .DynamicFilter(_mapper.Map<PostViewModel>(filter));
 
                     string? colName = Enum.GetName(typeof(PostOrderFilter), orderFilter);
 
@@ -159,6 +226,32 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Total = result.Item1
                 },
                 Results = result.Item2.ToList()
+            };
+        }
+
+        public async Task<ResponseResult<PostViewModel>> GetAveragedScoreByIdOrignPost(Guid id)
+        {
+            PostViewModel result = new PostViewModel();
+            try
+            {
+                lock (_postRepository)
+                {
+                    result = _mapper.Map<PostViewModel>(_postRepository.GetPostOrign(id).Result);
+                }
+            }catch(Exception)
+            {
+                return new ResponseResult<PostViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                    result = false
+                };
+            }
+
+            return new ResponseResult<PostViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Value = result,
+                result = true
             };
         }
 

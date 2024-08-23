@@ -15,6 +15,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
 using System.Net.NetworkInformation;
 using System.Security.Principal;
@@ -180,7 +181,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 
 
         public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccounts(
-            AccountViewModel filter, PagingRequest paging, AccountOrderFilter orderFilter)
+            AccountFilter filter, PagingRequest paging, AccountOrderFilter orderFilter)
         {
             (int, IQueryable<AccountViewModel>) result;
             try
@@ -204,7 +205,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 {
 
 
-                    data = data.DynamicFilter(filter);
+                    data = data.DynamicFilter(_mapper.Map<AccountViewModel>(filter));
 
                     string? colName = Enum.GetName(typeof(AccountOrderFilter), orderFilter);
 

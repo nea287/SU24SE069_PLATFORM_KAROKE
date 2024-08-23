@@ -24,6 +24,21 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return true;
         }
 
+        public async Task<Post> GetPostOrign(Guid PostId)
+        {
+            Post data = new Post();
+            try
+            {
+                data = await FirstOrDefaultAsync(x => x.OriginPostId == PostId);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            return data;
+        }
+
         public async Task<bool> DeletePost(Guid id)
         {
             try

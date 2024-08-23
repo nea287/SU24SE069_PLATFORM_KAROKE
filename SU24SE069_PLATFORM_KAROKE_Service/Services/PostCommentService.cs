@@ -104,14 +104,17 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public async Task<DynamicModelResponse.DynamicModelsResponse<PostCommentViewModel>> GetComments(PostCommentViewModel filter, PagingRequest paging, PostCommentFilter orderFilter)
+
+
+
+        public async Task<DynamicModelResponse.DynamicModelsResponse<PostCommentViewModel>> GetComments(Filters.PostCommentFilter filter, PagingRequest paging, PostCommentFilter orderFilter)
         {
             (int, IQueryable<PostCommentViewModel>) result;
             try
             {
                 var data = _repository.GetAll(includeProperties: String.Join(",", SupportingFeature.GetNameIncludedProperties<PostComment>()))
                                     .ProjectTo<PostCommentViewModel>(_mapper.ConfigurationProvider)
-                                    .DynamicFilter(filter);
+                                    .DynamicFilter(_mapper.Map<PostCommentViewModel>(filter));
 
                 string? colName = Enum.GetName(typeof(PostCommentFilter), orderFilter);
 
