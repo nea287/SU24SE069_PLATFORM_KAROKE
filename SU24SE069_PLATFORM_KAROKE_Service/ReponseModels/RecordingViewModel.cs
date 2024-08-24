@@ -30,6 +30,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public float? EndTime { get; set; }
         public float? Volume { get; set; }
         //public ICollection<Post> Posts { get; set; }
+        public string? SongUrl { get; set; }
+        public PurchasedSongViewModel? PurchasedSong { get; set; }
         public ICollection<VoiceAudioViewModel>? VoiceAudios { get; set; }
     }
 }
