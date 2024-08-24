@@ -219,6 +219,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
 
             #region Recording
+            CreateMap<RecordingFilter, RecordingViewModel>().ReverseMap();
             CreateMap<Recording, RecordingViewModel>()
                 .ForMember(x => x.RecordingType, dest => dest.MapFrom(src => (RecordingType)src.RecordingType))
                 .ForMember(x => x.SongUrl, dest => dest.MapFrom(src => src.PurchasedSong.Song.SongUrl))

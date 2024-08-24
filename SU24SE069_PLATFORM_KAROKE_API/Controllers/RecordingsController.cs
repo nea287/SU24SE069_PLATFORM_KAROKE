@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording;
@@ -21,7 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             _recordingService = recordingService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetRecordings([FromQuery] RecordingViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] RecordingOrderFilter orderFilter = RecordingOrderFilter.UpdatedDate)
+        public async Task<IActionResult> GetRecordings([FromQuery] RecordingFilter filter, [FromQuery] PagingRequest paging, [FromQuery] RecordingOrderFilter orderFilter = RecordingOrderFilter.UpdatedDate)
         {
             var rs =await _recordingService.GetRecordings(filter, paging, orderFilter);
 
