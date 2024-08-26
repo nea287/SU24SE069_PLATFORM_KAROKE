@@ -8,7 +8,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.MoneyTransaction;
 
-namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
+namespace SU24SE069_PLATFORM_KAROKE_API
 {
     [Route("api/transactions")]
     [ApiController]
@@ -27,7 +27,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
-        
+
         [HttpGet("get-transactions")]
         public async Task<IActionResult> GetTransactionsForAdmin([FromQuery] string? filter, [FromQuery] PagingRequest paging, MonetaryTransactionOrderFilter orderFilter = MonetaryTransactionOrderFilter.CreatedDate)
         {
@@ -41,7 +41,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         {
             var rs = await _service.CreateTransaction(request);
 
-            return rs.result.HasValue? (rs.result.Value? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+            return rs.result.HasValue ? rs.result.Value ? Ok(rs) : BadRequest(rs) : BadRequest(rs);
         }
 
         [HttpPut("{id:guid}")]
@@ -49,7 +49,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         {
             var rs = await _service.UpdateStatusTransaction(id, status);
 
-            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+            return rs.result.HasValue ? rs.result.Value ? Ok(rs) : BadRequest(rs) : BadRequest(rs);
         }
 
     }

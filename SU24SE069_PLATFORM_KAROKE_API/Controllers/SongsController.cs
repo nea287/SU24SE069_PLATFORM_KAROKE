@@ -51,14 +51,9 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
-
         [HttpPost]
-        public async Task<IActionResult> CreateSong([FromForm] CreateSongRequestModel request)
+        public async Task<IActionResult> CreateSong([FromBody] CreateSongRequestModel request)
         {
-            //if(!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
             var rs = await _songService.CreateSong(request);
             
             return rs.result.HasValue? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);

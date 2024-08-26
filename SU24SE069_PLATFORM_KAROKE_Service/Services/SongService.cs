@@ -14,6 +14,7 @@ using System.Linq.Expressions;
 using SU24SE069_PLATFORM_KAROKE_Service.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Service.Filters.Song;
 using Microsoft.AspNetCore.Http;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
@@ -146,20 +147,31 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         }
         #endregion
 
+        public async Task<(bool, string?)> GetUrlSong(IFormFile file)
+        {
+            (bool, string?) result;
+            try
+            {
+                if (file.Length > 500 * 1024 * 1024)
+                {
+                    return (false, null);
+                }
+                result = await _firebaseStorageService.UploadKaraokeVideoAsync(file);
+            }
+            catch (Exception)
+            {
+                return (false, null);
+            }
+            return result;
+
+        }
+
         #region Create
         public async Task<ResponseResult<SongViewModel>> CreateSong(CreateSongRequestModel request)
         {
             SongViewModel result = new SongViewModel();
             // Handle file exceeding limitations
-            if(request.SongFile.Length > 500 * 1024 * 1024)
-            {
-                return new ResponseResult<SongViewModel>()
-                {
-                    Message = "File is larger than 500MB: " + request.SongFile.Length,
-                    result = false,
-                };
-            }
-            var (isSuccess, songUrl) = await _firebaseStorageService.UploadKaraokeVideoAsync(request.SongFile);
+            
 
             try
             {
@@ -175,31 +187,33 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         };
                     }
 
-                    var data = _mapper.Map<Song>(request);
+                    byte[] fileBytes = Convert.FromBase64String(request.SongUrl);
 
-                    // Handle the file upload and generate the SongUrl internally
-                    if (request.SongFile != null)
-                    { 
-                        if (!isSuccess)
-                        {
-                            return new ResponseResult<SongViewModel>()
-                            {
-                                Message = "Failed to upload song video: " + songUrl,
-                                result = false,
-                            };
-                        }
+                    var stream = new MemoryStream(fileBytes);
 
-                        // Set the SongUrl to the URL of the uploaded file
-                        data.SongUrl = songUrl;
-                    }
-                    else
+                    var dataUrl = new FormFile(stream, 0, stream.Length, songCode+".mp4", songCode+".mp4")
+                    {
+                        Headers = new HeaderDictionary(),
+                        ContentType = "video/mp4"
+                    };
+
+                    var resultUrl = GetUrlSong(dataUrl).Result;
+
+                    if (!resultUrl.Item1)
                     {
                         return new ResponseResult<SongViewModel>()
                         {
-                            Message = "Song file is required.",
+                            Message = Constraints.LOAD_FAILED,
                             result = false,
                         };
                     }
+
+                    request.SongUrl = resultUrl.Item2; 
+
+
+                    var data = _mapper.Map<Song>(request);
+
+                    // Handle the file upload and generate the SongUrl internally
 
                     data.SongCode = songCode;
                     data.SongStatus = (int)SongStatus.ENABLE;

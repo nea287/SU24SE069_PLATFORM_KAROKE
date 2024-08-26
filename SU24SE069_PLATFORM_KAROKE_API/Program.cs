@@ -11,6 +11,8 @@ using SU24SE069_PLATFORM_KAROKE_Service.Commons;
 using SU24SE069_PLATFORM_KAROKE_API.AppStarts.OptionSetup;
 using SU24SE069_PLATFORM_KAROKE_Service.BackgroundServices;
 using Microsoft.AspNetCore.Http.Features;
+using Swashbuckle.AspNetCore.Annotations;
+using SU24SE069_PLATFORM_KAROKE_Service.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,7 +61,11 @@ builder.Services.AddAutoMapper(typeof(AutoMapperResolver));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.OperationFilter<SwaggerFileOperationFilter>();
+
     c.SchemaFilter<SwaggerIgnoreFilter>();
+    //c.SwaggerDoc("v1", new OpenApiInfo { Title = "KOK API", Version = "v1" });
+
     #region JWT
     //Khai bao bearer token trong swagger
     var securityScheme = new Microsoft.OpenApi.Models.OpenApiSecurityScheme
