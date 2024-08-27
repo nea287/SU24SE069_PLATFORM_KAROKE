@@ -122,7 +122,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
         
 
-        public async Task<ResponseResult<PostViewModel>> UpdateScore(Guid id, float score)
+        public async Task<ResponseResult<PostViewModel>> UploadScore(Guid id)
         {
             PostViewModel result = new PostViewModel();
             try
@@ -143,7 +143,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     var data = _mapper.Map<Post>(data1);
 
                     data.UpdateTime = DateTime.Now;
-                    data.Score = score; 
+                    data.Score =  _postRepository.GetPostScore(id).Result;
+
 
                     if (data == null)
                     {

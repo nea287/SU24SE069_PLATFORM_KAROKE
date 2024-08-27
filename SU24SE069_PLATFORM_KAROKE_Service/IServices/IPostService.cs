@@ -20,6 +20,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<PostViewModel>> Delete(Guid id);
         public Task<DynamicModelResponse.DynamicModelsResponse<PostViewModel>> GetPosts(PostFilter filter, PagingRequest paging, PostOrderFilter orderFilter);
         public Task<ResponseResult<PostViewModel>> UpdatePost(Guid id, string? caption);
-        public Task<ResponseResult<PostViewModel>> UpdateScore(Guid id, float score);
+        public Task<ResponseResult<PostViewModel>> UploadScore(Guid id);
     }
 }

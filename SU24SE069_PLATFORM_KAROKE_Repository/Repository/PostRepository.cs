@@ -1,4 +1,5 @@
-﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,24 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 return false;
             }
             return true;
+        }
+
+        public async Task<float> GetPostScore(Guid id)
+        {
+            float score = 0;
+            try
+            {
+                var postRating = await GetByIdGuid(id);
+
+
+                score = (postRating.PostRatings.Sum(r => r.Score))/(postRating.PostRatings.Count());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return score;
         }
 
         public async Task<Post> GetPostOrign(Guid PostId)

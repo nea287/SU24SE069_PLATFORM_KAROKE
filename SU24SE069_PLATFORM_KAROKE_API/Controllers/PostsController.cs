@@ -28,10 +28,10 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
 
-        [HttpPut("update-score/{id:guid}")]
-        public async Task<IActionResult> UpdateScore(Guid id,[FromBody] float score)
+        [HttpPut("upload-score/{id:guid}")]
+        public async Task<IActionResult> Uploadcore(Guid id)
         {
-            var rs = await _postService.UpdateScore(id, score);
+            var rs = await _postService.UploadScore(id);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
