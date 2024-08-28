@@ -19,6 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Report
         public ReportStatus ReportType { get; set; }
         public Guid CommentId { get; set; }
         public Guid PostId { get; set; }
-        public Guid RoomId { get; set; }       
+        public Guid RoomId { get; set; }  
+        public ReportTitle? ReportTitle { get; set; }
     }
 }

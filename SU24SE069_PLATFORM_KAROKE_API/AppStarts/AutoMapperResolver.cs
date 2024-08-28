@@ -396,6 +396,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.ReportType, dest => dest.MapFrom(src => (ReportType)src .ReportType))
                 .ForMember(x => x.ReportCategory, dest => dest.MapFrom(src => (ReportCatagory)src.ReportCategory))
                 .ForMember(x => x.Status, dest => dest.MapFrom(src => (ReportStatus)src.Status))
+                .ForMember(x => x.Title, dest => dest.MapFrom(src => (ReportTitle)src.Title))
                 .ForMember(x => x.Comment, dest => dest.MapFrom(src => src.Comment.Comment))
                 .ForMember(x => x.RoomLog, dest => dest.MapFrom(src => src.Room.RoomLog))  
                 .ForMember(x => x.PostCaption, dest => dest.MapFrom(src => src.Post.Caption))  

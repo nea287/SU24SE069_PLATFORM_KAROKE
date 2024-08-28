@@ -16,6 +16,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public Guid CommentId { get; set; }
         public Guid PostId { get; set; }
         public Guid RoomId { get; set; }
+        public int? Title { get; set; }
 
         public virtual Post Post { get; set; } = null!;
         public virtual Account ReportedAccount { get; set; } = null!;

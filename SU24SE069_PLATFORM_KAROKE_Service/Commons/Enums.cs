@@ -43,7 +43,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
     public enum ReportOrderFilter
     {
-        ReportId, ReporterId, ReportedAccountId, ReportCategory, Status, Reason, CreateTime, ReportType, CommentId, PostId, RoomId
+        ReportId, ReporterId, ReportedAccountId, ReportCategory, Status, Reason, CreateTime, ReportType, CommentId, PostId, RoomId, Title
     }
 
     public enum PostRateOrderFilter
@@ -496,6 +496,12 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     #endregion
 
     #region Report
+    public enum ReportTitle
+    {
+        FRAUT_OR_SCAM,
+        HARASSMENT_BEHAVIOUR
+
+    }
     public enum ReportStatus
     {
         PROCCESSING,
