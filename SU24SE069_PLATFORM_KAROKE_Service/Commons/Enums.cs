@@ -475,6 +475,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     {
         ACTIVE,
         DEACTIVE,
+        TEMPORARY_DISABLE
     }
     public enum PostType
     {
@@ -492,6 +493,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
     {
         DEACTIVE,
         ACTIVE,
+        TEMPORARY_DISABLE
     }
     #endregion
 

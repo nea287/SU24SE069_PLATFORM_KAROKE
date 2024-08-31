@@ -52,5 +52,13 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
+        
+        [HttpPut("change-status/{id:guid}")]
+        public async Task<IActionResult> UpdateStatusComment(PostCommentStatus request, Guid id)
+        {
+            var rs = await _service.ChangeStatusComment(id, request);
+
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+        }
     }
 }

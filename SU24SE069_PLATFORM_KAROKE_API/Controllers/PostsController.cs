@@ -51,6 +51,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
+        
+        [HttpPut("change-status/{id:guid}")]
+        public async Task<IActionResult> UpdateStatusPost(Guid id, [FromBody] PostStatus status)
+        {
+            var rs = await _postService.ChangeStatus(id, status);
+
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+        }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeletePost(Guid id)

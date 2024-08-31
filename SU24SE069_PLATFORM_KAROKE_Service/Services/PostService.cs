@@ -256,6 +256,72 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
+
+        public async Task<ResponseResult<PostViewModel>> ChangeStatus(Guid id, PostStatus status)
+        {
+            PostViewModel result = new PostViewModel();
+            try
+            {
+                lock (_postRepository)
+                {
+                    var data1 = _postRepository.GetPost(id).Result;
+
+                    if (data1 is null)
+                    {
+                        return new ResponseResult<PostViewModel>()
+                        {
+                            Message = Constraints.NOT_FOUND,
+                            result = false,
+                        };
+                    }
+
+                    var data = _mapper.Map<Post>(data1);
+
+                    data.UpdateTime = DateTime.Now;
+                    data.Status = (int)status;
+
+                    if (data == null)
+                    {
+                        return new ResponseResult<PostViewModel>()
+                        {
+                            Message = Constraints.NOT_FOUND,
+                            result = false,
+                            Value = _mapper.Map<PostViewModel>(data)
+                        };
+                    }
+
+                    _postRepository.DetachEntity(data1);
+                    _postRepository.MotifyEntity(data);
+
+                    if (!_postRepository.UpdatePost(data1).Result)
+                    {
+                        _postRepository.DetachEntity(data);
+                        throw new Exception();
+                    }
+
+                    result = _mapper.Map<PostViewModel>(data);
+                };
+
+
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<PostViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false,
+                    Value = result
+                };
+            }
+
+            return new ResponseResult<PostViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+                Value = result
+            };
+        }
+
         public async Task<ResponseResult<PostViewModel>> UpdatePost(Guid id, string? caption)
         {
             PostViewModel result = new PostViewModel();
@@ -320,5 +386,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Value = result
             };
         }
+
+
     }
 }

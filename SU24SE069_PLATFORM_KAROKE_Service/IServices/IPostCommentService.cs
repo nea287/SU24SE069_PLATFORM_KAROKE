@@ -19,5 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<PostCommentViewModel>> UpdatePostComment(UpdatePostComment request, Guid id);
         public Task<DynamicModelResponse.DynamicModelsResponse<PostCommentViewModel>> GetComments(Filters.PostCommentFilter filter, PagingRequest paging, PostCommentFilter orderFilter);
         public Task<ResponseResult<PostCommentViewModel>> DeletePostComment(Guid id);
+
+        public Task<ResponseResult<PostCommentViewModel>> ChangeStatusComment(Guid id, PostCommentStatus status);
     }
 }
