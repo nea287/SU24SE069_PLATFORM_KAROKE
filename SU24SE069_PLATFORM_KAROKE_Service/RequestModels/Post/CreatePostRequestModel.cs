@@ -24,4 +24,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Post
         //public ICollection<CreatePostRateRequestModel>? PostRates { get; set; }
         public ICollection<CreateReportRequestModel>? Reports { get; set; }
     }
+    public class CaptionPostRequestModel
+    {
+        public string? Caption { get; set; }
+    }
 }

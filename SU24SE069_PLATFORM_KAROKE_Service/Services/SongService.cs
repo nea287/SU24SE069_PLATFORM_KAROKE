@@ -13,6 +13,8 @@ using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using System.Linq.Expressions;
 using SU24SE069_PLATFORM_KAROKE_Service.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Service.Filters.Song;
+using Microsoft.AspNetCore.Http;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
@@ -22,13 +24,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         private readonly ISongRepository _songRepository;
         private readonly IPurchasedSongRepository _purchasedSongRepository;
         private readonly IFavouriteSongRepository _favouriteSongRepository;
+        private readonly IFirebaseStorageService _firebaseStorageService;
 
-        public SongService(IMapper mapper, ISongRepository songRepository, IPurchasedSongRepository purchasedSongRepository, IFavouriteSongRepository favouriteSongRepository)
+        public SongService(IMapper mapper, ISongRepository songRepository, IPurchasedSongRepository purchasedSongRepository, IFavouriteSongRepository favouriteSongRepository, IFirebaseStorageService firebaseStorageService)
         {
             _mapper = mapper;
             _songRepository = songRepository;
             _purchasedSongRepository = purchasedSongRepository;
             _favouriteSongRepository = favouriteSongRepository;
+            _firebaseStorageService = firebaseStorageService;
         }
         #region Read
         public async Task<ResponseResult<SongDTO>> GetSong(Guid songId)
@@ -143,10 +147,32 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         }
         #endregion
 
+        public async Task<(bool, string?)> GetUrlSong(IFormFile file)
+        {
+            (bool, string?) result;
+            try
+            {
+                if (file.Length > 500 * 1024 * 1024)
+                {
+                    return (false, null);
+                }
+                result = await _firebaseStorageService.UploadKaraokeVideoAsync(file);
+            }
+            catch (Exception)
+            {
+                return (false, null);
+            }
+            return result;
+
+        }
+
         #region Create
         public async Task<ResponseResult<SongViewModel>> CreateSong(CreateSongRequestModel request)
         {
             SongViewModel result = new SongViewModel();
+            // Handle file exceeding limitations
+            
+
             try
             {
                 lock (_songRepository)
@@ -161,7 +187,33 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         };
                     }
 
+                    byte[] fileBytes = Convert.FromBase64String(request.SongUrl);
+
+                    var stream = new MemoryStream(fileBytes);
+
+                    var dataUrl = new FormFile(stream, 0, stream.Length, songCode+".mp4", songCode+".mp4")
+                    {
+                        Headers = new HeaderDictionary(),
+                        ContentType = "video/mp4"
+                    };
+
+                    var resultUrl = GetUrlSong(dataUrl).Result;
+
+                    if (!resultUrl.Item1)
+                    {
+                        return new ResponseResult<SongViewModel>()
+                        {
+                            Message = Constraints.LOAD_FAILED,
+                            result = false,
+                        };
+                    }
+
+                    request.SongUrl = resultUrl.Item2; 
+
+
                     var data = _mapper.Map<Song>(request);
+
+                    // Handle the file upload and generate the SongUrl internally
 
                     data.SongCode = songCode;
                     data.SongStatus = (int)SongStatus.ENABLE;

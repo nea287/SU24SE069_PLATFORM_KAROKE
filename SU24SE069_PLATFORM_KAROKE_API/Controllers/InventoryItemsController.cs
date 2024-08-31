@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
@@ -24,7 +25,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetInventoryItems([FromQuery] AccountItemViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] AccountInventoryItemOrderFilter orderFilter = AccountInventoryItemOrderFilter.ActivateDate)
+        public IActionResult GetInventoryItems([FromQuery] AccountItemFilter filter, [FromQuery] PagingRequest paging, [FromQuery] AccountInventoryItemOrderFilter orderFilter = AccountInventoryItemOrderFilter.ActivateDate)
         {
             var rs = _inventoryService.GetAccountInventories(filter, paging, orderFilter);
 

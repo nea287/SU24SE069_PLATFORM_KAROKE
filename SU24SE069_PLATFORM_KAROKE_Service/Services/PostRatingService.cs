@@ -34,10 +34,26 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 if(_repository.ExistedRating(request.MemberId, request.PostId))
                 {
+                    //return new ResponseResult<PostRatingViewModel>()
+                    //{
+                    //    Message = Constraints.INFORMATION_EXISTED,
+                    //    result = false,
+                    //};
+                    await _repository.DisponseAsync();
+                    if (!await _repository.UpdateRating(_mapper.Map<PostRating>(request)))
+                    {
+                        return new ResponseResult<PostRatingViewModel>()
+                        {
+                            Message = Constraints.UPDATE_FAILED,
+                            result = false,
+                        };
+                    }
+
                     return new ResponseResult<PostRatingViewModel>()
                     {
-                        Message = Constraints.INFORMATION_EXISTED,
-                        result = false,
+                        Message = Constraints.UPDATE_SUCCESS,
+                        result = true,
+                        Value = _mapper.Map<PostRatingViewModel>(request)
                     };
                 }
 

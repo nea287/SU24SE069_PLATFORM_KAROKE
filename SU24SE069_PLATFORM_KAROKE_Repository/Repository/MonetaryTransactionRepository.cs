@@ -11,8 +11,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
     public class MonetaryTransactionRepository : BaseRepository<MonetaryTransaction>, IMonetaryTransactionRepository
     {
-
-
         public async Task<bool> CreateMoneyTransaction(MonetaryTransaction transaction)
         {
             try
@@ -47,6 +45,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             }
 
             return true;
+        }
+
+        public async Task<List<MonetaryTransaction>> GetTransactionsByStatus(int transactionStatus)
+        {
+            return await GetDbSet().Where(t => t.Status == transactionStatus).ToListAsync();
         }
     }
 }

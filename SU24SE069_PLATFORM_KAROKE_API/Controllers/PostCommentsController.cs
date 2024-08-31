@@ -22,7 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetComments([FromQuery] PostCommentViewModel filter, [FromQuery] PagingRequest paging, [FromQuery] PostCommentFilter orderFilter = PostCommentFilter.UploadTime)
+        public async Task<IActionResult> GetComments([FromQuery] SU24SE069_PLATFORM_KAROKE_Service.Filters.PostCommentFilter filter, [FromQuery] PagingRequest paging, [FromQuery] PostCommentFilter orderFilter = PostCommentFilter.UploadTime)
         {
             var rs = await _service.GetComments(filter, paging, orderFilter);
 
@@ -49,6 +49,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         public async Task<IActionResult> UpdateComment(UpdatePostComment request, Guid id)
         {
             var rs = await _service.UpdatePostComment(request, id);
+
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+        }
+        
+        [HttpPut("change-status/{id:guid}")]
+        public async Task<IActionResult> UpdateStatusComment(PostCommentStatus request, Guid id)
+        {
+            var rs = await _service.ChangeStatusComment(id, request);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }

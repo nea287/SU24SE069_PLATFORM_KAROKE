@@ -9,6 +9,10 @@ using System.Text.Json.Serialization;
 using SU24SE069_PLATFORM_KAROKE_Service.Validator;
 using SU24SE069_PLATFORM_KAROKE_Service.Commons;
 using SU24SE069_PLATFORM_KAROKE_API.AppStarts.OptionSetup;
+using SU24SE069_PLATFORM_KAROKE_Service.BackgroundServices;
+using Microsoft.AspNetCore.Http.Features;
+using Swashbuckle.AspNetCore.Annotations;
+using SU24SE069_PLATFORM_KAROKE_Service.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +28,18 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
+#region FormFile
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 500 * 1024 * 1024; // Set file size limit to 500 MB
+});
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 500 * 1024 * 1024; // Set file size limit to 500 MB
+});
+#endregion
 
 #region Momo
 builder.Services.ConfigureOptions<MoMoOptionsSetup>();
@@ -45,7 +61,11 @@ builder.Services.AddAutoMapper(typeof(AutoMapperResolver));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.OperationFilter<SwaggerFileOperationFilter>();
+
     c.SchemaFilter<SwaggerIgnoreFilter>();
+    //c.SwaggerDoc("v1", new OpenApiInfo { Title = "KOK API", Version = "v1" });
+
     #region JWT
     //Khai bao bearer token trong swagger
     var securityScheme = new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -172,11 +192,19 @@ builder.Services.AddMemoryCache();
 
 #region FluentValidator
 builder.Services.AddFluentValidator();
+#endregion
+
+#region AzureInsight
 builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
 {
     ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
 });
 #endregion
+
+#region BackgroundServices
+builder.Services.AddHostedService<PendingMonetaryTransactionCancelService>();
+#endregion
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

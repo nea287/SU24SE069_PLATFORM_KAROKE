@@ -21,6 +21,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
     {
         private readonly ISongService _songService;
 
+
         public SongsController(ISongService songService)
         {
             _songService = songService;
@@ -50,7 +51,6 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
-
         [HttpPost]
         public async Task<IActionResult> CreateSong([FromBody] CreateSongRequestModel request)
         {
@@ -58,6 +58,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             
             return rs.result.HasValue? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : NotFound(rs);
         }
+
+
 
         [HttpPut("{songId:guid}")]
         public async Task<IActionResult> UpdateSong(Guid songId, [FromBody] UpdateSongRequestModel request)

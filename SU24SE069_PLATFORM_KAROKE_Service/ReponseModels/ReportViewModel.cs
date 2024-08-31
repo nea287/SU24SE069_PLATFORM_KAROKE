@@ -23,5 +23,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public string? Comment {  get; set; }   
         public string? RoomLog { get; set; }
         public string? PostCaption { get; set; }   
+        public ReportTitle? Title { get; set; }
     }
 }

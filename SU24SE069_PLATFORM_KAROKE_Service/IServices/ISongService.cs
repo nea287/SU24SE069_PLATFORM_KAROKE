@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
@@ -21,6 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<SongDTO>> GetSong(Guid id);
         public Task<ResponseResult<SongViewModel>> UpdateSong(Guid id, UpdateSongRequestModel song);
         public Task<ResponseResult<SongViewModel>> DeleteSong(Guid id);
+        public Task<(bool, string?)> GetUrlSong(IFormFile file);
         public Task<ResponseResult<SongViewModel>> CreateSong(CreateSongRequestModel request);
         public DynamicModelResponse.DynamicModelsResponse<SongViewModel> GetSongs(SongFilter filter, PagingRequest paging, SongOrderFilter orderFilter);
         public DynamicModelResponse.DynamicModelsResponse<SongViewModel> GetSongsForAdmin(string? filter, PagingRequest paging, SongOrderFilter orderFilter);

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Org.BouncyCastle.Asn1.Ocsp;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
@@ -28,6 +29,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             _mapper = mapper;
             _repository = repository;
         }
+
+
         public async Task<ResponseResult<PostCommentViewModel>> CreatePostComment(CreatePostCommentRequestModel requestModel)
         {
             PostComment cmt = new PostComment();    
@@ -80,7 +83,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     };
                 }
 
-                data.Status = (int)PostCommentStatus.DEACTIVE;
+                data.Status = (int)PostCommentStatus.TEMPORARY_DISABLE;
 
                 if (!await _repository.UpdateComment(data))
                 {
@@ -104,14 +107,17 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public async Task<DynamicModelResponse.DynamicModelsResponse<PostCommentViewModel>> GetComments(PostCommentViewModel filter, PagingRequest paging, PostCommentFilter orderFilter)
+
+
+
+        public async Task<DynamicModelResponse.DynamicModelsResponse<PostCommentViewModel>> GetComments(Filters.PostCommentFilter filter, PagingRequest paging, PostCommentFilter orderFilter)
         {
             (int, IQueryable<PostCommentViewModel>) result;
             try
             {
                 var data = _repository.GetAll(includeProperties: String.Join(",", SupportingFeature.GetNameIncludedProperties<PostComment>()))
                                     .ProjectTo<PostCommentViewModel>(_mapper.ConfigurationProvider)
-                                    .DynamicFilter(filter);
+                                    .DynamicFilter(_mapper.Map<PostCommentViewModel>(filter));
 
                 string? colName = Enum.GetName(typeof(PostCommentFilter), orderFilter);
 
@@ -140,6 +146,48 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Results = result.Item2.ToList(),
             };
         }
+
+        public async Task<ResponseResult<PostCommentViewModel>> ChangeStatusComment(Guid id, PostCommentStatus status)
+        {
+            PostComment data = new PostComment();
+            try
+            {
+                data = await _repository.GetByIdGuid(id);
+                if (data is null)
+                {
+                    return new ResponseResult<PostCommentViewModel>()
+                    {
+                        Message = Constraints.NOT_FOUND,
+                        result = false
+                    };
+                }
+
+                data.Status = (int)status;
+                data.CommentId = id;
+
+                if (!await _repository.UpdateComment(data))
+                {
+                    _repository.DetachEntity(data);
+                    throw new Exception();
+                }
+
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<PostCommentViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false
+                };
+            }
+
+            return new ResponseResult<PostCommentViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+            };
+        }
+
 
         public async Task<ResponseResult<PostCommentViewModel>> UpdatePostComment(UpdatePostComment request, Guid id)
         {

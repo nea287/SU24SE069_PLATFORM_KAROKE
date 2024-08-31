@@ -1,16 +1,13 @@
 ﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
-using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels;
-using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
-using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
+namespace SU24SE069_PLATFORM_KAROKE_Service.Filters
 {
-    public class PostViewModel
+    public class PostFilter
     {
         public Guid? PostId { get; set; }
         public string? Caption { get; set; }
@@ -22,10 +19,5 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public PostType? PostType { get; set; }
         public PostStatus? PostStatus { get; set; }
         public float? Score { get; set; }
-        public AccountViewModel? Member { get; set; }
-        [SwaggerIgnore]
-        public  ICollection<PostViewModel>? InverseOriginPost { get; set; }
-        [SwaggerIgnore]
-        public  ICollection<PostRatingViewModel>? PostRatings { get; set; }
     }
 }

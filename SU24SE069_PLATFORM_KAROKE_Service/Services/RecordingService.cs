@@ -9,6 +9,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Repository.Repository;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Recording;
@@ -153,7 +154,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public async Task<DynamicModelResponse.DynamicModelsResponse<RecordingViewModel>> GetRecordings(RecordingViewModel filter, PagingRequest paging, RecordingOrderFilter orderFilter)
+        public async Task<DynamicModelResponse.DynamicModelsResponse<RecordingViewModel>> GetRecordings(RecordingFilter filter, PagingRequest paging, RecordingOrderFilter orderFilter)
         {
             (int, IQueryable<RecordingViewModel>) result;
             try
@@ -166,7 +167,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         .AsQueryable()
 
                         .ProjectTo<RecordingViewModel>(_mapper.ConfigurationProvider)
-                        .DynamicFilter(filter);
+                        .DynamicFilter(_mapper.Map<RecordingViewModel>(filter));
 
                     string? colName = Enum.GetName(typeof(RecordingOrderFilter), orderFilter);
 

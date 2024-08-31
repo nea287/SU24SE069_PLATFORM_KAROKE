@@ -31,6 +31,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Singer;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Song;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.SupportRequest;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.VoiceAudio;
+using PostCommentFilter = SU24SE069_PLATFORM_KAROKE_Service.Filters.PostCommentFilter;
 
 namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
 {
@@ -54,12 +55,43 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<Account, CreateAccountRequestModel>().ReverseMap();
             CreateMap<Account, CreateAccount1RequestModel>().ReverseMap();
             CreateMap<AccountViewModel, CreateAccount1RequestModel>().ReverseMap();
+            CreateMap<AccountViewModel, AccountFilter>().ReverseMap();
+            CreateMap<Account, AccountModel>()
+                .ForMember(x => x.Role, dest => dest.MapFrom(src => (AccountRole)src.Role))
+                .ForMember(x => x.Gender, dest => dest.MapFrom(src => (AccountGender)src.Gender))
+                .ForMember(x => x.AccountStatus, dest => dest.MapFrom(src => (AccountStatus)src.AccountStatus))
+                .ForMember(x => x.CharaterItemCode, dest =>
+                {
+                    dest.MapFrom(a => a.CharacterItem != null ? a.CharacterItem.Item.ItemCode : (string?)null);
+                })
+                .ForMember(x => x.RoomItemCode, dest =>
+                {
+                    dest.MapFrom(a => a.RoomItem != null ? a.RoomItem.Item.ItemCode : (string?)null);
+                })
+                .ReverseMap();
+            CreateMap<AccountViewModel, AccountModel>()
+
+                // .ForMember(x => x.Role, dest => dest.MapFrom(src => (AccountRole)src.Role))
+                //.ForMember(x => x.Gender, dest => dest.MapFrom(src => (AccountGender)src.Gender))
+                //.ForMember(x => x.AccountStatus, dest => dest.MapFrom(src => (AccountStatus)src.AccountStatus))
+                //.ForMember(x => x.CharaterItemCode, dest =>
+                //{
+                //    dest.MapFrom(a => a.CharacterItem != null ? a.CharacterItem.Item.ItemCode : (string?)null);
+                //})
+                //.ForMember(x => x.RoomItemCode, dest =>
+                //{
+                //    dest.MapFrom(a => a.RoomItem != null ? a.RoomItem.Item.ItemCode : (string?)null);
+                //})
+                .ReverseMap();
             CreateMap<AccountViewModel, CreateAccountRequestModel>().ReverseMap();
             CreateMap<Account, UpdateAccountByMailRequestModel>().ReverseMap();
             CreateMap<Account, UpdateAccountRequestModel>().ReverseMap();
             #endregion
 
             #region Song
+            CreateMap<Song, SongModel>()
+                  .ForMember(x => x.SongStatus, dest => dest.MapFrom(opt => (SongStatus)opt.SongStatus))
+                .ReverseMap();
             CreateMap<Song, SongViewModel>()
                 .ForMember(x => x.SongStatus, dest => dest.MapFrom(opt => (SongStatus)opt.SongStatus))
                 .ReverseMap();
@@ -145,7 +177,15 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.ItemType, dest => dest.MapFrom(src => (ItemType)src.ItemType))
                 .ForMember(x => x.ItemStatus, dest => dest.MapFrom(src => (ItemStatus)src.ItemStatus))
                 .ForMember(x => x.CreatorMail, dest => dest.MapFrom(src => src.Creator.Email))
+     
                 .ReverseMap();
+
+            CreateMap<Item, ItemModel>()
+                .ForMember(x => x.ItemType, dest => dest.MapFrom(src => (ItemType)src.ItemType))
+                .ForMember(x => x.ItemStatus, dest => dest.MapFrom(src => (ItemStatus)src.ItemStatus))
+                .ForMember(x => x.CreatorMail, dest => dest.MapFrom(src => src.Creator.Email))
+                .ReverseMap();
+
 
             CreateMap<Item, ItemFilter>()
                 .ForMember(x => x.ItemType, dest => dest.MapFrom(src => (ItemType)src.ItemType))
@@ -167,16 +207,22 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
 
             #region AccountInventoryItem
+            CreateMap<AccountItemFilter, AccountItemViewModel>().ReverseMap();
             CreateMap<AccountItem, AccountItemViewModel>()
                 .ForMember(x => x.ItemStatus, dest => dest.MapFrom(opt => (ItemStatus)opt.ItemStatus))
+                .ForMember(x => x.ItemType, dest =>  dest.MapFrom(a => (ItemType)a.Item.ItemType))
+                .ForMember(x => x.Item, dest => dest.MapFrom(a => a.Item
+                ))
                 .ReverseMap();
 
             CreateMap<AccountItem, CreateAccountInventoryItemRequestModel>().ReverseMap();
             #endregion
 
             #region Recording
+            CreateMap<RecordingFilter, RecordingViewModel>().ReverseMap();
             CreateMap<Recording, RecordingViewModel>()
                 .ForMember(x => x.RecordingType, dest => dest.MapFrom(src => (RecordingType)src.RecordingType))
+                .ForMember(x => x.SongUrl, dest => dest.MapFrom(src => src.PurchasedSong.Song.SongUrl))
                 .ReverseMap();
             CreateMap<Recording, CreateRecordingRequestModel>().ReverseMap();
             CreateMap<Recording, UpdateRecording1RequestModel>()
@@ -312,9 +358,12 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
 
             #region PostComment
-            CreateMap<PostComment, PostCommentViewModel>()
+            CreateMap<PostComment, PostCommentViewModel>().ReverseMap();
+            CreateMap<PostCommentFilter, PostCommentViewModel>().ReverseMap();
+            CreateMap<PostCommentViewModel, PostComment>()
                 .ForMember(x => x.Status, dest => dest.MapFrom(src => (PostCommentStatus)src.Status))
                 .ForMember(x => x.CommentType, dest => dest.MapFrom(src => (PostCommentType)src.CommentType))
+                .ForMember(x => x.Member, dest => dest.MapFrom(src => src.Member))
                 .ReverseMap();
 
             CreateMap<PostComment, CreatePostCommentRequestModel>().ReverseMap();
@@ -323,6 +372,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
 
             #region Post
             CreateMap<Post, CreatePostRequestModel>().ReverseMap();
+            CreateMap<PostFilter, PostViewModel>().ReverseMap();
             CreateMap<Post, PostViewModel>()
                 .ForMember(e => e.PostStatus, dest => dest.MapFrom(opt => (PostStatus)opt.Status))
                 .ForMember(e => e.PostType, dest => dest.MapFrom(opt => (PostType)opt.PostType))
@@ -346,6 +396,10 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.ReportType, dest => dest.MapFrom(src => (ReportType)src .ReportType))
                 .ForMember(x => x.ReportCategory, dest => dest.MapFrom(src => (ReportCatagory)src.ReportCategory))
                 .ForMember(x => x.Status, dest => dest.MapFrom(src => (ReportStatus)src.Status))
+                .ForMember(x => x.Title, dest => 
+         
+                    dest.MapFrom(src => (ReportTitle?)src.Title)
+                )
                 .ForMember(x => x.Comment, dest => dest.MapFrom(src => src.Comment.Comment))
                 .ForMember(x => x.RoomLog, dest => dest.MapFrom(src => src.Room.RoomLog))  
                 .ForMember(x => x.PostCaption, dest => dest.MapFrom(src => src.Post.Caption))  
