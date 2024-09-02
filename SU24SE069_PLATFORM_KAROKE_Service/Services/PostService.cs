@@ -190,6 +190,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             (int, IQueryable<PostViewModel>) result;
             try
             {
+                await _postRepository.DisponseAsync();
                 lock (_postRepository)
                 {
                     var data = _postRepository.UpdateScores(
@@ -216,6 +217,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     result = data.PagingIQueryable(paging.page, paging.pageSize,
                             Constraints.LimitPaging, Constraints.DefaultPaging);
+
                 }
             }
             catch (Exception)

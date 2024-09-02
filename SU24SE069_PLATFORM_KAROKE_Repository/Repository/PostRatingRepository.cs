@@ -14,6 +14,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
         {
             try
             {
+                await DisponseAsync();
+
                 await InsertAsync(request);
                 await SaveChagesAsync();
             }catch(Exception ex)
@@ -28,6 +30,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
         {
             try
             {
+                await DisponseAsync();
+
                 var data = await FirstOrDefaultAsync(x => x.MemberId == memberId && x.PostId == postId);
 
                 Delete(data);
@@ -63,6 +67,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
         {
             try
             {
+                await DisponseAsync();
                 await Update(request);
                 await SaveChagesAsync();
             }catch(Exception ex)

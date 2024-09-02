@@ -214,6 +214,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.DAO
         {
             _context.Entry(entity).State = EntityState.Detached;
         }
+        
+        public void DetachEntity(IQueryable<TEntity> entity)
+        {
+            _context.Entry(entity).State = EntityState.Detached;
+        }
         public void MotifyEntity(TEntity entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
