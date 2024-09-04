@@ -190,12 +190,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             (int, IQueryable<PostViewModel>) result;
             try
             {
-                await _postRepository.DisponseAsync();
                 lock (_postRepository)
                 {
                     var data = _postRepository.UpdateScores(
                                                  String.Join(",",
-                                                 SupportingFeature.GetNameIncludedProperties<Post>()))
+                                                 SupportingFeature.GetNameIncludedProperties<Post>())).Result
                         .AsQueryable()
                         .ProjectTo<PostViewModel>(_mapper.ConfigurationProvider)
                         .DynamicFilter(_mapper.Map<PostViewModel>(filter));
