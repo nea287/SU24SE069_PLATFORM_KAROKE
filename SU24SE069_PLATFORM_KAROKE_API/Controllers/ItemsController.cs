@@ -46,6 +46,16 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.Results.IsNullOrEmpty()? NotFound(rs) : Ok(rs);
         }
 
+        [HttpGet("get-shop-item/{memberId:guid}")]
+        public async Task<IActionResult> GetShopItemOfAMember(Guid memberId, [FromQuery] ItemFilter filter, [FromQuery] PagingRequest paging, [FromQuery] ItemOrderFilter orderFilter = ItemOrderFilter.CreatedDate)
+        {
+            var rs = _itemService.GetShopItemOfAMember(memberId, filter, paging, orderFilter);
+
+            return rs.Results.IsNullOrEmpty()? NotFound(rs) : Ok( rs);
+
+
+        }
+
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteItem(Guid id)
         {

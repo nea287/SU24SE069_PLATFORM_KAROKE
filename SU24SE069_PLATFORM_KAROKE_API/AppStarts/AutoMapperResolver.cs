@@ -242,6 +242,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<InAppTransaction, InAppTransactionViewModel>()
                 .ForMember(x => x.Status, dest => dest.MapFrom(src => (InAppTransactionStatus)src.Status))
                 .ForMember(x => x.TransactionType, dest => dest.MapFrom(src => (InAppTransactionType)src.TransactionType))
+                .ForMember(x => x.UserName, dest => dest.MapFrom(src => src.Member.UserName))
                 .ReverseMap();
 
             CreateMap<InAppTransaction, CrreateInAppTransactionRequestModel>().ReverseMap();

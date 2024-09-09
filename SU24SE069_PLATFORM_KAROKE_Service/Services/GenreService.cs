@@ -34,6 +34,18 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 rs = _mapper.Map<Genre>(request);
 
+                rs.GenreName = rs.GenreName.Trim().ToLower();
+
+                if (_repository.CheckGenre(rs.GenreName))
+                {
+                    return new ResponseResult<GenreViewModel>()
+                    {
+                        Message = Constraints.INFORMATION_EXISTED,
+                        result = false,
+                    };
+                }
+                await _repository.DisponseAsync();
+
                 if (!await _repository.AddGenre(rs))
                 {
                     _repository.DetachEntity(rs);

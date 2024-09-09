@@ -10,6 +10,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
     public interface IGenreRepository : IBaseRepository<Genre>
     {
         public Task<bool> AddGenre(Genre request);
+        public bool CheckGenre(string genreName);
         public Task<bool> DeleteGenre(Genre request);
         public Task<bool> UpdateGenre(Genre request);
     }
