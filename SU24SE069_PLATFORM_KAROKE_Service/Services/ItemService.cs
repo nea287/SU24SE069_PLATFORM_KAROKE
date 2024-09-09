@@ -275,9 +275,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public DynamicModelResponse.DynamicModelsResponse<ItemViewModel> GetShopItemOfAMember(Guid memberId, ItemFilter filter, PagingRequest paging, ItemOrderFilter orderFilter)
+        public DynamicModelResponse.DynamicModelsResponse<ItemShopViewModel> GetShopItemOfAMember(Guid memberId, ItemFilter filter, PagingRequest paging, ItemOrderFilter orderFilter)
         {
-            (int, IQueryable<ItemViewModel>) result;
+            (int, IQueryable<ItemShopViewModel>) result;
             try
             {
                 var data1 = _itemRepository.GetAll(
@@ -286,14 +286,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         .ProjectTo<ItemFilter>(_mapper.ConfigurationProvider)
                         .DynamicFilter(_mapper.Map<ItemFilter>(filter)).ToList();
 
-                var data = _mapper.Map<List<ItemViewModel>>(data1);
+
+                var data = _mapper.Map<List<ItemShopViewModel>>(data1);
 
 
                 data = data.Select(x =>
                 {
                     if(x.CanStack == false)
                     {
-                        x.IsOwned = x.AccountItems.Any(x => x.MemberId == memberId) ? false : true;
+                        x.IsOwned = data1.SelectMany(a => a.AccountItems).Any(x => x.MemberId == memberId) ? false : true;
                     }
                     else
                     {
@@ -312,14 +313,14 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             }
             catch (Exception)
             {
-                return new DynamicModelResponse.DynamicModelsResponse<ItemViewModel>()
+                return new DynamicModelResponse.DynamicModelsResponse<ItemShopViewModel>()
                 {
                     Message = Constraints.LOAD_FAILED,
 
                 };
             }
 
-            return new DynamicModelResponse.DynamicModelsResponse<ItemViewModel>()
+            return new DynamicModelResponse.DynamicModelsResponse<ItemShopViewModel>()
             {
                 Message = Constraints.INFORMATION,
                 Metadata = new DynamicModelResponse.PagingMetadata()

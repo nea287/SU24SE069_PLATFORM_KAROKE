@@ -199,6 +199,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ReverseMap();
 
             CreateMap<ItemViewModel, ItemFilter>().ReverseMap();
+            CreateMap<ItemShopViewModel, ItemFilter>().ReverseMap();
+
+            //CreateMap<ItemFilter, ItemShopViewModel>()
+            //    .ForMember(x => x.IsOwned, dest =>
+            //    {
+            //        dest.MapFrom(src => src.CanStack == true? false : (src.AccountItems.Any(a => a.MemberId == )));
+            //    })
+            //    .ReverseMap();
 
             CreateMap<Item, CreateItemRequestModel>().ReverseMap();
             CreateMap<Item, UpdateItemRequestModel>().ReverseMap();
