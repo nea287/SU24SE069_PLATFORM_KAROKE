@@ -298,7 +298,14 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     }
                     else
                     {
-                        x.IsOwned = false;
+                        if(data1.SelectMany(a => a.AccountItems).Any(x => x.MemberId == memberId))
+                        {
+                            x.IsOwned = true;
+                        }
+                        else
+                        {
+                            x.IsOwned = false;
+                        }
                     }
 
                     return x;

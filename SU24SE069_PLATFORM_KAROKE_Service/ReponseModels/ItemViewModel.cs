@@ -19,7 +19,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public ItemStatus? ItemStatus { get; set; }
         public bool? CanExpire { get; set; }
         public bool? CanStack { get; set; }
-        public bool? IsOwned { get; set; }
         public DateTime? CreatedDate { get; set; }
         public Guid? CreatorId { get; set; }
         public string? CreatorMail { get; set; }

@@ -23,7 +23,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Filters
         public bool? CanStack { get; set; }
         public DateTime? CreatedDate { get; set; }
         public Guid? CreatorId { get; set; }
-        public string? CreatorMail { get; set; }
+        public string? CreatorMail { get; set; } 
         public string? PrefabCode { get; set; }
         [JsonIgnore]
         public Guid? BuyerId { get; set; }
