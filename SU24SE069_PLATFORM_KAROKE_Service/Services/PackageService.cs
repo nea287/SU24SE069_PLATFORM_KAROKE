@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.Extensions.Caching.Memory;
 using Net.payOS.Types;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
@@ -17,19 +18,28 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
     public class PackageService : IPackageService
     {
+        private const string CheckoutUrlCacheName = "checkoutUrl";
+        private const string QRCodeCacheName = "qrCode";
         private readonly IMapper _mapper;
         private readonly IPackageRepository _repository;
         private readonly IPayOSService _payOSService;
         private readonly IMonetaryTransactionService _monetaryTransactionService;
         private readonly IMonetaryTransactionRepository _monetaryTransactionRepository;
+        private readonly IMemoryCache _memoryCache;
 
-        public PackageService(IPackageRepository repository, IMapper mapper, IPayOSService payOSService, IMonetaryTransactionService monetaryTransactionService, IMonetaryTransactionRepository monetaryTransactionRepository)
+        public PackageService(IPackageRepository repository,
+            IMapper mapper,
+            IPayOSService payOSService,
+            IMonetaryTransactionService monetaryTransactionService,
+            IMonetaryTransactionRepository monetaryTransactionRepository,
+            IMemoryCache memoryCache)
         {
             _mapper = mapper;
             _repository = repository;
             _payOSService = payOSService;
             _monetaryTransactionService = monetaryTransactionService;
             _monetaryTransactionRepository = monetaryTransactionRepository;
+            _memoryCache = memoryCache;
         }
         public async Task<ResponseResult<PackageViewModel>> CreatePackage(PackageRequestModel request)
         {
@@ -300,8 +310,21 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
         public async Task<ResponseResult<PayOSPackagePaymentResponse>> CreatePayOSPackagePurchasePayment(MonetaryTransactionRequestModel transactionRequest)
         {
+            // Check for existing monetary transaction.
+            // If there is any, cancel create purchase request
+            if (await _monetaryTransactionRepository.IsAnyMemberPendingTransactionExist(transactionRequest.MemberId))
+            {
+                return new ResponseResult<PayOSPackagePaymentResponse>()
+                {
+                    Message = $"Người dùng có yêu cầu mua gói UP chưa xử lý! Vui lòng thanh toán hoặc hủy yêu cầu trước đó để tạo yêu cầu mới.",
+                    Value = null,
+                    result = false,
+                };
+            }
+
             long orderCode = GenerateOrderCode();
             transactionRequest.PaymentCode = orderCode.ToString();
+
             // Create monetary transaction
             var transactionResult = await _monetaryTransactionService.CreateTransaction(transactionRequest);
             if (transactionResult == null || transactionResult.Value == null)
@@ -334,6 +357,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             var paymentResponse = new PayOSPackagePaymentResponse();
             paymentResponse.MapPayOSPaymentLink(createPaymentLink);
             paymentResponse.MapTransactionData(transaction, package.StarNumber);
+
+            // Set payment url and qr code data to memory cache
+            SupportingFeature.Instance.SetDataToCache(_memoryCache, $"{orderCode.ToString()}_{CheckoutUrlCacheName}", paymentResponse.checkoutUrl, 120);
+            SupportingFeature.Instance.SetDataToCache(_memoryCache, $"{orderCode.ToString()}_{QRCodeCacheName}", paymentResponse.qrCode, 120);
+
             return new ResponseResult<PayOSPackagePaymentResponse>()
             {
                 Message = "Thành công!",
@@ -354,6 +382,111 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         {
             int count = _monetaryTransactionRepository.Count();
             return count++;
+        }
+
+        public async Task<ResponseResult<string>> CancelPayOSPackagePurchaseRequest(Guid monetaryTransactionId)
+        {
+            var monetaryTransaction = await _monetaryTransactionRepository.GetByIdGuid(monetaryTransactionId);
+
+            // Check if transaction exists
+            if (monetaryTransaction == null)
+            {
+                return new ResponseResult<string>()
+                {
+                    Message = "Hủy yêu cầu mua gói UP thất bại! Không tìm thấy yêu cầu mua gói.",
+                    Value = "Hủy yêu cầu mua gói UP thất bại! Không tìm thấy yêu cầu mua gói.",
+                    result = false
+                };
+            }
+
+            // Check if transaction has been processed
+            if (monetaryTransaction.Status != (int)PaymentStatus.PENDING)
+            {
+                return new ResponseResult<string>()
+                {
+                    Message = "Hủy yêu cầu mua gói UP thất bại! Yêu cầu mua gói không ở trạng thái đang chờ.",
+                    Value = "Hủy yêu cầu mua gói UP thất bại! Yêu cầu mua gói không ở trạng thái đang chờ.",
+                    result = false
+                };
+            }
+
+            // Update transaction to cancelled status
+            try
+            {
+                monetaryTransaction.Status = (int)PaymentStatus.CANCELLED;
+                await _monetaryTransactionRepository.Update(monetaryTransaction);
+                await _monetaryTransactionRepository.SaveChagesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to update monetary transaction status to Cancelled: {ex.Message}");
+                return new ResponseResult<string>()
+                {
+                    Message = "Có lỗi xảy ra trong quá trình hủy yêu cầu mua gói UP. Vui lòng thử lại!",
+                    Value = "Có lỗi xảy ra trong quá trình hủy yêu cầu mua gói UP. Vui lòng thử lại!",
+                    result = false
+                };
+            }
+
+            // Cancel payOS payment request
+            if (long.TryParse(monetaryTransaction.PaymentCode, out long orderCode))
+            {
+                await _payOSService.CancelPaymentLinkInformation(orderCode, "Transaction cancelled by user!");
+            }
+
+            // Delete cache data of checkoutUrl and qrCode data
+            SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, $"{monetaryTransaction.PaymentCode}_{CheckoutUrlCacheName}");
+            SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, $"{monetaryTransaction.PaymentCode}_{QRCodeCacheName}");
+
+            return new ResponseResult<string>()
+            {
+                Message = "Hủy yêu cầu mua gói UP thành công!",
+                Value = "Hủy yêu cầu mua gói UP thành công!",
+                result = true
+            };
+        }
+
+        public async Task<ResponseResult<PayOSPackagePaymentMethodResponse>> GetMemberLatestPendingPurchaseRequest(Guid memberId)
+        {
+            MonetaryTransaction? monetaryTransaction = null;
+            try
+            {
+                monetaryTransaction = await _monetaryTransactionRepository.GetMemberLatestPendingTransaction(memberId);
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<PayOSPackagePaymentMethodResponse>()
+                {
+                    Message = $"Tải yêu cầu mua gói UP đang chờ xử lý của người dùng thất bại. Vui lòng thử lại!.",
+                    Value = null,
+                    result = false,
+                };
+            }
+
+            if (monetaryTransaction == null)
+            {
+                return new ResponseResult<PayOSPackagePaymentMethodResponse>()
+                {
+                    Message = $"Người dùng không có yêu cầu mua gói UP đang chờ xử lý.",
+                    Value = null,
+                    result = false,
+                };
+            }
+
+            var upPackage = await _repository.GetByIdGuid(monetaryTransaction.PackageId);
+
+            PayOSPackagePaymentMethodResponse response = new PayOSPackagePaymentMethodResponse();
+            response.MapTransactionEntityData(monetaryTransaction, upPackage);
+
+            response.checkoutUrl = SupportingFeature.Instance.GetDataFromCache(_memoryCache, $"{monetaryTransaction.PaymentCode}_{CheckoutUrlCacheName}");
+            response.qrCode = SupportingFeature.Instance.GetDataFromCache(_memoryCache, $"{monetaryTransaction.PaymentCode}_{QRCodeCacheName}");
+
+            return new ResponseResult<PayOSPackagePaymentMethodResponse>()
+            {
+                Message = $"Tải yêu cầu mua gói UP đang chờ xử lý của người dùng thành công!",
+                Value = response,
+                result = true,
+            };
         }
 
         #endregion

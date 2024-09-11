@@ -30,8 +30,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
-        
-        
+
+
         [HttpGet("get-packages")]
         public async Task<IActionResult> GetPackagesForAdmin([FromQuery] string? filter, [FromQuery] PagingRequest paging, PackageOrderFilter orderFilter = PackageOrderFilter.CreatedDate)
         {
@@ -78,6 +78,30 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         public async Task<IActionResult> PurchasePackageWithPayOS([FromBody] MonetaryTransactionRequestModel transactionRequest)
         {
             var result = await _service.CreatePayOSPackagePurchasePayment(transactionRequest);
+            if (result.result == null || !result.result.Value)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        [Route("cancel/payos/{id:guid}")]
+        public async Task<IActionResult> CancelPayOSPackagePurchaseRequest(Guid id)
+        {
+            var result = await _service.CancelPayOSPackagePurchaseRequest(id);
+            if (result.result == null || !result.result.Value)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("request/pending/{memberId:guid}")]
+        public async Task<IActionResult> GetMemberPendingPackagePurchaseRequest(Guid memberId)
+        {
+            var result = await _service.GetMemberLatestPendingPurchaseRequest(memberId);
             if (result.result == null || !result.result.Value)
             {
                 return BadRequest(result);

@@ -1,4 +1,5 @@
 ﻿using Net.payOS.Types;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.PayOS
 {
@@ -49,6 +50,19 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.PayOS
                 PackageName = transaction.PackageName;
                 UpAmount = upAmount;
                 MoneyAmount = (decimal)transaction.MoneyAmount;
+                AccountId = transaction.MemberId.ToString();
+                MonetaryTransactionId = transaction.MonetaryTransactionId.ToString();
+            }
+        }
+
+        public void MapTransactionEntityData(MonetaryTransaction transaction, Package upPackage)
+        {
+            if (transaction != null && upPackage != null)
+            {
+                PackageId = transaction.PackageId.ToString();
+                PackageName = upPackage.PackageName;
+                UpAmount = upPackage.StarNumber;
+                MoneyAmount = transaction.MoneyAmount;
                 AccountId = transaction.MemberId.ToString();
                 MonetaryTransactionId = transaction.MonetaryTransactionId.ToString();
             }
