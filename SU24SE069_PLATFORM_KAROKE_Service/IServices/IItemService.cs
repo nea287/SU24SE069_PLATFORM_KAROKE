@@ -16,6 +16,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
     public interface IItemService
     {
         public Task<ResponseResult<ItemViewModel>> GetItem(Guid id);
+        public DynamicModelResponse.DynamicModelsResponse<ItemShopViewModel> GetShopItemOfAMember(Guid memberId, ItemFilter filter, PagingRequest paging, ItemOrderFilter orderFilter);
         public DynamicModelResponse.DynamicModelsResponse<ItemViewModel> GetItems(ItemFilter filter, PagingRequest request, ItemOrderFilter orderFilter);
         public DynamicModelResponse.DynamicModelsResponse<ItemViewModel> GetItemsForAdmin(string? filter, PagingRequest request, ItemOrderFilter orderFilter);
         public Task<ResponseResult<ItemViewModel>> CreateItem(CreateItemRequestModel request);

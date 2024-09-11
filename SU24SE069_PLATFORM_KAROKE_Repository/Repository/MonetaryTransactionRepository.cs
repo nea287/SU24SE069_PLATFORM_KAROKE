@@ -51,5 +51,20 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
         {
             return await GetDbSet().Where(t => t.Status == transactionStatus).ToListAsync();
         }
+
+        public async Task<bool> IsAnyMemberPendingTransactionExist(Guid memberId)
+        {
+            // PENDING status == 0
+            return await GetDbSet()
+                .AnyAsync(t => t.MemberId == memberId && t.Status == 0);
+        }
+
+        public async Task<MonetaryTransaction?> GetMemberLatestPendingTransaction(Guid memberId)
+        {
+            // PENDING status == 0
+            return await GetDbSet()
+                .OrderByDescending(t => t.CreatedDate)
+                .FirstOrDefaultAsync(t => t.Status == 0);
+        }
     }
 }

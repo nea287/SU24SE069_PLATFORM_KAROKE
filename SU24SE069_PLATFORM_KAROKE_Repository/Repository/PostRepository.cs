@@ -43,6 +43,38 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return score;
         }
 
+        public async Task<IQueryable<Post>> UpdateScores(string include)
+        {
+
+            IQueryable<Post> data;
+            try
+            {
+                await DisponseAsync();
+
+                data = GetAll(includeProperties: include);
+
+
+                data = data.AsEnumerable() 
+                          .Select(item =>
+                          {
+                              item.Score = item.PostRatings.Any()
+                                            ? item.PostRatings.Sum(a => a.Score) / item.PostRatings.Count()
+                                            : 0;
+                              return item;
+                          })
+                          .AsQueryable();
+
+                SaveChages();
+
+
+            }catch(Exception)
+            {
+                return null;
+            }
+
+            return data;
+        }
+
         public async Task<Post> GetPostOrign(Guid PostId)
         {
             Post data = new Post();

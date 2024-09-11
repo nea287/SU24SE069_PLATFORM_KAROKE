@@ -17,5 +17,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<DynamicModelResponse.DynamicModelsResponse<PackageViewModel>> GetPackages(PackageViewModel filter, PagingRequest paging, PackageOrderFilter orderFilter);
         public Task<DynamicModelResponse.DynamicModelsResponse<PackageViewModel>> GetPackagesForAdmin(string? filter, PagingRequest paging, PackageOrderFilter orderFilter);
         Task<ResponseResult<PayOSPackagePaymentResponse>> CreatePayOSPackagePurchasePayment(MonetaryTransactionRequestModel transactionRequest);
+        Task<ResponseResult<string>> CancelPayOSPackagePurchaseRequest(Guid monetaryTransactionId);
+        Task<ResponseResult<PayOSPackagePaymentMethodResponse>> GetMemberLatestPendingPurchaseRequest(Guid memberId);
     }
 }

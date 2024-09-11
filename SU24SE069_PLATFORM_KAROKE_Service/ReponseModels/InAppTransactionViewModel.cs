@@ -14,6 +14,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public DateTime? CreatedDate { get; set; }
         public InAppTransactionType? TransactionType { get; set; }
         public Guid? MemberId { get; set; }
+        public string? UserName { get; set; }
         public Guid? ItemId { get; set; }
         public Guid? SongId { get; set; }
         public decimal? UpAmountBefore { get; set; }

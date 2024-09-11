@@ -13,5 +13,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
         public Task<bool> UpdateMoneyTransaction(MonetaryTransaction transaction);
         Task<MonetaryTransaction?> FindTransactionByPaymentCode(string paymentCode);
         Task<List<MonetaryTransaction>> GetTransactionsByStatus(int transactionStatus);
+        Task<bool> IsAnyMemberPendingTransactionExist(Guid memberId);
+        Task<MonetaryTransaction?> GetMemberLatestPendingTransaction(Guid memberId);
     }
 }

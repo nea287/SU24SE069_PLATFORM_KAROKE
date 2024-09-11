@@ -10,6 +10,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
     public class GenreRepository : BaseRepository<Genre>, IGenreRepository
     {
+        public bool CheckGenre(string genreName)
+        {
+            
+            return Any(x => x.GenreName.Equals(genreName));
+           
+        }
         public async Task<bool> AddGenre(Genre singer)
         {
             try

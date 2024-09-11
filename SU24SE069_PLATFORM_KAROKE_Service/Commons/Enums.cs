@@ -510,24 +510,36 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         COMPLETE,
         CANCELED,
     }
+    //public enum ReportType
+    //{
+    //    INAPPROPRIATE_CONTENT,
+    //    SPAM,
+    //    HARASSMENT,
+    //    VIOLENCE,
+    //    HATE_SPEECH,
+    //    SELF_HARM,
+    //    TERRORISM,
+    //    NUDITY,
+    //    GRAPHIC_CONTENT,
+    //    MISINFORMATION
+    //}
     public enum ReportType
-    {
-        INAPPROPRIATE_CONTENT,
-        SPAM,
-        HARASSMENT,
-        VIOLENCE,
-        HATE_SPEECH,
-        SELF_HARM,
-        TERRORISM,
-        NUDITY,
-        GRAPHIC_CONTENT,
-        MISINFORMATION
-    }
-    public enum ReportCatagory
     {
         POST,
         COMMENT,
         ROOM
+    }
+    public enum ReportCatagory
+    {
+        SEXUAL_CONTENT,
+        BULLYING_OR_HARASSMENT, 
+        INCITEMENT_TO_VIOLENCE_OR_HATE, 
+        SUICIDE_OR_SELF_HARM, 
+        PROHIBITED_GOODS_SALES_OR_PROMOTION, 
+        FRAUD_OR_IMPERSONATION, SPAM, 
+        MISINFORMATION, 
+        INTELLECTUAL_PROPERTY_VIOLATION
+
     }
     #endregion
 

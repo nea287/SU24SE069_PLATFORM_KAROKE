@@ -12,7 +12,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.BackgroundServices
     public class PendingMonetaryTransactionCancelService : BackgroundService
     {
         private const int OverdueHoursAmount = 2;
-        private const int ServiceExecuteMinutes = 30;
+        private const int ServiceExecuteMinutes = 10;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<PendingMonetaryTransactionCancelService> _logger;
         //private readonly IMonetaryTransactionRepository _monetaryTransactionRepository;
@@ -105,10 +105,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.BackgroundServices
                         }
                     }
                     _logger.LogInformation($"Finish cancelling payOS payment transactions");
-
-                    _logger.LogInformation("Finish Cancel Overdue Monetary Transactions Service");
                 }
 
+                _logger.LogInformation("Finish Cancel Overdue Monetary Transactions Service");
             }
 
         }

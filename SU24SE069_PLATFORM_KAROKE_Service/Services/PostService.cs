@@ -49,11 +49,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         .Select(item => { item.UpdateTime = DateTime.Now; item.ShareTime = DateTime.Now; return item; })
                         .ToList();
                 }
-                //else if (!data.PostRates.IsNullOrEmpty())
-                //{
-                //    data.PostRates = data.PostRates
-                //        .ToList();
-                //}
+
+
+
                 else if (!data.Reports.IsNullOrEmpty())
                 {
 
@@ -194,12 +192,23 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 lock (_postRepository)
                 {
-                    var data = _postRepository.GetAll(
-                                                 includeProperties: String.Join(",",
-                                                 SupportingFeature.GetNameIncludedProperties<Post>()))
+                    var data = _postRepository.UpdateScores(
+                                                 String.Join(",",
+                                                 SupportingFeature.GetNameIncludedProperties<Post>())).Result
                         .AsQueryable()
                         .ProjectTo<PostViewModel>(_mapper.ConfigurationProvider)
                         .DynamicFilter(_mapper.Map<PostViewModel>(filter));
+
+
+
+                    //if (!data.IsNullOrEmpty())
+                    //{
+                       
+                    //    data.VoiceAudios = data.VoiceAudios
+                    //        .Select(item => { item.UploadTime = DateTime.Now; return item; })
+                    //        .ToList();
+                    //}
+
 
                     string? colName = Enum.GetName(typeof(PostOrderFilter), orderFilter);
 
@@ -207,6 +216,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     result = data.PagingIQueryable(paging.page, paging.pageSize,
                             Constraints.LimitPaging, Constraints.DefaultPaging);
+
                 }
             }
             catch (Exception)

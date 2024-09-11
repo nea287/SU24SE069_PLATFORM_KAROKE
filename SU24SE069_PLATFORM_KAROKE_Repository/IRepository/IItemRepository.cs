@@ -14,6 +14,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
         public IEnumerable<Item> GetItems();
         public Task<bool> UpdateItem(Guid id,Item item);
         public Task<bool> CreateItem(Item item);
+        //public IEnumerable<Item> GetShopItemOfAMember(Guid memberId);
         public Task<bool> DeleteItem(Item item);
         public bool ExistedItem(string ItemCode);
 

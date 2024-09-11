@@ -524,6 +524,17 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public void DetachEntity(IQueryable<TEntity> entity)
+        {
+            try
+            {
+                BaseDAO<TEntity>.Instance.DetachEntity(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         public async Task Update(TEntity entity)
         {

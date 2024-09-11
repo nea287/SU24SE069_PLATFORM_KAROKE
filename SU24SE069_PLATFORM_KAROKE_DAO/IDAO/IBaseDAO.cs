@@ -20,6 +20,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.IDAO
         public Task<IEnumerable<TEntity>> GetWhere(Expression<Func<TEntity, bool>> predicate);
         public Task HardDelete(int key);
         public void Delete(TEntity entity);
+        public void DetachEntity(IQueryable<TEntity> entity);
         public Task HardDeleteGuid(Guid key);
         public Task InsertAsync(TEntity entity);
         public void Insert(TEntity entity);

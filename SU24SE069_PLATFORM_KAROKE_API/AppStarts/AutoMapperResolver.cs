@@ -199,6 +199,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ReverseMap();
 
             CreateMap<ItemViewModel, ItemFilter>().ReverseMap();
+            CreateMap<ItemShopViewModel, ItemFilter>().ReverseMap();
+
+            //CreateMap<ItemFilter, ItemShopViewModel>()
+            //    .ForMember(x => x.IsOwned, dest =>
+            //    {
+            //        dest.MapFrom(src => src.CanStack == true? false : (src.AccountItems.Any(a => a.MemberId == )));
+            //    })
+            //    .ReverseMap();
 
             CreateMap<Item, CreateItemRequestModel>().ReverseMap();
             CreateMap<Item, UpdateItemRequestModel>().ReverseMap();
@@ -242,6 +250,7 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             CreateMap<InAppTransaction, InAppTransactionViewModel>()
                 .ForMember(x => x.Status, dest => dest.MapFrom(src => (InAppTransactionStatus)src.Status))
                 .ForMember(x => x.TransactionType, dest => dest.MapFrom(src => (InAppTransactionType)src.TransactionType))
+                .ForMember(x => x.UserName, dest => dest.MapFrom(src => src.Member.UserName))
                 .ReverseMap();
 
             CreateMap<InAppTransaction, CrreateInAppTransactionRequestModel>().ReverseMap();

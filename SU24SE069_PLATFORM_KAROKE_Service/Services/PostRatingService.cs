@@ -26,13 +26,14 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         {
             _mapper = mapper;
             _repository = repository;
+            
         }
 
         public async Task<ResponseResult<PostRatingViewModel>> CreateRating(PostRatingRequestModel request)
         {
             try
             {
-                if(_repository.ExistedRating(request.MemberId, request.PostId))
+                if (_repository.ExistedRating(request.MemberId, request.PostId))
                 {
                     //return new ResponseResult<PostRatingViewModel>()
                     //{
@@ -70,6 +71,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     result = false,
                 };
             }
+            finally
+            {
+                await _repository.DisponseAsync();
+
+            }
 
             return new ResponseResult<PostRatingViewModel>()
             {
@@ -83,7 +89,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         {
             try
             {
-                if(!_repository.ExistedRating(memberId, postId))
+                if (!_repository.ExistedRating(memberId, postId))
                 {
                     return new ResponseResult<PostRatingViewModel>()
                     {
@@ -103,6 +109,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Message = Constraints.DELETE_FAILED,
                     result = false
                 };
+            }
+            finally
+            {
+                await _repository.DisponseAsync();
             }
 
             return new ResponseResult<PostRatingViewModel>()
@@ -153,7 +163,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             PostRating data = new PostRating();
             try
             {
-                if(!_repository.ExistedRating(memberId, postId))
+                if (!_repository.ExistedRating(memberId, postId))
                 {
                     return new ResponseResult<PostRatingViewModel>()
                     {
@@ -179,6 +189,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     Message = Constraints.UPDATE_FAILED,
                     result = false,
                 };
+            }
+            finally
+            {
+                await _repository.DisponseAsync();
             }
 
             return new ResponseResult<PostRatingViewModel>()

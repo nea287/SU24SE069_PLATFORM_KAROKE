@@ -69,6 +69,21 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return items;
         }
 
+        //public IEnumerable<Item> GetShopItemOfAMember(Guid memberId)
+        //{
+        //    IEnumerable<Item> items = new List<Item>();
+        //    try
+        //    {
+        //        items = GetWhere(x => x.AccountItems.).Result;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+
+        //    return items;
+        //}
+
         public async Task<bool> UpdateItem(Guid id, Item item)
         {
             try

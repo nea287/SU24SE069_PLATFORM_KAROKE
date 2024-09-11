@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Org.BouncyCastle.Asn1.Ocsp;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
@@ -14,6 +15,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +32,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             _mapper = mapper;
             _itemRepository = itemRepository;
         }
+
         public async Task<ResponseResult<ItemViewModel>> CreateItem(CreateItemRequestModel request)
         {
             Item rs = new Item();
@@ -269,6 +272,71 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 Message = Constraints.UPDATE_SUCCESS,
                 result = true,
                 Value = _mapper.Map<ItemViewModel>(rs)
+            };
+        }
+
+        public DynamicModelResponse.DynamicModelsResponse<ItemShopViewModel> GetShopItemOfAMember(Guid memberId, ItemFilter filter, PagingRequest paging, ItemOrderFilter orderFilter)
+        {
+            (int, IQueryable<ItemShopViewModel>) result;
+            try
+            {
+                var data1 = _itemRepository.GetAll(
+                                                includeProperties: String.Join(",",
+                                                SupportingFeature.GetNameIncludedProperties<Item>()))
+                        .ProjectTo<ItemFilter>(_mapper.ConfigurationProvider)
+                        .DynamicFilter(_mapper.Map<ItemFilter>(filter)).ToList();
+
+
+                var data = _mapper.Map<List<ItemShopViewModel>>(data1);
+
+
+                data = data.Select(x =>
+                {
+                    if(x.CanStack == false)
+                    {
+                        x.IsOwned = data1.SelectMany(a => a.AccountItems).Any(x => x.MemberId == memberId) ? false : true;
+                    }
+                    else
+                    {
+                        if(data1.SelectMany(a => a.AccountItems).Any(x => x.MemberId == memberId))
+                        {
+                            x.IsOwned = true;
+                        }
+                        else
+                        {
+                            x.IsOwned = false;
+                        }
+                    }
+
+                    return x;
+                }).ToList();
+
+                string? colName = Enum.GetName(typeof(ItemOrderFilter), orderFilter);
+                data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).ToList();
+
+                result = data.AsQueryable().PagingIQueryable(paging.page, paging.pageSize,
+                        Constraints.LimitPaging, Constraints.DefaultPaging);
+
+            }
+            catch (Exception)
+            {
+                return new DynamicModelResponse.DynamicModelsResponse<ItemShopViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+
+                };
+            }
+
+            return new DynamicModelResponse.DynamicModelsResponse<ItemShopViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
             };
         }
     }

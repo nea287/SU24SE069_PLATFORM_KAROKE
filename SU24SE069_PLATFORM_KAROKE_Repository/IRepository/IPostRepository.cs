@@ -15,6 +15,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
         public bool ExistedPost(Guid id);
         public Task<Post> GetPost(Guid id);
         public Task<float> GetPostScore(Guid id);
+        public Task<IQueryable<Post>> UpdateScores(string include);
         public Task<Post> GetPostOrign(Guid PostId);
     }
 }

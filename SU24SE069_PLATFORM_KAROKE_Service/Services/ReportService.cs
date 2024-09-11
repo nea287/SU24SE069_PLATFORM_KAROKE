@@ -199,8 +199,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             Report rs = new Report();
             try
             {
-                var data = await _repository.GetByIdGuid(reportId);
-                if (data is null)
+                rs = await _repository.GetByIdGuid(reportId);
+                if (rs is null)
                 {
                     return new ResponseResult<ReportViewModel>()
                     {
@@ -213,11 +213,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 //rs.ReportId = reportId;
 
                 //_repository.DetachEntity(data);
-                data.ReportCategory = (int)request.ReportCategory;
-                data.Reason = request.Reason;
-                data.ReportType = (int)request.ReportType;
+                rs.ReportCategory = (int)request.ReportCategory;
+                rs.Reason = request.Reason;
+                rs.ReportType = (int)request.ReportType;
 
-                _repository.MotifyEntity(data);
+                _repository.MotifyEntity(rs);
 
                 if (!await _repository.UpdateReport(rs))
                 {
@@ -249,8 +249,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             Report rs = new Report();
             try
             {
-                var data = await _repository.GetByIdGuid(id);
-                if (data is null)
+                rs = await _repository.GetByIdGuid(id);
+                if (rs is null)
                 {
                     return new ResponseResult<ReportViewModel>()
                     {
@@ -260,12 +260,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 }
 
                 //rs = _mapper.Map<Report>(request);
-                //rs.ReportId = reportId;
+                rs.ReportId = id;
 
                 //_repository.DetachEntity(data);
-                data.Status = (int)status;
+                rs.Status = (int)status;
 
-                _repository.MotifyEntity(data);
+                _repository.MotifyEntity(rs);
 
                 if (!await _repository.UpdateReport(rs))
                 {
