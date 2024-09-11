@@ -22,7 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public PostType? PostType { get; set; }
         public PostStatus? PostStatus { get; set; }
         public float? Score { get; set; }
-        public AccountViewModel? Member { get; set; }
+        //public AccountViewModel? Member { get; set; }
         [SwaggerIgnore]
         public  ICollection<PostViewModel>? InverseOriginPost { get; set; }
         [SwaggerIgnore]

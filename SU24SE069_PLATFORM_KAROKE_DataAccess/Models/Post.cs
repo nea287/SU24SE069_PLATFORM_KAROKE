@@ -28,7 +28,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual Post? OriginPost { get; set; }
         public virtual Recording Recording { get; set; } = null!;
         public virtual PostComment? PostComment { get; set; }
-        public virtual ICollection<Post> InverseOriginPost { get; set; }
+        public virtual ICollection<Post>? InverseOriginPost { get; set; }
         public virtual ICollection<PostRating> PostRatings { get; set; }
         public virtual ICollection<PostShare> PostShares { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
