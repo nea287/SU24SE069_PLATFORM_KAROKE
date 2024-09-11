@@ -53,6 +53,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 
                 data = GetAll(includeProperties: include);
 
+                AttachEntities(data);
 
                 data = data.AsEnumerable() 
                           .Select(item =>
@@ -63,6 +64,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                               return item;
                           })
                           .AsQueryable();
+
+                
 
                 SaveChages();
 

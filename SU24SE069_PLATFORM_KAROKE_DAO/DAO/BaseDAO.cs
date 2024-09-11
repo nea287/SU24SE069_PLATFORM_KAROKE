@@ -219,10 +219,22 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.DAO
         {
             _context.Entry(entity).State = EntityState.Detached;
         }
+
+        public void AttachEntities(IQueryable<TEntity> entities)
+        {
+            _context.AttachRange(entities);
+        }
+
+        public void MotifyEntity(IQueryable<TEntity> entities)
+        {
+            _context.Entry(entities).State = EntityState.Modified;
+        }
         public void MotifyEntity(TEntity entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
         }
+
+
 
         public bool IsMin(Func<TEntity, bool> predicate)
         {

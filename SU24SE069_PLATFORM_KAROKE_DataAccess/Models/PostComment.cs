@@ -22,7 +22,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public virtual Post CommentNavigation { get; set; } = null!;
         public virtual Account Member { get; set; } = null!;
         public virtual PostComment? ParentComment { get; set; }
-        public virtual ICollection<PostComment> InverseParentComment { get; set; }
+        public virtual ICollection<PostComment>? InverseParentComment { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
     }
 }

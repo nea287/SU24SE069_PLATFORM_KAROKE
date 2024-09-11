@@ -23,6 +23,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DAO.IDAO
         public void DetachEntity(IQueryable<TEntity> entity);
         public Task HardDeleteGuid(Guid key);
         public Task InsertAsync(TEntity entity);
+        public void MotifyEntity(IQueryable<TEntity> entity);
+        public void AttachEntities(IQueryable<TEntity> entities);
         public void Insert(TEntity entity);
         public void InsertRangeAsync(IQueryable<TEntity> entities);
         public Task UpdateById(TEntity entity, int id);

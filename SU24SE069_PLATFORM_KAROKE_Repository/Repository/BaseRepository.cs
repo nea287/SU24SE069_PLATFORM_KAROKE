@@ -96,6 +96,28 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             }
             return result;
         }
+        public void AttachEntities(IQueryable<TEntity> entities)
+        {
+            try
+            {
+                BaseDAO<TEntity>.Instance.AttachEntities(entities);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public void MotifyEntity(IQueryable<TEntity> entities)
+        {
+            try
+            {
+                BaseDAO<TEntity>.Instance.MotifyEntity(entities);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
@@ -512,6 +534,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
+
 
         public void DetachEntity(TEntity entity)
         {

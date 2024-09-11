@@ -242,6 +242,36 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                             result = false,
                         };
                     }
+
+                    //request.GetType().GetProperties().Select(x =>
+                    //{
+                    //    if (x.GetType().GetProperty(x.Name).GetValue(x, null) == null)
+                    //    {
+                    //        x.SetValue(x, data.GetType().GetProperty(x.Name).GetValue(x, null));
+                    //    }
+                    //    return x;
+                    //});
+
+                    request.GetType().GetProperties().Where(pro => pro.GetValue(request) == null)
+                            .ToList().ForEach(e =>
+                            {
+                                if (e.PropertyType.IsEnum ||
+                                (Nullable.GetUnderlyingType(e.PropertyType)?.IsEnum ?? false))
+                                {
+
+                                    Type? enumType = Type.GetType("SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons." + e.Name);
+                                    var value = Enum.Parse(enumType, e?.GetValue(request).ToString());
+                                    e.SetValue(value, data.GetType().GetProperty(e.Name)?.GetValue(data));
+
+                               
+                                }
+                                else
+                                {
+                                    e.SetValue(request, data.GetType().GetProperty(e.Name)?.GetValue(data));
+
+                                }
+                            });
+
                     rs = _mapper.Map<Item>(request);
                     rs.CreatedDate = data.CreatedDate;
                     rs.ItemId = data.ItemId;
@@ -294,11 +324,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 {
                     if(x.CanStack == false)
                     {
-                        x.IsOwned = data1.SelectMany(a => a.AccountItems).Any(x => x.MemberId == memberId) ? false : true;
+                        x.IsOwned = data1.SelectMany(a => a.AccountItems).Any(t => t.MemberId == memberId && t.ItemId == x.ItemId) ? true : false;
                     }
                     else
                     {
-                        if(data1.SelectMany(a => a.AccountItems).Any(x => x.MemberId == memberId))
+                        if(data1.SelectMany(a => a.AccountItems).Any(t => t.MemberId == memberId && t.ItemId == x.ItemId))
                         {
                             x.IsOwned = true;
                         }
