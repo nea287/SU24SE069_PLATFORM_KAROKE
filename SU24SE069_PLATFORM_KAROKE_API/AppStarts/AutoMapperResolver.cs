@@ -7,6 +7,7 @@ using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Friend;
+using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Notification;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.AccountInventoryItem;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Artist;
@@ -448,6 +449,9 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ReverseMap();
             CreateMap<Notification, CreateNotificationRequestModel>().ReverseMap();
             CreateMap<NotificationFiilter, NotificationViewModel>().ReverseMap();
+            CreateMap<Notification, NotificationResponse>()
+                .ForMember(d => d.NotificationType, opt => opt.MapFrom(s => (NotificationType)s.NotificationType))
+                .ForMember(d => d.Status, opt => opt.MapFrom(s => (NotificationStatus)s.Status));
             #endregion
         }
     }
