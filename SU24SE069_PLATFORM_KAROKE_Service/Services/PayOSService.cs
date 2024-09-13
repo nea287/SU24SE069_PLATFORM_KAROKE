@@ -10,6 +10,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.Commons;
 using SU24SE069_PLATFORM_KAROKE_Service.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.PayOS;
+using System.Security.Principal;
 using System.Text;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
@@ -28,13 +29,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         private readonly IPackageRepository _packageRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IInAppTransactionRepository _inAppTransactionRepository;
+        private readonly INotificationService _notificationService;
 
         public PayOSService(IOptions<PayOSCredential> options,
             IMonetaryTransactionService monetaryTransactionService,
             IMonetaryTransactionRepository monetaryTransactionRepository,
             IPackageRepository packageRepository,
             IAccountRepository accountRepository,
-            IInAppTransactionRepository inAppTransactionRepository)
+            IInAppTransactionRepository inAppTransactionRepository,
+            INotificationService notificationService)
         {
             payOSCredential = options.Value;
             _monetaryTransactionService = monetaryTransactionService;
@@ -42,6 +45,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             _accountRepository = accountRepository;
             _packageRepository = packageRepository;
             _inAppTransactionRepository = inAppTransactionRepository;
+            _notificationService = notificationService;
         }
 
         public async Task<PaymentLinkInformation?> CancelPaymentLinkInformation(long orderId, string? cancellationReason = null)
@@ -236,6 +240,14 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 monetaryTransaction.Status = (int)PaymentStatus.CANCELLED;
                 await _monetaryTransactionRepository.Update(monetaryTransaction);
                 await _monetaryTransactionRepository.SaveChagesAsync();
+
+                // Create and send notification to user
+                await _notificationService.CreateAndSendNotification(new RequestModels.Notification.CreateNotificationRequestModel()
+                {
+                    Description = $"Yêu cầu nạp gói UP đã được hủy bỏ!",
+                    NotificationType = NotificationType.TRANSACTION_NOTI,
+                    AccountId = monetaryTransaction.MemberId,
+                });
             }
         }
 
@@ -288,7 +300,16 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 account.UpBalance += upPackage.StarNumber;
                 await _accountRepository.Update(account);
                 await _accountRepository.SaveChagesAsync();
+
                 Console.WriteLine("Finish process payOS webhook!");
+
+                // Create and send notification to user
+                await _notificationService.CreateAndSendNotification(new RequestModels.Notification.CreateNotificationRequestModel()
+                {
+                    Description = $"Yêu cầu nạp gói UP đã được thanh toán thành công!",
+                    NotificationType = NotificationType.TRANSACTION_NOTI,
+                    AccountId = account.AccountId,
+                });
             }
         }
 

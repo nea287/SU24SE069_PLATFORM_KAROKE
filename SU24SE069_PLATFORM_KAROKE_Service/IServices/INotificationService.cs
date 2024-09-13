@@ -3,6 +3,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Notification;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Notification;
 using System;
 using System.Collections.Generic;
@@ -19,5 +20,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<NotificationViewModel>> UpdateStatus(int id, NotificationStatus status);
         public Task<ResponseResult<NotificationViewModel>> CreateNotification(CreateNotificationRequestModel createNotificationRequest);
         public Task<ResponseResult<NotificationViewModel>> DeleteNotification(int id);
+        Task CreateAndSendNotification(CreateNotificationRequestModel notificationRequestModel);
     }
 }
