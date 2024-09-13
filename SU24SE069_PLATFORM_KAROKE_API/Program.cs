@@ -13,6 +13,7 @@ using SU24SE069_PLATFORM_KAROKE_Service.BackgroundServices;
 using Microsoft.AspNetCore.Http.Features;
 using Swashbuckle.AspNetCore.Annotations;
 using SU24SE069_PLATFORM_KAROKE_Service.Helpers;
+using SU24SE069_PLATFORM_KAROKE_Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -170,7 +171,12 @@ builder.Services.AddAuthorization(options =>
 });
 #endregion
 #region SignalR
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(hubOptions =>
+{
+    hubOptions.EnableDetailedErrors = true;
+    hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(10);
+    hubOptions.HandshakeTimeout = TimeSpan.FromSeconds(5);
+});
 #endregion
 #region CORS 
 builder.Services.AddCors(options =>
@@ -229,6 +235,7 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHub<ChatHubDAO>("/chatHub");
+    endpoints.MapHub<NotificationHub>("/notificationHub");
     endpoints.MapControllers();
 });
 

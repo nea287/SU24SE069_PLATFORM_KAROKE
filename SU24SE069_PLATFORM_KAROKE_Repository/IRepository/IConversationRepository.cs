@@ -10,5 +10,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
     public interface IConversationRepository : IBaseRepository<Conversation>
     {
         public Task<bool> CreateConversation(Conversation request);
+        public IQueryable<Conversation> GetConversationOfMember(string include, Guid id);
     }
 }

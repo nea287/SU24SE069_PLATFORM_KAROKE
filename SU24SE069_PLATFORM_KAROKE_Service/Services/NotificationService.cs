@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.SignalR;
 using Org.BouncyCastle.Asn1.Ocsp;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Helpers;
@@ -10,6 +11,7 @@ using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
+using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels.Notification;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Notification;
 using System;
 using System.Collections.Generic;
@@ -23,12 +25,17 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
     {
         private readonly IMapper _mapper;
         private readonly INotificationRepository _repository;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public NotificationService(IMapper mapper, INotificationRepository repository)
+        private const string NotificationSendingMethodName = "PushNotification";
+
+        public NotificationService(IMapper mapper, INotificationRepository repository, IHubContext<NotificationHub> hubContext)
         {
             _mapper = mapper;
             _repository = repository;
+            _hubContext = hubContext;
         }
+
         public async Task<ResponseResult<NotificationViewModel>> CreateNotification(CreateNotificationRequestModel request)
         {
             Notification rs = new Notification();
@@ -103,8 +110,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             return new ResponseResult<NotificationViewModel>()
             {
                 Message = Constraints.DELETE_SUCCESS,
-      
-                
+
+
                 result = true,
                 Value = _mapper.Map<NotificationViewModel>(data)
             };
@@ -229,6 +236,32 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 result = true,
                 Value = _mapper.Map<NotificationViewModel>(data)
             };
+        }
+
+        public async Task CreateAndSendNotification(CreateNotificationRequestModel notificationRequestModel)
+        {
+            Notification notification = new Notification()
+            {
+                Description = notificationRequestModel.Description,
+                NotificationType = (int)notificationRequestModel.NotificationType,
+                AccountId = notificationRequestModel.AccountId,
+                CreateDate = DateTime.Now,
+                Status = (int)NotificationStatus.UNREAD,
+            };
+
+            bool createResult = false;
+            try
+            {
+                createResult = await _repository.CreateNotification(notification);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to create notification: {ex.Message}");
+                return;
+            }
+
+            NotificationResponse notificationResponse = _mapper.Map<NotificationResponse>(notification);
+            await _hubContext.Clients.Groups(notificationRequestModel.AccountId.ToString()).SendAsync(NotificationSendingMethodName, notificationResponse);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 
                 data = GetAll(includeProperties: include);
 
-                AttachEntities(data);
+                //AttachEntities(data);
 
                 data = data.AsEnumerable() 
                           .Select(item =>
