@@ -22,4 +22,15 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public Guid? TicketId { get; set; }
         //public ICollection<MessageViewModel>? Messages { get; set; }
     }
+
+    public class ConversationMemberViewModel
+    {
+        public Guid? ConversationId { get; set; }
+        public Guid? MemberId1 { get; set; }
+        public Guid? MemberId2 { get; set; }
+        public ConversationType? ConversationType { get; set; }
+        public Guid? TicketId { get; set; }
+        ICollection<MessageViewModel>? Messages { get; set; }
+    }
+
 }

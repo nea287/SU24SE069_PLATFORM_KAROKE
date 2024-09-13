@@ -22,5 +22,20 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             }
             return true;
         }
+
+        public IQueryable<Conversation> GetConversationOfMember(string include, Guid id)
+        {
+            IQueryable<Conversation> conversations;
+            try
+            {
+                conversations = GetAll(includeProperties: include, filter: x => x.MemberId1 == id || x.MemberId2 == id).OrderBy(x => x.Messages.OrderBy(a => a.TimeStamp));
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            return conversations;
+        }
     }
 }

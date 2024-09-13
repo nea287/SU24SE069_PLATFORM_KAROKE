@@ -192,11 +192,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 lock (_postRepository)
                 {
-                    var data = _postRepository.UpdateScores(
-                                                 String.Join(",",
-                                                 SupportingFeature.GetNameIncludedProperties<Post>())).Result
-                        .AsQueryable()
-                        .ProjectTo<PostViewModel>(_mapper.ConfigurationProvider)
+                    var data1 = _postRepository.UpdateScores(
+                                                 "InverseOriginPost,PostRatings").Result
+
+                     ;
+                    var data = _mapper.Map<List<PostViewModel>>(data1).AsQueryable()
                         .DynamicFilter(_mapper.Map<PostViewModel>(filter));
 
 
@@ -214,7 +214,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
 
-                    result = data.PagingIQueryable(paging.page, paging.pageSize,
+                    result = data.AsQueryable().PagingIQueryable(paging.page, paging.pageSize,
                             Constraints.LimitPaging, Constraints.DefaultPaging);
 
                 }
