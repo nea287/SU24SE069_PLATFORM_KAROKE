@@ -56,5 +56,20 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 .OrderByDescending(n => n.CreateDate)
                 .ToListAsync();
         }
+
+        public async Task<List<Notification>> GetUserReadAndUnreadNotification(Guid accountId)
+        {
+            return await GetDbSet().Where(n => n.AccountId == accountId && (n.Status == 1 || n.Status == 0))
+                .OrderByDescending(n => n.CreateDate)
+                .ToListAsync(); 
+        }
+
+        public async Task<List<Notification>> GetUserReadNotification(Guid accountId)
+        {
+            // READ = 0, UNREAD = 1, DELETE = 2
+            return await GetDbSet().Where(n => n.AccountId == accountId && n.Status == 0)
+                .OrderByDescending(n => n.CreateDate)
+                .ToListAsync();
+        }
     }
 }

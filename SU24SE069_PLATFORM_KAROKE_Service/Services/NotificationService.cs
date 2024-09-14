@@ -372,5 +372,66 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 };
             }
         }
+
+        public async Task<ResponseResult<List<NotificationResponse>>> GetUserReadAndUnreadNotifications(Guid userId)
+        {
+            var notifications = await _repository.GetUserReadAndUnreadNotification(userId);
+            if (notifications == null || notifications.Count == 0)
+            {
+                return new ResponseResult<List<NotificationResponse>>()
+                {
+                    Message = "Người dùng không có thông báo nào đã xem hoặc chưa xem.",
+                    Value = null,
+                    result = false
+                };
+            }
+            var responseModels = _mapper.Map<List<NotificationResponse>>(notifications);
+            return new ResponseResult<List<NotificationResponse>>
+            {
+                Message = "Tải danh sách thông báo của người dùng thành công",
+                Value = responseModels,
+                result = true
+            };
+        }
+
+        public async Task<ResponseResult<bool>> UpdateReadNotificationsToDelete(Guid userId)
+        {
+            var readNotifications = await _repository.GetUserReadNotification(userId);
+            if (readNotifications.IsNullOrEmpty())
+            {
+                return new ResponseResult<bool>()
+                {
+                    Message = "Người dùng không có thông báo đã xem.",
+                    Value = true,
+                    result = true,
+                };
+            }
+            try
+            {
+                foreach (var notification in readNotifications)
+                {
+                    notification.Status = (int)NotificationStatus.DELETE;
+                    await _repository.Update(notification);
+                }
+                await _repository.SaveChagesAsync();
+
+                return new ResponseResult<bool>()
+                {
+                    Message = "Thay đổi trạng thái của các thông báo thành công",
+                    Value = true,
+                    result = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to update status of user's READ notifications to DELETE: {ex.Message}");
+                return new ResponseResult<bool>()
+                {
+                    Message = "Có lỗi xảy ra trong quá trình thay đổi trạng thái những thông báo của người dùng",
+                    Value = false,
+                    result = false,
+                };
+            }
+        }
     }
 }

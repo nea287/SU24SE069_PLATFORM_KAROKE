@@ -24,5 +24,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         Task<ResponseResult<List<NotificationResponse>>> GetUserUnreadNotifications(Guid userId);
         Task<ResponseResult<bool>> UpdateUnreadNotificationsToRead(Guid userId);
         Task<ResponseResult<NotificationResponse>> UpdateNotificationStatus(int notificationId, NotificationStatusUpdateRequest updateRequest);
+        Task<ResponseResult<List<NotificationResponse>>> GetUserReadAndUnreadNotifications(Guid userId);
+        Task<ResponseResult<bool>> UpdateReadNotificationsToDelete(Guid userId);
     }
 }

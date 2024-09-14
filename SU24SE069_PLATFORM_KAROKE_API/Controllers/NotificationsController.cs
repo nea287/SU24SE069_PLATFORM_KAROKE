@@ -83,5 +83,21 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             var result = await _service.UpdateNotificationStatus(id, updateRequest);
             return !(bool)result.result ? BadRequest(result) : Ok(result);
         }
+
+        [HttpGet]
+        [Route("read-and-unread/{userId:guid}")]
+        public async Task<IActionResult> GetUserReadAndUnreadNotifications(Guid userId)
+        {
+            var result = await _service.GetUserReadAndUnreadNotifications(userId);
+            return result.Value.IsNullOrEmpty() ? NotFound(result) : Ok(result);
+        }
+
+        [HttpPost]
+        [Route("read/{userId:guid}/delete-all")]
+        public async Task<IActionResult> UpdateReadNotificationsToDelete(Guid userId)
+        {
+            var result = await _service.UpdateReadNotificationsToDelete(userId);
+            return result.Value == false ? BadRequest(result) : Ok(result);
+        }
     }
 }
