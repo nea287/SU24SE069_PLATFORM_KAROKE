@@ -12,5 +12,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
         public Task<bool> CreateAccountInventory(AccountItem request);
         //public bool DeleteAccountInventory(AccountInventoryItem request);
         public Task<bool> UpdateAccountInventory(Guid id, AccountItem request);
+        public bool CheckAccountInventory(Guid id);
+        public Task<bool> DeleteAccountInventory(Guid id);
     }
 }

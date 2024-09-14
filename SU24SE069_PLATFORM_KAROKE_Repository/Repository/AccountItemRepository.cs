@@ -10,6 +10,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
     public class AccountItemRepository : BaseRepository<AccountItem>, IAccountItemRepository
     {
+        public bool CheckAccountInventory(Guid id)
+        {
+            return Any(x => x.AccountItemId == id);
+        }
+
         public async Task<bool> CreateAccountInventory(AccountItem request)
         {
             try
@@ -20,6 +25,22 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             {
                 return false;
             }
+            return true;
+        }
+
+        public async Task<bool> DeleteAccountInventory(Guid id)
+        {
+            try
+            {
+                await DisponseAsync();
+                await HardDeleteGuid(id);
+                await SaveChagesAsync();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
             return true;
         }
 

@@ -14,6 +14,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
 {
     public interface IAccountItemService
     {
+        public Task<ResponseResult<AccountItemViewModel>> DeleteAccountItem(Guid id);
         public Task<ResponseResult<AccountItemViewModel>> CreateAccountInventory(CreateAccountInventoryItemRequestModel request);
         public Task<ResponseResult<AccountItemViewModel>> UpdateAccountInventoryItem(Guid id, CreateAccountInventoryItemRequestModel request);
         public DynamicModelResponse.DynamicModelsResponse<AccountItemViewModel> GetAccountInventories(AccountItemFilter filter, PagingRequest paging, AccountInventoryItemOrderFilter orderFilter);

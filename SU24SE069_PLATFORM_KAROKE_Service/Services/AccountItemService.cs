@@ -126,6 +126,43 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
+        public async Task<ResponseResult<AccountItemViewModel>> DeleteAccountItem(Guid id)
+        {
+            try
+            {
+                if (!_inventoryRepository.CheckAccountInventory(id))
+                {
+                    await _inventoryRepository.DisponseAsync();
+                    return new ResponseResult<AccountItemViewModel>() { 
+                        Message = Constraints.NOT_FOUND,
+                        result = false
+                    };
+                }
+
+                if(!await _inventoryRepository.DeleteAccountInventory(id))
+                {
+                    throw new Exception();
+                }
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<AccountItemViewModel>() {
+                    Message = Constraints.DELETE_FAILED, 
+                    result = false
+                };
+            }
+            finally
+            {
+                await _inventoryRepository.DisponseAsync();
+            }
+
+            return new ResponseResult<AccountItemViewModel>()
+            {
+                Message = Constraints.DELETE_SUCCESS,
+                result = true
+            };
+        }
+
         public async  Task<ResponseResult<AccountItemViewModel>> UpdateAccountInventoryItem(Guid id, CreateAccountInventoryItemRequestModel request)
         {
             AccountItem rs = new AccountItem();
