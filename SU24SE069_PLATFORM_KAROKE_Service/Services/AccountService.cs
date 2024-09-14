@@ -801,6 +801,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 await _accountRepository.SaveChagesAsync();
                 result = _mapper.Map<AccountViewModel>(data);
 
+                SupportingFeature.Instance.RemoveDataFromCache(_memoryCache, Constraints.ACCOUNTS);
+
+
             }
             catch (Exception)
             {

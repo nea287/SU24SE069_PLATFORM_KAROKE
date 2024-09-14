@@ -21,5 +21,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<NotificationViewModel>> CreateNotification(CreateNotificationRequestModel createNotificationRequest);
         public Task<ResponseResult<NotificationViewModel>> DeleteNotification(int id);
         Task CreateAndSendNotification(CreateNotificationRequestModel notificationRequestModel);
+        Task<ResponseResult<List<NotificationResponse>>> GetUserUnreadNotifications(Guid userId);
+        Task<ResponseResult<bool>> UpdateUnreadNotificationsToRead(Guid userId);
+        Task<ResponseResult<NotificationResponse>> UpdateNotificationStatus(int notificationId, NotificationStatusUpdateRequest updateRequest);
+        Task<ResponseResult<List<NotificationResponse>>> GetUserReadAndUnreadNotifications(Guid userId);
+        Task<ResponseResult<bool>> UpdateReadNotificationsToDelete(Guid userId);
     }
 }

@@ -1,11 +1,6 @@
-﻿using SU24SE069_PLATFORM_KAROKE_DAO.DAO;
+﻿using Microsoft.EntityFrameworkCore;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
 {
@@ -52,6 +47,29 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             }
 
             return true;
+        }
+
+        public async Task<List<Notification>> GetUserUnreadNotification(Guid accountId)
+        {
+            // READ = 0, UNREAD = 1, DELETE = 2
+            return await GetDbSet().Where(n => n.AccountId == accountId && n.Status == 1)
+                .OrderByDescending(n => n.CreateDate)
+                .ToListAsync();
+        }
+
+        public async Task<List<Notification>> GetUserReadAndUnreadNotification(Guid accountId)
+        {
+            return await GetDbSet().Where(n => n.AccountId == accountId && (n.Status == 1 || n.Status == 0))
+                .OrderByDescending(n => n.CreateDate)
+                .ToListAsync(); 
+        }
+
+        public async Task<List<Notification>> GetUserReadNotification(Guid accountId)
+        {
+            // READ = 0, UNREAD = 1, DELETE = 2
+            return await GetDbSet().Where(n => n.AccountId == accountId && n.Status == 0)
+                .OrderByDescending(n => n.CreateDate)
+                .ToListAsync();
         }
     }
 }

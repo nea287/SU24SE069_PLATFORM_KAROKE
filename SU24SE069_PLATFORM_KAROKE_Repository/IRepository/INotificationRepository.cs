@@ -13,5 +13,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.IRepository
         public Task<bool> CreateNotification(Notification notification);
         public Task<bool> UpdateNotification(Notification notification);
         public IQueryable<Notification> GetAllNotificationsByAccountId(Guid accountId);
+        Task<List<Notification>> GetUserUnreadNotification(Guid accountId);
+        Task<List<Notification>> GetUserReadAndUnreadNotification(Guid accountId);
+        Task<List<Notification>> GetUserReadNotification(Guid accountId);
     }
 }

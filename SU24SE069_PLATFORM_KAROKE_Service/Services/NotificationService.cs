@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.SignalR;
 using Org.BouncyCastle.Asn1.Ocsp;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
@@ -262,6 +263,175 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
             NotificationResponse notificationResponse = _mapper.Map<NotificationResponse>(notification);
             await _hubContext.Clients.Groups(notificationRequestModel.AccountId.ToString()).SendAsync(NotificationSendingMethodName, notificationResponse);
+        }
+
+        public async Task<ResponseResult<List<NotificationResponse>>> GetUserUnreadNotifications(Guid userId)
+        {
+            var unreadNotifications = await _repository.GetUserUnreadNotification(userId);
+            if (unreadNotifications == null || unreadNotifications.Count == 0)
+            {
+                return new ResponseResult<List<NotificationResponse>>()
+                {
+                    Message = "Người dùng không có thông báo nào chưa xem.",
+                    Value = null,
+                    result = false
+                };
+            }
+            var responseModels = _mapper.Map<List<NotificationResponse>>(unreadNotifications);
+            return new ResponseResult<List<NotificationResponse>>
+            {
+                Message = "Tải danh sách thông báo của người dùng thành công",
+                Value = responseModels,
+                result = true
+            };
+        }
+
+        public async Task<ResponseResult<bool>> UpdateUnreadNotificationsToRead(Guid userId)
+        {
+            var unreadNotifications = await _repository.GetUserUnreadNotification(userId);
+            if (unreadNotifications.IsNullOrEmpty())
+            {
+                return new ResponseResult<bool>()
+                {
+                    Message = "Người dùng không có thông báo chưa xem.",
+                    Value = true,
+                    result = true,
+                };
+            }
+            try
+            {
+                foreach (var notification in unreadNotifications)
+                {
+                    notification.Status = (int)NotificationStatus.READ;
+                    await _repository.Update(notification);
+                }
+                await _repository.SaveChagesAsync();
+
+                return new ResponseResult<bool>()
+                {
+                    Message = "Thay đổi trạng thái của các thông báo thành công",
+                    Value = true,
+                    result = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to update status of user's UNREAD notifications to READ: {ex.Message}");
+                return new ResponseResult<bool>()
+                {
+                    Message = "Có lỗi xảy ra trong quá trình thay đổi trạng thái những thông báo của người dùng",
+                    Value = false,
+                    result = false,
+                };
+            }
+        }
+
+        public async Task<ResponseResult<NotificationResponse>> UpdateNotificationStatus(int notificationId, NotificationStatusUpdateRequest updateRequest)
+        {
+            var notification = await _repository.GetById(notificationId);
+            if (notification == null)
+            {
+                return new ResponseResult<NotificationResponse>()
+                {
+                    Message = "Không tìm thấy thông báo cần thay đổi trạng thái.",
+                    Value = null,
+                    result = false,
+                };
+            }
+
+            if (notification.Status == (int)updateRequest.NewStatus)
+            {
+                return new ResponseResult<NotificationResponse>()
+                {
+                    Message = "Trạng thái mới của thông báo trùng với trạng thái cũ.",
+                    Value = null,
+                    result = false,
+                };
+            }
+
+            try
+            {
+                notification.Status = (int)updateRequest.NewStatus;
+                await _repository.Update(notification);
+                await _repository.SaveChagesAsync();
+                return new ResponseResult<NotificationResponse>()
+                {
+                    Message = "Thay đổi trạng thái của thông báo thành công",
+                    Value = _mapper.Map<NotificationResponse>(notification),
+                    result = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to update status of notification with Id '{notificationId}': {ex.Message}");
+                return new ResponseResult<NotificationResponse>()
+                {
+                    Message = "Có lỗi xảy ra trong quá trình thay đổi trạng thái của thông báo. Vui lòng thử lại.",
+                    Value = null,
+                    result = false,
+                };
+            }
+        }
+
+        public async Task<ResponseResult<List<NotificationResponse>>> GetUserReadAndUnreadNotifications(Guid userId)
+        {
+            var notifications = await _repository.GetUserReadAndUnreadNotification(userId);
+            if (notifications == null || notifications.Count == 0)
+            {
+                return new ResponseResult<List<NotificationResponse>>()
+                {
+                    Message = "Người dùng không có thông báo nào đã xem hoặc chưa xem.",
+                    Value = null,
+                    result = false
+                };
+            }
+            var responseModels = _mapper.Map<List<NotificationResponse>>(notifications);
+            return new ResponseResult<List<NotificationResponse>>
+            {
+                Message = "Tải danh sách thông báo của người dùng thành công",
+                Value = responseModels,
+                result = true
+            };
+        }
+
+        public async Task<ResponseResult<bool>> UpdateReadNotificationsToDelete(Guid userId)
+        {
+            var readNotifications = await _repository.GetUserReadNotification(userId);
+            if (readNotifications.IsNullOrEmpty())
+            {
+                return new ResponseResult<bool>()
+                {
+                    Message = "Người dùng không có thông báo đã xem.",
+                    Value = true,
+                    result = true,
+                };
+            }
+            try
+            {
+                foreach (var notification in readNotifications)
+                {
+                    notification.Status = (int)NotificationStatus.DELETE;
+                    await _repository.Update(notification);
+                }
+                await _repository.SaveChagesAsync();
+
+                return new ResponseResult<bool>()
+                {
+                    Message = "Thay đổi trạng thái của các thông báo thành công",
+                    Value = true,
+                    result = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to update status of user's READ notifications to DELETE: {ex.Message}");
+                return new ResponseResult<bool>()
+                {
+                    Message = "Có lỗi xảy ra trong quá trình thay đổi trạng thái những thông báo của người dùng",
+                    Value = false,
+                    result = false,
+                };
+            }
         }
     }
 }
