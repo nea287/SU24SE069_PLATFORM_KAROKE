@@ -59,5 +59,29 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
+
+        [HttpGet]
+        [Route("unread/{userId:guid}")]
+        public async Task<IActionResult> GetUserUnreadNotifications(Guid userId)
+        {
+            var result = await _service.GetUserUnreadNotifications(userId);
+            return result.Value.IsNullOrEmpty() ? NotFound(result) : Ok(result);
+        }
+
+        [HttpPost]
+        [Route("unread/{userId:guid}/read-all")]
+        public async Task<IActionResult> UpdateUnreadNotificationsToRead(Guid userId)
+        {
+            var result = await _service.UpdateUnreadNotificationsToRead(userId);
+            return result.Value == false ? BadRequest(result) : Ok(result);
+        }
+
+        [HttpPost]
+        [Route("{id:int}/update")]
+        public async Task<IActionResult> UpdateNotificationStatus([FromRoute]int id, [FromBody] NotificationStatusUpdateRequest updateRequest)
+        {
+            var result = await _service.UpdateNotificationStatus(id, updateRequest);
+            return !(bool)result.result ? BadRequest(result) : Ok(result);
+        }
     }
 }
