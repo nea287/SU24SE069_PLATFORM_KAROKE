@@ -18,6 +18,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
@@ -253,24 +254,26 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     //});
 
                     request.GetType().GetProperties().Where(pro => pro.GetValue(request) == null)
-                            .ToList().ForEach(e =>
-                            {
-                                if (e.PropertyType.IsEnum ||
-                                (Nullable.GetUnderlyingType(e.PropertyType)?.IsEnum ?? false))
-                                {
+                    .ToList().ForEach(e =>
+                    {
+                        if (e.PropertyType.IsEnum ||
+                            (Nullable.GetUnderlyingType(e.PropertyType)?.IsEnum ?? false))
+                        {
 
-                                    Type? enumType = Type.GetType("SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons." + e.Name);
-                                    var value = Enum.Parse(enumType, e?.GetValue(request).ToString());
-                                    e.SetValue(value, data.GetType().GetProperty(e.Name)?.GetValue(data));
+                            Type? enumType = Type.GetType(Regex.Match(e.PropertyType.FullName, @"(SU24SE069_PLATFORM_KAROKE_BusinessLayer\.Commons[^,]*)").Value);
+                            var value = Enum.GetName(enumType, data.GetType().GetProperty(e.Name)?.GetValue(data));
 
-                               
-                                }
-                                else
-                                {
-                                    e.SetValue(request, data.GetType().GetProperty(e.Name)?.GetValue(data));
+                            var value1 = Enum.Parse(enumType, value);
+                            e.SetValue(request, value1);
 
-                                }
-                            });
+
+                        }
+                        else
+                        {
+                            e.SetValue(request, data.GetType().GetProperty(e.Name)?.GetValue(data));
+
+                        }
+                    });
 
                     rs = _mapper.Map<Item>(request);
                     rs.CreatedDate = data.CreatedDate;

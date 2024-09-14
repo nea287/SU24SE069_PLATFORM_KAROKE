@@ -16,7 +16,9 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
 using SU24SE069_PLATFORM_KAROKE_Service.Filters;
+using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Net.NetworkInformation;
 using System.Security.Principal;
 using System.Text;
@@ -429,17 +431,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 lock (_accountRepository)
                 {
                     var data = _accountRepository.GetByIdGuid(id).Result;
-
-                    data.Fullname = request.Fullname;
-                    data.IdentityCardNumber = request.IdentityCardNumber;
-                    data.Gender = (int)request.Gender;
-                    data.Fullname = request.Fullname;
-                    data.Role = (int)request.Role;
-                    data.Yob = request.Yob;
-                    data.Description = request.Description;
-
-                    _accountRepository.MotifyEntity(data);
-
                     if (data == null)
                     {
                         return new ResponseResult<AccountViewModel>()
@@ -449,6 +440,46 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                             Value = _mapper.Map<AccountViewModel>(data)
                         };
                     }
+
+
+                    request.GetType().GetProperties().Where(pro => pro.GetValue(request) == null)
+                    .ToList().ForEach(e =>
+                    {
+                        if (e.PropertyType.IsEnum ||
+                            (Nullable.GetUnderlyingType(e.PropertyType)?.IsEnum ?? false))
+                    {
+
+                        Type? enumType = Type.GetType(Regex.Match(e.PropertyType.FullName, @"(SU24SE069_PLATFORM_KAROKE_BusinessLayer\.Commons[^,]*)").Value);
+                        var value = Enum.GetName(enumType, data.GetType().GetProperty(e.Name)?.GetValue(data));
+
+                            var value1 = Enum.Parse(enumType, value);
+                        e.SetValue(request, value1);
+
+
+                    }   
+                    else
+                    {
+                        e.SetValue(request, data.GetType().GetProperty(e.Name)?.GetValue(data));
+
+                    }
+                });
+
+                    //data = _mapper.Map<Account>(request);
+
+
+                    data.Fullname = request.Fullname;
+                    data.IdentityCardNumber = request.IdentityCardNumber;
+                    data.Gender = (int)request.Gender;
+                    data.AccountId = id;
+                    data.Role = (int)request.Role;
+                    data.Yob = request.Yob;
+                    data.Description = request.Description;
+                    data.PhoneNumber = request.PhoneNumber;
+                    data.Image = request.Image; 
+
+
+                    _accountRepository.MotifyEntity(data);
+
 
                     if (!_accountRepository.UpdateAccount(data).Result)
                     {
@@ -556,16 +587,6 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 lock (_accountRepository)
                 {
                     var data = _accountRepository.GetByIdGuid(id).Result;
-                    
-                    data.UserName = request.UserName;
-                    data.PhoneNumber = request.PhoneNumber;
-                    data.Gender = (int)request.Gender;
-                    data.UpBalance = request.UpBalance;
-                    data.CharacterItemId = request.CharacterItemId;
-                    data.RoomItemId = request.RoomItemId;
-
-                    _accountRepository.MotifyEntity(data);
-
                     if (data == null)
                     {
                         return new ResponseResult<AccountViewModel>()
@@ -575,6 +596,42 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                             Value = _mapper.Map<AccountViewModel>(data)
                         };
                     }
+
+                    request.GetType().GetProperties().Where(pro => pro.GetValue(request) == null)
+                    .ToList().ForEach(e =>
+                    {
+                        if (e.PropertyType.IsEnum ||
+                            (Nullable.GetUnderlyingType(e.PropertyType)?.IsEnum ?? false))
+                        {
+
+                            Type? enumType = Type.GetType(Regex.Match(e.PropertyType.FullName, @"(SU24SE069_PLATFORM_KAROKE_BusinessLayer\.Commons[^,]*)").Value);
+                            var value = Enum.GetName(enumType, data.GetType().GetProperty(e.Name)?.GetValue(data));
+
+                            var value1 = Enum.Parse(enumType, value);
+                            e.SetValue(request, value1);
+
+
+                        }
+                        else
+                        {
+                            e.SetValue(request, data.GetType().GetProperty(e.Name)?.GetValue(data));
+
+                        }
+                    });
+
+                    data.UserName = request.UserName;
+                    data.PhoneNumber = request.PhoneNumber;
+                    data.Gender = (int)request.Gender;
+                    data.UpBalance = request.UpBalance.Value;
+                    data.CharacterItemId = request.CharacterItemId;
+                    data.RoomItemId = request.RoomItemId;
+                    data.Yob = request.Yob;
+                    data.Description = request.Description;
+
+
+                    _accountRepository.MotifyEntity(data);
+
+
 
                     if (!_accountRepository.UpdateAccount(data).Result)
                     {
