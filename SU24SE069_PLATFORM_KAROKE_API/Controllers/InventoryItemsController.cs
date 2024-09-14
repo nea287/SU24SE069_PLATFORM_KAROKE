@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Service.Filters;
@@ -44,6 +45,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
         public async Task<IActionResult> UpdateInventoryItem(Guid id, [FromBody] CreateAccountInventoryItemRequestModel request)
         {
             var rs = await _inventoryService.UpdateAccountInventoryItem(id, request);
+
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteAccountItem(Guid id)
+        {
+            var rs = await _inventoryService.DeleteAccountItem(id);
 
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
