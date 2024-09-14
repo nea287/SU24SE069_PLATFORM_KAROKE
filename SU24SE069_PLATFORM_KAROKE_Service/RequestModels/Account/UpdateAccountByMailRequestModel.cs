@@ -11,10 +11,10 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Account
 {
     public class UpdateAccountByMailRequestModel
     {
-        public string UserName { get; set; } = null!;
-        public AccountGender Gender { get; set; }
+        public string? UserName { get; set; }
+        public AccountGender? Gender { get; set; }
         [RegularExpression(Constraints.VALIDATE_AMOUNT, ErrorMessage = Constraints.STAR_INVALID)]
-        public decimal UpBalance { get; set; }
+        public decimal? UpBalance { get; set; }
         [RegularExpression(Constraints.VALIDATE_NEGATIVE, ErrorMessage = Constraints.INFORMATION_INVALID)]
         public string? PhoneNumber { get; set; }
         public Guid? CharacterItemId { get; set; }

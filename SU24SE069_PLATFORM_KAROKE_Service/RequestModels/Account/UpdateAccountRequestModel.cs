@@ -9,8 +9,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Account
 {
     public class UpdateAccountRequestModel
     {
-        public AccountGender Gender { get; set; }
-        public AccountRole Role { get; set; }
+        public AccountGender? Gender { get; set; }
+        public AccountRole? Role { get; set; }
         public string? Fullname { get; set; }
         public int? Yob { get; set; }
         public string? IdentityCardNumber { get; set; }
