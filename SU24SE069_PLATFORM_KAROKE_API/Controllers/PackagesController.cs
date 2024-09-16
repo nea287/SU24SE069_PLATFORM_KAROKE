@@ -48,6 +48,13 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
             return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
         }
 
+        [HttpPut("update-status/{id:guid}")]
+        public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] PackageStatus status)
+        {
+            var rs = await _service.ChangeStatus(id, status);
+
+            return rs.result.HasValue ? (rs.result.Value ? Ok(rs) : BadRequest(rs)) : BadRequest(rs);
+        }
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdatePackage([FromBody] PackageRequestModel request, Guid id)
         {

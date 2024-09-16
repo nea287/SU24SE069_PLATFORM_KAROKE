@@ -75,6 +75,52 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
+
+        public async Task<ResponseResult<PackageViewModel>> ChangeStatus(Guid id, PackageStatus status)
+        {
+            Package rs = new Package();
+            try
+            {
+                var data = await _repository.GetByIdGuid(id);
+
+                if(data == null)
+                {
+                    await _repository.DisponseAsync();
+                    return new ResponseResult<PackageViewModel>()
+                    {
+                        Message = Constraints.NOT_FOUND,
+                        result = false
+                    };
+                }
+
+                data.Status = (int) status;
+                data.PackageId = id;
+
+                if(!await _repository.UpdatePackage(data))
+                {
+                    throw new Exception();  
+                }
+
+            }
+            catch (Exception)
+            {
+                return new ResponseResult<PackageViewModel>()
+                {
+                    Message = Constraints.UPDATE_FAILED,
+                    result = false
+                };
+            }
+            finally
+            {
+                await _repository.DisponseAsync();
+            }
+
+            return new ResponseResult<PackageViewModel>()
+            {
+                Message = Constraints.UPDATE_SUCCESS,
+                result = true,
+            };
+        }
         public async Task<ResponseResult<PackageViewModel>> DeletePackage(Guid id)
         {
             Package rs = new Package();
