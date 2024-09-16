@@ -14,6 +14,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<PackageViewModel>> UpdatePackage(PackageRequestModel request, Guid id);
         public Task<ResponseResult<PackageViewModel>> DeletePackage(Guid id);
         public Task<ResponseResult<PackageViewModel>> EnablePackage(Guid id);
+        public Task<ResponseResult<PackageViewModel>> ChangeStatus(Guid id, PackageStatus status);
+
         public Task<DynamicModelResponse.DynamicModelsResponse<PackageViewModel>> GetPackages(PackageViewModel filter, PagingRequest paging, PackageOrderFilter orderFilter);
         public Task<DynamicModelResponse.DynamicModelsResponse<PackageViewModel>> GetPackagesForAdmin(string? filter, PagingRequest paging, PackageOrderFilter orderFilter);
         Task<ResponseResult<PayOSPackagePaymentResponse>> CreatePayOSPackagePurchasePayment(MonetaryTransactionRequestModel transactionRequest);
