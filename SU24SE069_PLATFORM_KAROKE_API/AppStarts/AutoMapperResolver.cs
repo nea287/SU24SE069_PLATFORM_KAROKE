@@ -125,6 +125,22 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                     dest.MapFrom(a => a.SongArtists.Any() && a.SongArtists != null ? a.SongArtists.Select(t => t.Artist.ArtistName).First() : (string?)null);
                 })
                 .ReverseMap();
+            
+            CreateMap<Song, SongInAppViewModel>()
+                .ForMember(x => x.SongStatus, dest => dest.MapFrom(opt => (SongStatus)opt.SongStatus))
+                .ForMember(x => x.Singer, dest =>
+                {
+                    dest.MapFrom(a => a.SongSingers.Any() && a.SongSingers != null ? a.SongSingers.Select(t => t.Singer.SingerName).ToList() : new List<string>());
+                })
+                .ForMember(x => x.Genre, dest =>
+                {
+                    dest.MapFrom(a => a.SongGenres.Any() && a.SongGenres != null ? a.SongGenres.Select(t => t.Genre.GenreName).ToList() : new List<string>());
+                })
+                .ForMember(x => x.Artist, dest =>
+                {
+                    dest.MapFrom(a => a.SongArtists.Any() && a.SongArtists != null ? a.SongArtists.Select(t => t.Artist.ArtistName).ToList() : new List<string>());
+                })
+                .ReverseMap();
 
             //CreateMap<Song, SongFilter>()
             //.ForMember(x => x.SongStatus, dest => dest.MapFrom(opt => (SongStatus)opt.SongStatus))
@@ -192,6 +208,12 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.ItemStatus, dest => dest.MapFrom(src => (ItemStatus)src.ItemStatus))
                 .ForMember(x => x.CreatorMail, dest => dest.MapFrom(src => src.Creator.Email))
      
+                .ReverseMap();
+            
+            CreateMap<Item, ItemInAppViewModel>()
+                .ForMember(x => x.ItemType, dest => dest.MapFrom(src => (ItemType)src.ItemType))
+                .ForMember(x => x.ItemStatus, dest => dest.MapFrom(src => (ItemStatus)src.ItemStatus))
+                .ForMember(x => x.CreatorMail, dest => dest.MapFrom(src => src.Creator.Email))
                 .ReverseMap();
 
             CreateMap<Item, ItemModel>()
@@ -266,6 +288,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.TransactionType, dest => dest.MapFrom(src => (InAppTransactionType)src.TransactionType))
                 .ForMember(x => x.UserName, dest => dest.MapFrom(src => src.Member.UserName))
                 .ReverseMap();
+
+            CreateMap<InAppTransactionFilter, InAppTransactionViewModel>().ReverseMap();
 
             CreateMap<InAppTransaction, CrreateInAppTransactionRequestModel>().ReverseMap();
             CreateMap<InAppTransaction, UpdateInAppTransactionRequestModel>().ReverseMap();

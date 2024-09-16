@@ -1,6 +1,7 @@
 ﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Item;
@@ -18,7 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<InAppTransactionViewModel>> GetTransaction(Guid id);
         public Task<ResponseResult<InAppTransactionViewModel>> CreateInAppTransaction(CrreateInAppTransactionRequestModel request);
         public Task<ResponseResult<InAppTransactionViewModel>> UpdateInAppTransaction(UpdateInAppTransactionRequestModel request, Guid id);
-        public Task<DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>> GetTransactions(InAppTransactionViewModel filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter);
+        public Task<DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>> GetTransactions(InAppTransactionFilter filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter);
         public Task<DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>> GetTransactionsForAdmin(string? filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter);
 
         public Task<ResponseResult<InAppTransactionViewModel>> PurchaseSong(PurchasedSongRequestModel request);

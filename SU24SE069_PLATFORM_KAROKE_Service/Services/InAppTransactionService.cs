@@ -9,6 +9,7 @@ using SU24SE069_PLATFORM_KAROKE_BusinessLayer.ReponseModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_BusinessLayer.RequestModels.Helpers;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using SU24SE069_PLATFORM_KAROKE_Repository.IRepository;
+using SU24SE069_PLATFORM_KAROKE_Service.Filters;
 using SU24SE069_PLATFORM_KAROKE_Service.IServices;
 using SU24SE069_PLATFORM_KAROKE_Service.ReponseModels;
 using SU24SE069_PLATFORM_KAROKE_Service.RequestModels.InAppTransaction;
@@ -117,7 +118,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             };
         }
 
-        public async Task<DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>> GetTransactions(InAppTransactionViewModel filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter)
+        public async Task<DynamicModelResponse.DynamicModelsResponse<InAppTransactionViewModel>> GetTransactions(InAppTransactionFilter filter, PagingRequest paging, InAppTransactionOrderFilter orderFilter)
         {
             (int, IQueryable<InAppTransactionViewModel>) result;
             try
@@ -129,7 +130,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                                                 SupportingFeature.GetNameIncludedProperties<InAppTransaction>()))
                         .AsQueryable()
                         .ProjectTo<InAppTransactionViewModel>(_mapper.ConfigurationProvider)
-                        .DynamicFilter(filter);
+                        .DynamicFilter(_mapper.Map<InAppTransactionViewModel>(filter));
 
                     string? colName = Enum.GetName(typeof(InAppTransactionOrderFilter), orderFilter);
 
