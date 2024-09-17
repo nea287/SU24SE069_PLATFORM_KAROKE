@@ -58,14 +58,14 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.Role, dest => dest.MapFrom(src => (AccountRole)src.Role))
                 .ForMember(x => x.Gender, dest => dest.MapFrom(src => (AccountGender)src.Gender))
                 .ForMember(x => x.AccountStatus, dest => dest.MapFrom(src => (AccountStatus)src.AccountStatus))
-                //.ForMember(x => x.CharaterItemCode, dest =>
-                //{
-                //    dest.MapFrom(a => a.CharacterItem != null ? a.CharacterItem.Item.ItemCode : (string?)null);
-                //})
-                //.ForMember(x => x.RoomItemCode, dest =>
-                //{
-                //    dest.MapFrom(a => a.RoomItem != null ? a.RoomItem.Item.ItemCode : (string?)null);
-                //})
+                .ForMember(x => x.CharaterItemCode, dest =>
+                {
+                    dest.MapFrom(a => a.CharacterItem != null ? a.CharacterItem.Item.ItemCode : (string?)null);
+                })
+                .ForMember(x => x.RoomItemCode, dest =>
+                {
+                    dest.MapFrom(a => a.RoomItem != null ? a.RoomItem.Item.ItemCode : (string?)null);
+                })
                 ;
             CreateMap<Account, CreateAccountRequestModel>().ReverseMap();
             CreateMap<Account, CreateAccount1RequestModel>().ReverseMap();
