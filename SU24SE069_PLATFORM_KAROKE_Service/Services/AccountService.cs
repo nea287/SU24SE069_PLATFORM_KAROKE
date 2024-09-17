@@ -28,6 +28,8 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
 {
     public class AccountService : IAccountService
     {
+        private const decimal InitialUpBalance = 300;
+
         private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
         private readonly IDistributedCache _cache;
@@ -929,7 +931,25 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 CharacterItemId = null,
                 RoomItemId = null,
                 AccountStatus = (int)AccountStatus.NOT_VERIFY,
-                UpBalance = 0,
+                UpBalance = InitialUpBalance,
+            };
+
+            AccountItem accountNewItem = new AccountItem()
+            {
+                AccountItemId = Guid.NewGuid(),
+                ItemStatus = (int)ItemStatus.ENABLE,
+                ActivateDate = DateTime.Now,
+                ExpirationDate = DateTime.Now,
+                Quantity = 1,
+                ItemId = Guid.Parse("52a1c65c-5347-4696-804d-d6d7ea4dea50"),
+                MemberId = newAccountId,
+                InAppTransactionId = null,
+                ObtainMethod = 0
+            };
+
+            newAccount.AccountInventoryItems = new List<AccountItem>
+            {
+                accountNewItem
             };
 
             bool createResult = false;
