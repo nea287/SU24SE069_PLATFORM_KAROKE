@@ -143,10 +143,14 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 lock (_itemRepository)
                 {
-                    var data1 = _itemRepository.GetAll(
+                    var data3 = _itemRepository.GetAll(
                                                 includeProperties: String.Join(",",
-                                                SupportingFeature.GetNameIncludedProperties<Item>()))
-                        .ProjectTo<ItemFilter>(_mapper.ConfigurationProvider)
+                                                SupportingFeature.GetNameIncludedProperties<Item>())).ToList();
+
+
+                    var data2 = _mapper.Map<List<ItemFilter>>(data3);
+
+                   var data1 = data2.AsQueryable()
                         .DynamicFilterForAdmin(filter).ToList();
 
                     var data = _mapper.Map<List<ItemViewModel>>(data1).AsQueryable();
@@ -188,10 +192,14 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 lock (_itemRepository)
                 {
-                    var data1 = _itemRepository.GetAll(
+                    var data3 = _itemRepository.GetAll(
                                                 includeProperties: String.Join(",",
                                                 SupportingFeature.GetNameIncludedProperties<Item>()))
-                        .ProjectTo<ItemFilter>(_mapper.ConfigurationProvider)
+                        .ToList();
+
+                    var data2 = _mapper.Map<ICollection<ItemFilter>>(data3);
+
+                   var data1 =  data2.AsQueryable()
                         .DynamicFilter(_mapper.Map<ItemFilter>(filter)).ToList();
 
                     var data = _mapper.Map<List<ItemViewModel>>(data1).AsQueryable();
