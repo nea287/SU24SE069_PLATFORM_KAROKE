@@ -700,6 +700,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasColumnName("caption");
 
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
+
                 entity.Property(e => e.Score).HasColumnType("float").HasColumnName("score");
 
                 entity.Property(e => e.OriginPostId).HasColumnName("origin_post_id");
@@ -750,6 +751,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.Property(e => e.CommentId)
                     .HasColumnName("comment_id")
                     .HasDefaultValueSql("(newid())");
+                
+              
 
                 entity.Property(e => e.Comment).HasColumnName("comment");
 
@@ -955,6 +958,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.CommentId).HasColumnName("comment_id");
+                entity.Property(e => e.Title).HasColumnType("int").HasColumnName("title");
 
                 entity.Property(e => e.CreateTime)
                     .HasColumnType("datetime")

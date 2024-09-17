@@ -65,7 +65,8 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.RoomItemCode, dest =>
                 {
                     dest.MapFrom(a => a.RoomItem != null ? a.RoomItem.Item.ItemCode : (string?)null);
-                });
+                })
+                ;
             CreateMap<Account, CreateAccountRequestModel>().ReverseMap();
             CreateMap<Account, CreateAccount1RequestModel>().ReverseMap();
             CreateMap<AccountViewModel, CreateAccount1RequestModel>().ReverseMap();
@@ -268,6 +269,12 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
                 .ForMember(x => x.RecordingType, dest => dest.MapFrom(src => (RecordingType)src.RecordingType))
                 .ForMember(x => x.SongUrl, dest => dest.MapFrom(src => src.PurchasedSong.Song.SongUrl))
                 .ReverseMap();
+            
+            CreateMap<Recording, RecordingPostViewModel>()
+                .ForMember(x => x.RecordingType, dest => dest.MapFrom(src => (RecordingType)src.RecordingType))
+                .ForMember(x => x.SongUrl, dest => dest.MapFrom(src => src.PurchasedSong.Song.SongUrl))
+                .ReverseMap();
+
             CreateMap<Recording, CreateRecordingRequestModel>().ReverseMap();
             CreateMap<Recording, UpdateRecording1RequestModel>()
                 .ForMember(x => x.VoiceAudios, dest => dest.MapFrom(opt => opt.VoiceAudios)).ReverseMap();
