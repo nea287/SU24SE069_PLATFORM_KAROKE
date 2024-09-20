@@ -15,6 +15,8 @@ using SU24SE069_PLATFORM_KAROKE_Service.Helpers;
 using SU24SE069_PLATFORM_KAROKE_Service.Filters.Song;
 using Microsoft.AspNetCore.Http;
 using Org.BouncyCastle.Asn1.Ocsp;
+using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 {
@@ -263,34 +265,112 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 lock (_songRepository)
                 {
                     var data1 = _songRepository.GetSong(id).Result;
-
-                    var data = _mapper.Map<Song>(request);
-
-                    data.CreatedDate = data1.CreatedDate;
-                    data.UpdatedDate = DateTime.Now;
-                    data.SongStatus = data1.SongStatus;
-                    data.SongId = id;
-
-                    if (data == null)
+                    if (data1 == null)
                     {
                         return new ResponseResult<SongViewModel>()
                         {
                             Message = Constraints.NOT_FOUND,
                             result = false,
-                            Value = _mapper.Map<SongViewModel>(data)
+                            Value = _mapper.Map<SongViewModel>(data1)
                         };
                     }
 
-                    _songRepository.DetachEntity(data1);
-                    _songRepository.MotifyEntity(data);
+                    var data = _mapper.Map<SongModel1>(request);
 
-                    if (!_songRepository.UpdateSong(id, data).Result)
+                    //data.CreatedDate = data1.CreatedDate;
+                    //data.UpdatedDate = DateTime.Now;
+                    //data.SongStatus = data1.SongStatus;
+                    //data.SongId = id;
+
+                    //data.SongGenres.Select(x => { x.SongId = id; return x; }).ToList();
+                    //data.SongSingers.Select(x => { x.SongId = id; return x; }).ToList();
+                    //data.SongArtists.Select(x => { x.SongId = id; return x; }).ToList();
+                    //data.InAppTransactions = data1.InAppTransactions;
+                    //data.PurchasedSongs = data1.PurchasedSongs;
+                    //data.FavouriteSongs = data1.FavouriteSongs;
+
+
+
+
+
+                    data.GetType().GetProperties().Where(pro => pro.GetValue(data) == null )
+                    .ToList().ForEach(e =>
                     {
-                        _songRepository.DetachEntity(data);
+                        Type type = e.PropertyType;
+                        //if(type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        //{
+                        //    type = Nullable.GetUnderlyingType(e.PropertyType);
+                        //}
+                        if (type.IsEnum ||
+                            (Nullable.GetUnderlyingType(e.PropertyType)?.IsEnum ?? false))
+                        {
+
+                            Type? enumType = Type.GetType(Regex.Match(type.FullName, @"(SU24SE069_PLATFORM_KAROKE_BusinessLayer\.Commons[^,]*)").Value);
+                            var value = Enum.GetName(enumType, data1.GetType().GetProperty(e.Name)?.GetValue(data1));
+
+                            var value1 = Enum.Parse(enumType, value);
+                            e.SetValue(data, value1);
+
+
+                        }
+                        else if(typeof(ICollection<>).IsAssignableFrom(e.PropertyType) 
+                            || (type?.IsGenericType == true && type.GetGenericTypeDefinition() == typeof(ICollection<>)) )
+                        {
+
+                            var valueHas = data1.GetType().GetProperty(e.Name)?.GetValue(data1);
+                            if (valueHas != null)
+                            {
+                                Type typeOrg = valueHas.GetType();
+
+                                //Lấy generic arguments của HashSet<T>
+                                //var newHashSet = typeOrg.GetGenericArguments();
+
+                                // if (newHashSet.Length > 0)
+                                // {
+                                //     var contructedType = typeof(HashSet<>).MakeGenericType(newHashSet);
+                                //     var hashSetType = Activator.CreateInstance(contructedType);
+
+                                //     // Lấy kiểu ICollection<T>
+                                //     var iCollectionType = typeof(ICollection<>).MakeGenericType(newHashSet);
+
+                                //     // Kiểm tra nếu hashSetType là ICollection<T>
+                                //     if (iCollectionType.IsAssignableFrom(hashSetType.GetType()))
+                                //     {
+                                //         e.SetValue(data, hashSetType);
+                                //     }
+                                // }
+
+                                e.SetValue(data, valueHas);
+
+                            }
+
+
+                        }
+                        else
+                        {
+                            e.SetValue(data, data1.GetType().GetProperty(e.Name)?.GetValue(data1));
+
+                        }
+                    });
+
+                    data.SongGenres.Select(x => { x.SongId = id; return x; }).ToList();
+                    data.SongSingers.Select(x => { x.SongId = id; return x; }).ToList();
+                    data.SongArtists.Select(x => { x.SongId = id; return x; }).ToList();
+
+
+
+                    var data2 = _mapper.Map<Song>(data);
+
+                    _songRepository.DetachEntity(data1);
+                    _songRepository.MotifyEntity(data2);
+
+                    if (!_songRepository.UpdateSong(id, data2).Result)
+                    {
+                        _songRepository.DetachEntity(data2);
                         throw new Exception();
                     }
 
-                    result = _mapper.Map<SongViewModel>(data);
+                    result = _mapper.Map<SongViewModel>(data2);
                 };
 
 
@@ -311,6 +391,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                 result = true,
                 Value = result
             };
+        }
+
+        public ICollection<T> ConvertToICollection<T> (HashSet<T> type)
+        {
+            return new List<T>(type);
         }
 
         public async Task<ResponseResult<SongViewModel>> DeleteSong(Guid id)

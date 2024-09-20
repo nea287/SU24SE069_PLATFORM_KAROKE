@@ -90,14 +90,21 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
         {
             try
             {
-                if (!_postRepository.ExistedPost(id))
+                var data = await _postRepository.GetPost(id);
+                if (data == null)
                     return new ResponseResult<PostViewModel>()
                     {
                         Message = Constraints.NOT_FOUND,
                         result = false,
                     };
 
-                if (!await _postRepository.DeletePost(id))
+                _postRepository.MotifyEntity(data);
+
+                data.PostId = id;
+
+                data.Status = (int)PostStatus.TEMPORARY_DISABLE;
+
+                if (!await _postRepository.UpdatePost(data))
                 {
                     throw new Exception();
                 }
