@@ -29,6 +29,50 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             _mapper = mapper;
             _postRepository = postRepository;
         }
+
+
+        public async Task<DynamicModelResponse.DynamicModelsResponse<PostAdminViewModel>> GetPostAdmins(PostFilter filter, PagingRequest paging, PostOrderFilter orderFilter)
+        {
+            (int, IQueryable<PostAdminViewModel>) result;
+            try
+            {
+                lock (_postRepository)
+                {
+                    var data1 = _postRepository.UpdateScores(null).Result;
+                    var data = _mapper.Map<List<PostAdminViewModel>>(data1).AsQueryable()
+                        .DynamicFilter(_mapper.Map<PostAdminViewModel>(filter));
+
+
+                    string? colName = Enum.GetName(typeof(PostOrderFilter), orderFilter);
+
+                    data = SupportingFeature.Sorting(data.AsEnumerable(), (SortOrder)paging.OrderType, colName).AsQueryable();
+
+                    result = data.AsQueryable().PagingIQueryable(paging.page, paging.pageSize,
+                            Constraints.LimitPaging, Constraints.DefaultPaging);
+
+                }
+            }
+            catch (Exception)
+            {
+                return new DynamicModelResponse.DynamicModelsResponse<PostAdminViewModel>()
+                {
+                    Message = Constraints.LOAD_FAILED,
+                };
+            }
+
+            return new DynamicModelResponse.DynamicModelsResponse<PostAdminViewModel>()
+            {
+                Message = Constraints.INFORMATION,
+                Metadata = new DynamicModelResponse.PagingMetadata()
+                {
+                    Page = paging.page,
+                    Size = paging.pageSize,
+                    Total = result.Item1
+                },
+                Results = result.Item2.ToList()
+            };
+        }
+
         public async Task<ResponseResult<PostViewModel>> CreatePost(CreatePostRequestModel request)
         {
             PostViewModel result = new PostViewModel();
@@ -207,14 +251,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         .DynamicFilter(_mapper.Map<PostViewModel>(filter));
 
 
-
-                    //if (!data.IsNullOrEmpty())
-                    //{
-                       
-                    //    data.VoiceAudios = data.VoiceAudios
-                    //        .Select(item => { item.UploadTime = DateTime.Now; return item; })
-                    //        .ToList();
-                    //}
 
 
                     string? colName = Enum.GetName(typeof(PostOrderFilter), orderFilter);
