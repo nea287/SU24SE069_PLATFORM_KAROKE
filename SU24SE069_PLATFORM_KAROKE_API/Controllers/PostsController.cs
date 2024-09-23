@@ -26,6 +26,16 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
+        
+        [HttpGet("get-posts-for-admin")]
+        public async Task<IActionResult> GetPostForAdmins([FromQuery] PostFilter filter, [FromQuery] PagingRequest paging, [FromQuery] PostOrderFilter orderFilter = PostOrderFilter.UpdateTime) 
+        {
+            var rs = await _postService.GetPostAdmins(filter, paging, orderFilter);
+
+            return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
+        }
+
+
 
         [HttpPut("upload-score/{id:guid}")]
         public async Task<IActionResult> Uploadcore(Guid id)

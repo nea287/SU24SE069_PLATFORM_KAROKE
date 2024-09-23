@@ -19,6 +19,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.IServices
         public Task<ResponseResult<PostViewModel>> CreatePost(CreatePostRequestModel request);
         public Task<ResponseResult<PostViewModel>> Delete(Guid id);
         public Task<DynamicModelResponse.DynamicModelsResponse<PostViewModel>> GetPosts(PostFilter filter, PagingRequest paging, PostOrderFilter orderFilter);
+        public Task<DynamicModelResponse.DynamicModelsResponse<PostAdminViewModel>> GetPostAdmins(PostFilter filter, PagingRequest paging, PostOrderFilter orderFilter);
         public Task<ResponseResult<PostViewModel>> UpdatePost(Guid id, string? caption);
         public Task<ResponseResult<PostViewModel>> UploadScore(Guid id);
         public Task<ResponseResult<PostViewModel>> ChangeStatus(Guid id, PostStatus status);

@@ -43,7 +43,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
             return score;
         }
 
-        public async Task<IQueryable<Post>> UpdateScores(string include)
+        public async Task<IQueryable<Post>> UpdateScores(string? include)
         {
 
             IQueryable<Post> data;
