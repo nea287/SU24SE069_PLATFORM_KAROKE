@@ -100,11 +100,32 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
             return (total, results);
         }
 
+        public static IQueryable<TEntity> FilterByRole<TEntity>(this IQueryable<TEntity> source, string? role, string? search)
+        {
+            try
+            {
+                if(!string.IsNullOrEmpty(role))
+                {
+                    int value = (int)Enum.Parse(typeof(AccountRole), role);
+                    source = source.Where($"Role = \"{value}\"");
+                }
+                if (!string.IsNullOrEmpty(search))
+                {
+                    source = source.Where(BuildDynamicFilter<TEntity>(search));
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return source;
+        }
+
         public static IQueryable<TEntity> DynamicFilterForAdmin<TEntity>(this IQueryable<TEntity> source, string? search)
         {
             if (!string.IsNullOrEmpty(search))
             {
-                //string x = BuildDynamicFilter<TEntity>(search).ToString();
+
                 source = source.Where(BuildDynamicFilter<TEntity>(search));
             }
 
@@ -118,159 +139,123 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
             Expression orExpression = null;
 
-            foreach (var property in properties)
+            // Tách searchTerm thành các giá trị con dựa trên dấu ','
+            var searchTerms = searchTerm.Split(',').Select(term => term.Trim()).Where(term => !string.IsNullOrEmpty(term)).ToList();
+
+            foreach (var term in searchTerms)
             {
-                if (property.PropertyType == typeof(Guid?) || property.PropertyType == typeof(Guid)) continue;
-                else if (property.PropertyType == typeof(string))
+                Expression termOrExpression = null; // Biểu thức OR cho từng searchTerm
+
+                foreach (var property in properties)
                 {
-                    var propertyExpression = Expression.Property(parameter, property); // x.UserName
-
-                    // Kiểm tra null: x.UserName != null
-                    var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(string)));
-
-                    var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
-                    var searchExpression = Expression.Constant(searchTerm, typeof(string)); // "Test Create Account2"
-
-                    // Gọi Contains: x.UserName.Contains("searchTerm")
-                    var containsExpression = Expression.Call(propertyExpression, containsMethod, searchExpression);
-
-                    // Kết hợp điều kiện null và Contains: (x.UserName != null) && x.UserName.Contains("searchTerm")
-                    var notNullAndContainsExpression = Expression.AndAlso(notNullExpression, containsExpression);
-
-                    if (orExpression == null)
+                    if (property.PropertyType == typeof(Guid?) || property.PropertyType == typeof(Guid)) continue;
+                    else if (property.PropertyType == typeof(string))
                     {
-                        orExpression = notNullAndContainsExpression;
+                        var propertyExpression = Expression.Property(parameter, property);
+
+                        var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(string)));
+                        var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+                        var searchExpression = Expression.Constant(term, typeof(string));
+
+                        var containsExpression = Expression.Call(propertyExpression, containsMethod, searchExpression);
+                        var notNullAndContainsExpression = Expression.AndAlso(notNullExpression, containsExpression);
+
+                        termOrExpression = termOrExpression == null ? notNullAndContainsExpression : Expression.OrElse(termOrExpression, notNullAndContainsExpression);
                     }
-                    else
+                    else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
                     {
-                        orExpression = Expression.OrElse(orExpression, notNullAndContainsExpression);
+                        if (!bool.TryParse(term, out bool searchValue))
+                            continue;
+
+                        var propertyExpression = Expression.Property(parameter, property);
+
+                        var equalsExpression = Expression.Equal(
+                            Expression.Convert(propertyExpression, typeof(bool)),
+                            Expression.Constant(searchValue, typeof(bool))
+                        );
+
+                        Expression notNullAndEqualsExpression = equalsExpression;
+                        if (property.PropertyType == typeof(bool?))
+                        {
+                            var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(bool?)));
+                            notNullAndEqualsExpression = Expression.AndAlso(notNullExpression, equalsExpression);
+                        }
+
+                        termOrExpression = termOrExpression == null ? notNullAndEqualsExpression : Expression.OrElse(termOrExpression, notNullAndEqualsExpression);
+                    }
+                    else if (property.PropertyType == typeof(int) || property.PropertyType == typeof(float) || property.PropertyType == typeof(double) ||
+                             property.PropertyType == typeof(decimal) || property.PropertyType == typeof(int?) || property.PropertyType == typeof(float?) ||
+                             property.PropertyType == typeof(double?) || property.PropertyType == typeof(decimal?))
+                    {
+                        var numericRegex = new Regex(@"^-?\d+(\.\d+)?$");
+
+                        if (!numericRegex.IsMatch(term))
+                        {
+                            continue;
+                        }
+
+                        var searchValue = Convert.ChangeType(term, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType);
+                        var propertyExpression = Expression.Property(parameter, property);
+
+                        var equalsExpression = Expression.Equal(
+                            Expression.Convert(propertyExpression, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType),
+                            Expression.Constant(searchValue)
+                        );
+
+                        Expression notNullAndEqualsExpression = equalsExpression;
+                        if (Nullable.GetUnderlyingType(property.PropertyType) != null)
+                        {
+                            var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, property.PropertyType));
+                            notNullAndEqualsExpression = Expression.AndAlso(notNullExpression, equalsExpression);
+                        }
+
+                        termOrExpression = termOrExpression == null ? notNullAndEqualsExpression : Expression.OrElse(termOrExpression, notNullAndEqualsExpression);
+                    }
+                    else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
+                    {
+                        if (!DateTime.TryParse(term, out DateTime searchDate))
+                        {
+                            continue;
+                        }
+
+                        var propertyExpression = Expression.Property(parameter, property);
+                        var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+                        var greaterThanOrEqualExpression = Expression.GreaterThanOrEqual(
+                            Expression.Convert(propertyExpression, propertyType),
+                            Expression.Constant(searchDate, propertyType)
+                        );
+
+                        var lessThanOrEqualExpression = Expression.LessThanOrEqual(
+                            Expression.Convert(propertyExpression, propertyType),
+                            Expression.Constant(searchDate.AddDays(1), propertyType)
+                        );
+
+                        var dateRangeExpression = Expression.AndAlso(
+                            greaterThanOrEqualExpression,
+                            lessThanOrEqualExpression
+                        );
+
+                        if (property.PropertyType == typeof(DateTime?))
+                        {
+                            var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(DateTime?)));
+                            dateRangeExpression = Expression.AndAlso(notNullExpression, dateRangeExpression);
+                        }
+
+                        termOrExpression = termOrExpression == null ? dateRangeExpression : Expression.OrElse(termOrExpression, dateRangeExpression);
                     }
                 }
-                else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
+
+                if (orExpression == null)
                 {
-                    if (!bool.TryParse(searchTerm, out bool searchValue))
-                        continue;
-
-                    var propertyExpression = Expression.Property(parameter, property); // x.SomeBoolProperty
-
-                    // Tạo biểu thức so sánh: x.SomeBoolProperty == searchValue
-                    var equalsExpression = Expression.Equal(
-                        Expression.Convert(propertyExpression, typeof(bool)),
-                        Expression.Constant(searchValue, typeof(bool))
-                    );
-
-                    // Nếu là Nullable<bool>, cần kiểm tra null trước khi so sánh
-                    Expression notNullAndEqualsExpression = equalsExpression;
-                    if (property.PropertyType == typeof(bool?))
-                    {
-                        var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(bool?)));
-                        notNullAndEqualsExpression = Expression.AndAlso(notNullExpression, equalsExpression);
-                    }
-
-                    if (orExpression == null)
-                    {
-                        orExpression = notNullAndEqualsExpression;
-                    }
-                    else
-                    {
-                        orExpression = Expression.OrElse(orExpression, notNullAndEqualsExpression);
-                    }
+                    orExpression = termOrExpression;
                 }
-                else if (property.PropertyType == typeof(int) ||
-                         property.PropertyType == typeof(float) ||
-                         property.PropertyType == typeof(double) ||
-                         property.PropertyType == typeof(decimal) ||
-                        property.PropertyType == typeof(int?) ||
-                         property.PropertyType == typeof(float?) ||
-                         property.PropertyType == typeof(double?) ||
-                         property.PropertyType == typeof(decimal?))
+                else if (termOrExpression != null)
                 {
-                    var numericRegex = new Regex(@"^-?\d+(\.\d+)?$");
-
-                    if (!numericRegex.IsMatch(searchTerm))
-                    {
-                        continue; // Bỏ qua nếu searchTerm không phải là số
-                    }
-
-                    // Sử dụng Convert.ChangeType để chuyển đổi searchTerm sang kiểu phù hợp
-                    var searchValue = Convert.ChangeType(searchTerm, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType);
-
-                    var propertyExpression = Expression.Property(parameter, property); // x.SomeNumericProperty
-
-                    // Tạo biểu thức so sánh: x.SomeNumericProperty == searchValue
-                    var equalsExpression = Expression.Equal(
-                        Expression.Convert(propertyExpression, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType),
-                        Expression.Constant(searchValue)
-                    );
-
-                    // Nếu là nullable, cần kiểm tra null trước khi so sánh
-                    Expression notNullAndEqualsExpression = equalsExpression;
-                    if (Nullable.GetUnderlyingType(property.PropertyType) != null)
-                    {
-                        var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, property.PropertyType));
-                        notNullAndEqualsExpression = Expression.AndAlso(notNullExpression, equalsExpression);
-                    }
-
-                    if (orExpression == null)
-                    {
-                        orExpression = notNullAndEqualsExpression;
-                    }
-                    else
-                    {
-                        orExpression = Expression.OrElse(orExpression, notNullAndEqualsExpression);
-                    }
-                }else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
-                {
-                    // Giả sử bạn có các biến 'startDate' và 'endDate' là kiểu string và chứa ngày
-                    if (!DateTime.TryParse(searchTerm, out DateTime searchDate))
-                    {
-                        continue; // Bỏ qua nếu searchTerm không phải là ngày hợp lệ
-                    }
-
-                    var propertyExpression = Expression.Property(parameter, property); // x.SomeDateTimeProperty
-
-                    // Kiểm tra kiểu Nullable<DateTime>
-                    var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-
-                    Expression notNullExpression = null;
-
-                    // Tạo biểu thức so sánh: x.SomeDateTimeProperty >= searchDate
-                    var greaterThanOrEqualExpression = Expression.GreaterThanOrEqual(
-                        Expression.Convert(propertyExpression, propertyType),
-                        Expression.Constant(searchDate, propertyType)
-                    );
-
-                    // Tạo biểu thức so sánh: x.SomeDateTimeProperty <= searchDate
-                    var lessThanOrEqualExpression = Expression.LessThanOrEqual(
-                        Expression.Convert(propertyExpression, propertyType),
-                        Expression.Constant(searchDate.AddDays(1), propertyType)
-                    );
-
-                    // Tạo biểu thức lọc lớn hơn hoặc bằng và nhỏ hơn hoặc bằng cho khoảng ngày
-                    var dateRangeExpression = Expression.AndAlso(
-                        greaterThanOrEqualExpression,
-                        lessThanOrEqualExpression
-                    );
-
-                    // Nếu là Nullable<DateTime>, cần kiểm tra null trước khi so sánh
-                    if (property.PropertyType == typeof(DateTime?))
-                    {
-                        notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(DateTime?)));
-                        dateRangeExpression = Expression.AndAlso(notNullExpression, dateRangeExpression);
-                    }
-
-                    if (orExpression == null)
-                    {
-                        orExpression = dateRangeExpression;
-                    }
-                    else
-                    {
-                        orExpression = Expression.OrElse(orExpression, dateRangeExpression);
-                    }
+                    orExpression = Expression.AndAlso(orExpression, termOrExpression); // Kết hợp các term lại bằng AND
                 }
             }
 
-            // Nếu không có thuộc tính nào để lọc, trả về biểu thức "true" (để không lọc gì cả).
             if (orExpression == null)
             {
                 var trueConstant = Expression.Constant(true);
@@ -279,6 +264,178 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
 
             return Expression.Lambda<Func<T, bool>>(orExpression, parameter);
         }
+
+
+        //public Expression<Func<T, bool>> BuildRoleFilter<T>(string, sear)
+
+        //public static Expression<Func<T, bool>> BuildDynamicFilter<T>(string searchTerm)
+        //{
+        //    var parameter = Expression.Parameter(typeof(T), "x");
+        //    var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        //    Expression orExpression = null;
+
+        //    foreach (var property in properties)
+        //    {
+        //        if (property.PropertyType == typeof(Guid?) || property.PropertyType == typeof(Guid)) continue;
+        //        else if (property.PropertyType == typeof(string))
+        //        {
+        //            var propertyExpression = Expression.Property(parameter, property); // x.UserName
+
+        //            // Kiểm tra null: x.UserName != null
+        //            var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(string)));
+
+        //            var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+        //            var searchExpression = Expression.Constant(searchTerm, typeof(string)); // "Test Create Account2"
+
+        //            // Gọi Contains: x.UserName.Contains("searchTerm")
+        //            var containsExpression = Expression.Call(propertyExpression, containsMethod, searchExpression);
+
+        //            // Kết hợp điều kiện null và Contains: (x.UserName != null) && x.UserName.Contains("searchTerm")
+        //            var notNullAndContainsExpression = Expression.AndAlso(notNullExpression, containsExpression);
+
+        //            if (orExpression == null)
+        //            {
+        //                orExpression = notNullAndContainsExpression;
+        //            }
+        //            else
+        //            {
+        //                orExpression = Expression.OrElse(orExpression, notNullAndContainsExpression);
+        //            }
+        //        }
+        //        else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
+        //        {
+        //            if (!bool.TryParse(searchTerm, out bool searchValue))
+        //                continue;
+
+        //            var propertyExpression = Expression.Property(parameter, property); // x.SomeBoolProperty
+
+        //            // Tạo biểu thức so sánh: x.SomeBoolProperty == searchValue
+        //            var equalsExpression = Expression.Equal(
+        //                Expression.Convert(propertyExpression, typeof(bool)),
+        //                Expression.Constant(searchValue, typeof(bool))
+        //            );
+
+        //            // Nếu là Nullable<bool>, cần kiểm tra null trước khi so sánh
+        //            Expression notNullAndEqualsExpression = equalsExpression;
+        //            if (property.PropertyType == typeof(bool?))
+        //            {
+        //                var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(bool?)));
+        //                notNullAndEqualsExpression = Expression.AndAlso(notNullExpression, equalsExpression);
+        //            }
+
+        //            if (orExpression == null)
+        //            {
+        //                orExpression = notNullAndEqualsExpression;
+        //            }
+        //            else
+        //            {
+        //                orExpression = Expression.OrElse(orExpression, notNullAndEqualsExpression);
+        //            }
+        //        }
+        //        else if (property.PropertyType == typeof(int) ||
+        //                 property.PropertyType == typeof(float) ||
+        //                 property.PropertyType == typeof(double) ||
+        //                 property.PropertyType == typeof(decimal) ||
+        //                property.PropertyType == typeof(int?) ||
+        //                 property.PropertyType == typeof(float?) ||
+        //                 property.PropertyType == typeof(double?) ||
+        //                 property.PropertyType == typeof(decimal?))
+        //        {
+        //            var numericRegex = new Regex(@"^-?\d+(\.\d+)?$");
+
+        //            if (!numericRegex.IsMatch(searchTerm))
+        //            {
+        //                continue; // Bỏ qua nếu searchTerm không phải là số
+        //            }
+
+        //            // Sử dụng Convert.ChangeType để chuyển đổi searchTerm sang kiểu phù hợp
+        //            var searchValue = Convert.ChangeType(searchTerm, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType);
+
+        //            var propertyExpression = Expression.Property(parameter, property); // x.SomeNumericProperty
+
+        //            // Tạo biểu thức so sánh: x.SomeNumericProperty == searchValue
+        //            var equalsExpression = Expression.Equal(
+        //                Expression.Convert(propertyExpression, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType),
+        //                Expression.Constant(searchValue)
+        //            );
+
+        //            // Nếu là nullable, cần kiểm tra null trước khi so sánh
+        //            Expression notNullAndEqualsExpression = equalsExpression;
+        //            if (Nullable.GetUnderlyingType(property.PropertyType) != null)
+        //            {
+        //                var notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, property.PropertyType));
+        //                notNullAndEqualsExpression = Expression.AndAlso(notNullExpression, equalsExpression);
+        //            }
+
+        //            if (orExpression == null)
+        //            {
+        //                orExpression = notNullAndEqualsExpression;
+        //            }
+        //            else
+        //            {
+        //                orExpression = Expression.OrElse(orExpression, notNullAndEqualsExpression);
+        //            }
+        //        }else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
+        //        {
+        //            // Giả sử bạn có các biến 'startDate' và 'endDate' là kiểu string và chứa ngày
+        //            if (!DateTime.TryParse(searchTerm, out DateTime searchDate))
+        //            {
+        //                continue; // Bỏ qua nếu searchTerm không phải là ngày hợp lệ
+        //            }
+
+        //            var propertyExpression = Expression.Property(parameter, property); // x.SomeDateTimeProperty
+
+        //            // Kiểm tra kiểu Nullable<DateTime>
+        //            var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+        //            Expression notNullExpression = null;
+
+        //            // Tạo biểu thức so sánh: x.SomeDateTimeProperty >= searchDate
+        //            var greaterThanOrEqualExpression = Expression.GreaterThanOrEqual(
+        //                Expression.Convert(propertyExpression, propertyType),
+        //                Expression.Constant(searchDate, propertyType)
+        //            );
+
+        //            // Tạo biểu thức so sánh: x.SomeDateTimeProperty <= searchDate
+        //            var lessThanOrEqualExpression = Expression.LessThanOrEqual(
+        //                Expression.Convert(propertyExpression, propertyType),
+        //                Expression.Constant(searchDate.AddDays(1), propertyType)
+        //            );
+
+        //            // Tạo biểu thức lọc lớn hơn hoặc bằng và nhỏ hơn hoặc bằng cho khoảng ngày
+        //            var dateRangeExpression = Expression.AndAlso(
+        //                greaterThanOrEqualExpression,
+        //                lessThanOrEqualExpression
+        //            );
+
+        //            // Nếu là Nullable<DateTime>, cần kiểm tra null trước khi so sánh
+        //            if (property.PropertyType == typeof(DateTime?))
+        //            {
+        //                notNullExpression = Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(DateTime?)));
+        //                dateRangeExpression = Expression.AndAlso(notNullExpression, dateRangeExpression);
+        //            }
+
+        //            if (orExpression == null)
+        //            {
+        //                orExpression = dateRangeExpression;
+        //            }
+        //            else
+        //            {
+        //                orExpression = Expression.OrElse(orExpression, dateRangeExpression);
+        //            }
+        //        }
+        //    }
+
+        //    // Nếu không có thuộc tính nào để lọc, trả về biểu thức "true" (để không lọc gì cả).
+        //    if (orExpression == null)
+        //    {
+        //        var trueConstant = Expression.Constant(true);
+        //        orExpression = trueConstant;
+        //    }
+
+        //    return Expression.Lambda<Func<T, bool>>(orExpression, parameter);
+        //}
 
         //public static Expression<Func<T, bool>> BuildDynamicFilter<T>(string searchTerm)
         //{

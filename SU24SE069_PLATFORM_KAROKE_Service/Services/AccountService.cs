@@ -243,7 +243,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
         }
 
 
-        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccountsForAdmin(
+        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccountsForAdmin(string? role,
     string? filter, PagingRequest paging, AccountOrderFilter orderFilter)
         {
             (int, IQueryable<AccountViewModel>) result;
@@ -268,7 +268,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 {
 
 
-                    data = data.DynamicFilterForAdmin<AccountViewModel>(filter);
+                    data = data.FilterByRole<AccountViewModel>(role, filter);
 
                     string? colName = Enum.GetName(typeof(AccountOrderFilter), orderFilter);
 

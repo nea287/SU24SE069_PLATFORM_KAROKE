@@ -277,6 +277,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     var data = _mapper.Map<SongModel1>(request);
 
+                    data.SongGenres = data.SongGenres.Count <= 0 ? null : data.SongGenres;
+                    data.SongArtists = data.SongArtists.Count <= 0 ? null : data.SongArtists;
+                    data.SongSingers = data.SongSingers.Count <= 0 ? null : data.SongSingers;
+
                     //data.CreatedDate = data1.CreatedDate;
                     //data.UpdatedDate = DateTime.Now;
                     //data.SongStatus = data1.SongStatus;
