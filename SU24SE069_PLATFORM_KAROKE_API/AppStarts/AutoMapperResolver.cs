@@ -413,17 +413,22 @@ namespace SU24SE069_PLATFORM_KAROKE_API.AppStarts
             #endregion
 
             #region Singer
-            CreateMap<Singer, SingerViewModel>().ReverseMap();
+            CreateMap<Singer, SingerViewModel>().
+                ForMember(x => x.Status, dest => dest.MapFrom(opt => (SingerStatus?)opt.Status)).ReverseMap();
             CreateMap<Singer, SingerRequestModel>().ReverseMap();
             #endregion
 
             #region Artist
-            CreateMap<Artist, ArtistViewModel>().ReverseMap();
+            CreateMap<Artist, ArtistViewModel>().
+                ForMember(x => x.Status, dest => dest.MapFrom(opt => (ArtistStatus?)opt.Status))
+                .ReverseMap();
             CreateMap<Artist, ArtistRequestModel>().ReverseMap();
             #endregion
 
             #region Genre
-            CreateMap<Genre, GenreViewModel>().ReverseMap();
+            CreateMap<Genre, GenreViewModel>()
+                .ForMember(x => x.Status, opt => opt.MapFrom(dest => (GenreStatus?)dest.Status))
+                .ReverseMap();
             CreateMap<Genre, GenreRequestModel>().ReverseMap();
             #endregion
 

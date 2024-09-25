@@ -63,7 +63,29 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
         {
             try
             {
-                await UpdateGuid(song, id);
+                var data = await GetSongById(id);
+
+                //song.SongArtists.ToList().ForEach(artist =>
+                //{
+                //    data.SongArtists.Add(artist);
+                //});
+
+                //song.SongGenres.ToList().ForEach(genre =>
+                //{
+                //    data.SongGenres.Add(genre);
+                //});
+
+                //song.SongSingers.ToList().ForEach(singer =>
+                //{
+                //    data.SongSingers.Add(singer);
+                //});
+
+
+                data.SongSingers = song.SongSingers;
+                data.SongGenres = song.SongGenres;  
+                data.SongArtists = song.SongArtists;
+
+                await Update(song);
                 await SaveChagesAsync();
                 
 

@@ -84,6 +84,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     };
                 }
 
+                data.GenreId = id;
+                data.Status = (int)GenreStatus.INACTIVE;
+
                 if (!await _repository.DeleteGenre(data))
                 {
                     _repository.DetachEntity(data);

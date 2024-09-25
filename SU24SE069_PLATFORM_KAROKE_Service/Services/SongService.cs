@@ -262,9 +262,13 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             SongViewModel result = new SongViewModel();
             try
             {
-                lock (_songRepository)
-                {
-                    var data1 = _songRepository.GetSong(id).Result;
+              
+                    var data3 =  await _songRepository.GetByIdGuid(id);
+                var data1 = data3;
+
+                //data3.SongGenres.Clear();
+                //data3.SongSingers.Clear();
+                //data3.SongArtists.Clear();
                     if (data1 == null)
                     {
                         return new ResponseResult<SongViewModel>()
@@ -281,17 +285,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     data.SongArtists = data.SongArtists.Count <= 0 ? null : data.SongArtists;
                     data.SongSingers = data.SongSingers.Count <= 0 ? null : data.SongSingers;
 
-                    //data.CreatedDate = data1.CreatedDate;
-                    //data.UpdatedDate = DateTime.Now;
-                    //data.SongStatus = data1.SongStatus;
-                    //data.SongId = id;
-
-                    //data.SongGenres.Select(x => { x.SongId = id; return x; }).ToList();
-                    //data.SongSingers.Select(x => { x.SongId = id; return x; }).ToList();
-                    //data.SongArtists.Select(x => { x.SongId = id; return x; }).ToList();
-                    //data.InAppTransactions = data1.InAppTransactions;
-                    //data.PurchasedSongs = data1.PurchasedSongs;
-                    //data.FavouriteSongs = data1.FavouriteSongs;
 
 
 
@@ -301,10 +294,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     .ToList().ForEach(e =>
                     {
                         Type type = e.PropertyType;
-                        //if(type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                        //{
-                        //    type = Nullable.GetUnderlyingType(e.PropertyType);
-                        //}
                         if (type.IsEnum ||
                             (Nullable.GetUnderlyingType(e.PropertyType)?.IsEnum ?? false))
                         {
@@ -325,24 +314,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                             if (valueHas != null)
                             {
                                 Type typeOrg = valueHas.GetType();
-
-                                //Lấy generic arguments của HashSet<T>
-                                //var newHashSet = typeOrg.GetGenericArguments();
-
-                                // if (newHashSet.Length > 0)
-                                // {
-                                //     var contructedType = typeof(HashSet<>).MakeGenericType(newHashSet);
-                                //     var hashSetType = Activator.CreateInstance(contructedType);
-
-                                //     // Lấy kiểu ICollection<T>
-                                //     var iCollectionType = typeof(ICollection<>).MakeGenericType(newHashSet);
-
-                                //     // Kiểm tra nếu hashSetType là ICollection<T>
-                                //     if (iCollectionType.IsAssignableFrom(hashSetType.GetType()))
-                                //     {
-                                //         e.SetValue(data, hashSetType);
-                                //     }
-                                // }
 
                                 e.SetValue(data, valueHas);
 
@@ -365,17 +336,19 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
                     var data2 = _mapper.Map<Song>(data);
 
+                    data2.SongId = id;
+
                     _songRepository.DetachEntity(data1);
                     _songRepository.MotifyEntity(data2);
 
-                    if (!_songRepository.UpdateSong(id, data2).Result)
+                    if (!await _songRepository.UpdateSong(id, data2))
                     {
                         _songRepository.DetachEntity(data2);
                         throw new Exception();
                     }
 
                     result = _mapper.Map<SongViewModel>(data2);
-                };
+                
 
 
             }
@@ -387,6 +360,10 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     result = false,
                     Value = result
                 };
+            }
+            finally
+            {
+                await _songRepository.DisponseAsync();
             }
 
             return new ResponseResult<SongViewModel>()

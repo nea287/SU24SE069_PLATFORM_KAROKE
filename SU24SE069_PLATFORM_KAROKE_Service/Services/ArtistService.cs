@@ -75,7 +75,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         result = false,
                     };
                 }
-
+                data.Status = (int)ArtistStatus.INACTIVE;
+                data.ArtistId = id; 
                 if (!await _repository.DeleteArtist(data))
                 {
                     _repository.DetachEntity(data);

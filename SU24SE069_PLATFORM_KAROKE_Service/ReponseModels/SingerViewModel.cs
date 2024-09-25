@@ -1,4 +1,5 @@
-﻿using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
+﻿using SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons;
+using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.ReponseModels
         public Guid? SingerId { get; set; }
         public string? SingerName { get; set; }
         public string? Image { get; set; }
+        public SingerStatus? Status { get; set; }
         [SwaggerIgnore]
         public ICollection<SongSingerViewModel>? SongSingers { get; set; }
     }

@@ -529,15 +529,32 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Commons
         COMMENT,
         ROOM
     }
+
+    public enum GenreStatus
+    {
+        INACTIVE,
+        ACTIVE,
+    }
+    public enum SingerStatus
+    {
+        INACTIVE,
+        ACTIVE,
+    }
+    public enum ArtistStatus
+    {
+        INACTIVE,
+        ACTIVE,
+    }
     public enum ReportCatagory
     {
+        SPAM,
+        BULLYING_OR_HARASSMENT,
+        INCITEMENT_TO_VIOLENCE_OR_HATE,
+        SUICIDE_OR_SELF_HARM,
+        PROHIBITED_GOODS_SALES_OR_PROMOTION,
+        FRAUD_OR_IMPERSONATION,
         SEXUAL_CONTENT,
-        BULLYING_OR_HARASSMENT, 
-        INCITEMENT_TO_VIOLENCE_OR_HATE, 
-        SUICIDE_OR_SELF_HARM, 
-        PROHIBITED_GOODS_SALES_OR_PROMOTION, 
-        FRAUD_OR_IMPERSONATION, SPAM, 
-        MISINFORMATION, 
+        MISINFORMATION,
         INTELLECTUAL_PROPERTY_VIOLATION
 
     }
