@@ -34,6 +34,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 rs = _mapper.Map<Genre>(request);
 
+                rs.Status = (int)GenreStatus.ACTIVE;
                 rs.GenreName = rs.GenreName.Trim().ToLower();
 
                 if (_repository.CheckGenre(rs.GenreName))

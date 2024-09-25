@@ -35,6 +35,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 rs = _mapper.Map<Artist>(request);
 
+                rs.Status = (int)GenreStatus.ACTIVE;
+
                 if (!await _repository.AddArtist(rs))
                 {
                     _repository.DetachEntity(rs);

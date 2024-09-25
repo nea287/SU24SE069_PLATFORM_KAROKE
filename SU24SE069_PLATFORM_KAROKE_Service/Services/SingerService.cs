@@ -33,6 +33,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             try
             {
                 rs = _mapper.Map<Singer>(request);
+                rs.Status = (int)GenreStatus.ACTIVE;
+
 
                 if (!await _repository.AddSinger(rs))
                 {
