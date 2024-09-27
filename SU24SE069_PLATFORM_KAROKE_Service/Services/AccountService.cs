@@ -324,8 +324,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     data.Email = data.Email.ToLower();
                     data.UserName = data.UserName.ToLower();
                     data.IsOnline = false;
-                    data.AccountStatus = (int)AccountStatus.ACTIVE;
+                    data.AccountStatus = (int)AccountStatus.INACTIVE;
                     data.CreatedTime = DateTime.Now;
+                    data.UpBalance = 1000;
 
                     data.Password = BCrypt.Net.BCrypt.HashPassword(data.Password, 12);
 
