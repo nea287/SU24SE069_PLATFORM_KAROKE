@@ -263,13 +263,11 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             try
             {
               
-                    var data3 =  await _songRepository.GetByIdGuid(id);
-                var data1 = data3;
+                    var data1 =  await _songRepository.GetByIdGuid(id);
+                //var data1 = data3;
 
-                //data3.SongGenres.Clear();
-                //data3.SongSingers.Clear();
-                //data3.SongArtists.Clear();
-                    if (data1 == null)
+
+                if (data1 == null)
                     {
                         return new ResponseResult<SongViewModel>()
                         {
@@ -280,8 +278,12 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     }
 
                     var data = _mapper.Map<SongModel1>(request);
+                //data3.SongGenres.Clear();
 
-                    data.SongGenres = data.SongGenres.Count <= 0 ? null : data.SongGenres;
+                //data3.SongSingers.Clear();
+                //data3.SongArtists.Clear();
+
+                data.SongGenres = data.SongGenres.Count <= 0 ? null : data.SongGenres;
                     data.SongArtists = data.SongArtists.Count <= 0 ? null : data.SongArtists;
                     data.SongSingers = data.SongSingers.Count <= 0 ? null : data.SongSingers;
 

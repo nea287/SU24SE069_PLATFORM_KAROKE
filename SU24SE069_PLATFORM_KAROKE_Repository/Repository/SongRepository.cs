@@ -63,28 +63,70 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
         {
             try
             {
+                int count = song.SongArtists.Count; 
+                int countGenre = song.SongGenres.Count;
+                int countSinger = song.SongSingers.Count;
+
                 var data = await GetSongById(id);
 
-                //song.SongArtists.ToList().ForEach(artist =>
-                //{
-                //    data.SongArtists.Add(artist);
-                //});
-
-                //song.SongGenres.ToList().ForEach(genre =>
-                //{
-                //    data.SongGenres.Add(genre);
-                //});
-
-                //song.SongSingers.ToList().ForEach(singer =>
-                //{
-                //    data.SongSingers.Add(singer);
-                //});
+                int end = data.SongGenres.Count - 1;
+                int start = 0;
+                while(end >= start)
+                {
 
 
-                data.SongSingers = song.SongSingers;
-                data.SongGenres = song.SongGenres;  
-                data.SongArtists = song.SongArtists;
+                    if (start < countGenre)
+                    {
+                        data.SongGenres.Add(data.SongGenres.ElementAt(start++));
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    data.SongGenres.Remove(data.SongGenres.ElementAt(end));
 
+                    end = data.SongGenres.Count - 1;
+                }
+
+                start = 0;
+
+                end = data.SongArtists.Count - 1;
+
+                while(end >= start)
+                {
+                    if (start < count)
+                    {
+                        data.SongArtists.Add(data.SongArtists.ElementAt(start++));
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    data.SongArtists.Remove(data.SongArtists.ElementAt(end));
+
+                    end = data.SongArtists.Count - 1;
+                }
+                
+                start = 0;
+
+                end = data.SongSingers.Count - 1;
+
+                while(end >= start)
+                {
+                    if (start < count)
+                    {
+                        data.SongSingers.Add(data.SongSingers.ElementAt(start++));
+                    }
+                    else
+                    {
+                        break;  
+                    }
+                    data.SongSingers.Remove(data.SongSingers.ElementAt(end));
+
+                    end = data.SongSingers.Count - 1;
+                }
+
+               
                 await Update(song);
                 await SaveChagesAsync();
                 
@@ -154,5 +196,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Repository.Repository
                 .Include(s => s.SongGenres).ThenInclude(sg => sg.Genre)
                 .FirstOrDefaultAsync(s => s.SongId == id);
         }
+
+
+        
     }
 }
