@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 {
-    public partial class migrations : Migration
+    public partial class UpdateMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 columns: table => new
                 {
                     artist_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
-                    artist_name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
+                    artist_name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    status = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -26,7 +28,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 columns: table => new
                 {
                     genre_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
-                    genre_name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
+                    genre_name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    status = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -38,7 +42,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 columns: table => new
                 {
                     singer_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
-                    singer_name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
+                    singer_name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    status = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -64,7 +70,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     character_item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     room_item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     account_status = table.Column<int>(type: "int", nullable: true),
-                    up_balance = table.Column<decimal>(type: "money", nullable: false)
+                    up_balance = table.Column<decimal>(type: "money", nullable: false),
+                    description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    image = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -161,6 +169,28 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notification",
+                columns: table => new
+                {
+                    notification_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    notification_type = table.Column<int>(type: "int", nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    create_date = table.Column<DateTime>(type: "datetime", nullable: false),
+                    account_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notification", x => x.notification_id);
+                    table.ForeignKey(
+                        name: "FK_Notification_Account_account_id",
+                        column: x => x.account_id,
+                        principalTable: "Account",
+                        principalColumn: "account_id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Package",
                 columns: table => new
                 {
@@ -210,10 +240,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SupportRequest",
+                name: "Ticket",
                 columns: table => new
                 {
-                    request_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
+                    ticket_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
                     problem = table.Column<string>(type: "text", nullable: false),
                     create_time = table.Column<DateTime>(type: "datetime", nullable: false),
                     category = table.Column<int>(type: "int", nullable: false),
@@ -222,7 +252,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__SupportR__18D3B90FC2899572", x => x.request_id);
+                    table.PrimaryKey("PK__SupportR__18D3B90FC2899572", x => x.ticket_id);
                     table.ForeignKey(
                         name: "FK__SupportRe__sende__2645B050",
                         column: x => x.sender_id,
@@ -355,7 +385,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     member_id_1 = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     member_id_2 = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     conversation_type = table.Column<int>(type: "int", nullable: false),
-                    support_request_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ticket_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -371,11 +401,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         principalTable: "Account",
                         principalColumn: "account_id");
                     table.ForeignKey(
-                        name: "FK__Conversat__suppo__02084FDA",
-                        column: x => x.support_request_id,
-                        principalTable: "SupportRequest",
-                        principalColumn: "request_id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Conversation_Ticket",
+                        column: x => x.ticket_id,
+                        principalTable: "Ticket",
+                        principalColumn: "ticket_id");
                 });
 
             migrationBuilder.CreateTable(
@@ -387,8 +416,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     created_date = table.Column<DateTime>(type: "datetime", nullable: false),
                     transaction_type = table.Column<int>(type: "int", nullable: false),
                     member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    item_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    song_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     up_amount_before = table.Column<decimal>(type: "money", nullable: false),
                     monetary_transaction_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     up_total_amount = table.Column<decimal>(type: "money", nullable: false)
@@ -523,7 +552,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     host_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     owner_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     karaoke_room_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SongId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    volume = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -544,15 +573,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         principalTable: "Account",
                         principalColumn: "account_id");
                     table.ForeignKey(
-                        name: "FK__Recording__purchasedsong___1F98B2C1",
+                        name: "FK_Recording_PurchasedSong",
                         column: x => x.purchased_song_id,
                         principalTable: "PurchasedSong",
-                        principalColumn: "purchased_song_id");
-                    table.ForeignKey(
-                        name: "FK_Recording_Song_SongId",
-                        column: x => x.SongId,
-                        principalTable: "Song",
-                        principalColumn: "song_id");
+                        principalColumn: "purchased_song_id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -567,7 +592,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     recording_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     status = table.Column<int>(type: "int", nullable: false),
                     post_type = table.Column<int>(type: "int", nullable: false),
-                    origin_post_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    origin_post_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    score = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -597,11 +623,12 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     voice_url = table.Column<string>(type: "text", nullable: false),
                     duration_second = table.Column<double>(type: "float", nullable: false),
                     upload_time = table.Column<DateTime>(type: "datetime", nullable: false),
-                    start_time = table.Column<DateTime>(type: "float", nullable: false),
-                    end_time = table.Column<DateTime>(type: "float", nullable: false),
+                    start_time = table.Column<double>(type: "float", nullable: false),
+                    end_time = table.Column<double>(type: "float", nullable: false),
                     pitch = table.Column<int>(type: "int", nullable: false),
                     recording_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    member_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    volume = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -713,9 +740,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                     reason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     create_time = table.Column<DateTime>(type: "datetime", nullable: false),
                     report_type = table.Column<int>(type: "int", nullable: false),
-                    comment_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    post_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    room_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    comment_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    post_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    room_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    title = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -740,6 +768,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         column: x => x.room_id,
                         principalTable: "KaraokeRoom",
                         principalColumn: "room_id");
+                    table.ForeignKey(
+                        name: "FK_Report_PostComment",
+                        column: x => x.comment_id,
+                        principalTable: "PostComment",
+                        principalColumn: "comment_id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -778,9 +811,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 column: "member_id_2");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Conversation_support_request_id",
+                name: "IX_Conversation_ticket_id",
                 table: "Conversation",
-                column: "support_request_id");
+                column: "ticket_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FavouriteSong_song_id",
@@ -846,6 +879,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 name: "IX_MonetaryTransaction_package_id",
                 table: "MonetaryTransaction",
                 column: "package_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notification_account_id",
+                table: "Notification",
+                column: "account_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Package_creator_id",
@@ -933,9 +971,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 column: "purchased_song_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Recording_SongId",
-                table: "Recording",
-                column: "SongId");
+                name: "IX_Report_comment_id",
+                table: "Report",
+                column: "comment_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Report_post_id",
@@ -985,8 +1023,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 column: "singer_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SupportRequest_sender_id",
-                table: "SupportRequest",
+                name: "IX_Ticket_sender_id",
+                table: "Ticket",
                 column: "sender_id");
 
             migrationBuilder.CreateIndex(
@@ -1037,7 +1075,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 name: "Message");
 
             migrationBuilder.DropTable(
-                name: "PostComment");
+                name: "Notification");
 
             migrationBuilder.DropTable(
                 name: "PostRating");
@@ -1064,7 +1102,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 name: "Conversation");
 
             migrationBuilder.DropTable(
-                name: "Post");
+                name: "PostComment");
 
             migrationBuilder.DropTable(
                 name: "Artist");
@@ -1076,7 +1114,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                 name: "Singer");
 
             migrationBuilder.DropTable(
-                name: "SupportRequest");
+                name: "Ticket");
+
+            migrationBuilder.DropTable(
+                name: "Post");
 
             migrationBuilder.DropTable(
                 name: "Recording");

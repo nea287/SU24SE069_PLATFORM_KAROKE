@@ -63,7 +63,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
             // appsettings.Production.json
             IConfiguration config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile($"appsettings.Development.json", true, true)
+                .AddJsonFile($"appsettings.Production.json", true, true)
                 .Build();
             var strConn = config.GetConnectionString("Database");
             return strConn;
@@ -97,7 +97,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(e => e.Account)
                     .WithMany(a => a.Notifications)  // Nếu Account có nhiều Notifications
                     .HasForeignKey(e => e.AccountId)
-                    .OnDelete(DeleteBehavior.Cascade); // Hành vi khi xóa tài khoản
+                    .OnDelete(DeleteBehavior.NoAction); // Hành vi khi xóa tài khoản
             });
 
             modelBuilder.Entity<Account>(entity =>
@@ -193,13 +193,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.FavouriteSongs)
                     .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Favourite__membe__02FC7413");
 
                 entity.HasOne(d => d.Song)
                     .WithMany(p => p.FavouriteSongs)
                     .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Favourite__song___03F0984C");
             });
 
@@ -235,13 +235,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Item)
                     .WithMany(p => p.AccountItems)
                     .HasForeignKey(d => d.ItemId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__AccountIn__item___7E37BEF6");
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.AccountInventoryItems)
                     .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__AccountIn__membe__7F2BE32F");
 
                 entity.HasOne(d => d.InAppTransaction)
@@ -325,7 +325,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Creator)
                     .WithMany(p => p.Songs)
                     .HasForeignKey(d => d.CreatorId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Song__creator_id__25518C17");
 
 
@@ -352,13 +352,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.MemberId1Navigation)
                     .WithMany(p => p.ConversationMemberId1Navigations)
                     .HasForeignKey(d => d.MemberId1)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Conversat__membe__00200768");
 
                 entity.HasOne(d => d.MemberId2Navigation)
                     .WithMany(p => p.ConversationMemberId2Navigations)
                     .HasForeignKey(d => d.MemberId2)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Conversat__membe__01142BA1");
 
                 entity.HasOne(d => d.SupportRequest)
@@ -383,13 +383,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Receiver)
                     .WithMany(p => p.FriendReceivers)
                     .HasForeignKey(d => d.ReceiverId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Friend__receiver__04E4BC85");
 
                 entity.HasOne(d => d.Sender)
                     .WithMany(p => p.FriendSenders)
                     .HasForeignKey(d => d.SenderId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Friend__sender_i__05D8E0BE");
             });
             modelBuilder.Entity<Genre>(entity =>
@@ -448,19 +448,19 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Item)
                     .WithMany(p => p.InAppTransactions)
                     .HasForeignKey(d => d.ItemId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__InAppTran__item___06CD04F7");
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.InAppTransactions)
                     .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__InAppTran__membe__07C12930");
 
                 entity.HasOne(d => d.Song)
                     .WithMany(p => p.InAppTransactions)
                     .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__InAppTran__song___08B54D69");
 
                 entity.HasOne(d => d.MonetaryTransaction)
@@ -550,7 +550,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Creator)
                     .WithMany(p => p.KaraokeRooms)
                     .HasForeignKey(d => d.CreatorId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__KaraokeRo__creat__0B91BA14");
             });
 
@@ -578,7 +578,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.LoginActivities)
                     .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__LoginActi__membe__0C85DE4D");
             });
 
@@ -605,13 +605,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Conversation)
                     .WithMany(p => p.Messages)
                     .HasForeignKey(d => d.ConversationId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Message__convers__0E6E26BF");
 
                 entity.HasOne(d => d.Sender)
                     .WithMany(p => p.Messages)
                     .HasForeignKey(d => d.SenderId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Message__sender___0F624AF8");
             });
 
@@ -651,13 +651,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.MoneyTransactions)
                     .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__MoneyTran__membe__10566F31");
 
                 entity.HasOne(d => d.Package)
                     .WithMany(p => p.MoneyTransactions)
                     .HasForeignKey(d => d.PackageId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__MoneyTran__packa__114A936A");
             });
 
@@ -694,7 +694,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Creator)
                     .WithMany(p => p.Packages)
                     .HasForeignKey(d => d.CreatorId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Package__creator__123EB7A3");
             });
 
@@ -733,7 +733,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.Posts)
                     .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Post__member_id__1332DBDC");
 
                 entity.HasOne(d => d.OriginPost)
@@ -744,7 +744,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Recording)
                     .WithMany(p => p.Posts)
                     .HasForeignKey(d => d.RecordingId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Post__recording___14270015");
             });
 
@@ -788,7 +788,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.PostComments)
                     .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK_PostComment_Account");
 
             });
@@ -808,13 +808,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.PostRatings)
                     .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK_PostRating_Account");
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.PostRatings)
                     .HasForeignKey(d => d.PostId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK_PostRating_Post");
             });
 
@@ -845,13 +845,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.PostShares)
                     .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__PostShare__membe__17036CC0");
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.PostShares)
                     .HasForeignKey(d => d.PostId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__PostShare__post___17F790F9");
             });
 
@@ -875,13 +875,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.PurchasedSongs)
                     .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Purchased__membe__1AD3FDA4");
 
                 entity.HasOne(d => d.Song)
                     .WithMany(p => p.PurchasedSongs)
                     .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Purchased__song___1BC821DD");
 
                 entity.HasOne(d => d.InAppTransaction)
@@ -939,19 +939,19 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Host)
                     .WithMany(p => p.RecordingHosts)
                     .HasForeignKey(d => d.HostId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Recording__host___1CBC4616");
 
                 entity.HasOne(d => d.KaraokeRoom)
                     .WithMany(p => p.Recordings)
                     .HasForeignKey(d => d.KaraokeRoomId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Recording__karao__1DB06A4F");
 
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.RecordingOwners)
                     .HasForeignKey(d => d.OwnerId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Recording__owner__1EA48E88");
 
                 entity.HasOne(d => d.PurchasedSong)
@@ -996,31 +996,31 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Reports)
                     .HasForeignKey(d => d.PostId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Report__post_id__2180FB33");
 
                 entity.HasOne(d => d.Comment)
                 .WithMany(p => p.Reports)
                 .HasForeignKey(d => d.CommentId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .OnDelete(DeleteBehavior.NoAction)
                 .HasConstraintName("FK_Report_PostComment");
 
                 entity.HasOne(d => d.ReportedAccount)
                     .WithMany(p => p.ReportReportedAccounts)
                     .HasForeignKey(d => d.ReportedAccountId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Report__reported__22751F6C");
 
                 entity.HasOne(d => d.Reporter)
                     .WithMany(p => p.ReportReporters)
                     .HasForeignKey(d => d.ReporterId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Report__reporter__236943A5");
 
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Reports)
                     .HasForeignKey(d => d.RoomId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Report__room_id__245D67DE");
             });
 
@@ -1058,13 +1058,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.FavouriteSongs)
                     .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Favourite__membe__02FC7413");
 
                 entity.HasOne(d => d.Song)
                     .WithMany(p => p.FavouriteSongs)
                     .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__Favourite__song___03F0984C");
             });
 
@@ -1084,13 +1084,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Artist)
                     .WithMany(p => p.SongArtists)
                     .HasForeignKey(d => d.ArtistId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK_SongArtist_Artist");
 
                 entity.HasOne(d => d.Song)
                     .WithMany(p => p.SongArtists)
                     .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK_SongArtist_Song");
             });
 
@@ -1109,13 +1109,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Genre)
                     .WithMany(p => p.SongGenres)
                     .HasForeignKey(d => d.GenreId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK_SongGenre_Genre");
 
                 entity.HasOne(d => d.Song)
                     .WithMany(p => p.SongGenres)
                     .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK_SongGenre_Song");
 
 
@@ -1136,13 +1136,13 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Singer)
                     .WithMany(p => p.SongSingers)
                     .HasForeignKey(d => d.SingerId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK_SongSinger_Singer");
 
                 entity.HasOne(d => d.Song)
                     .WithMany(p => p.SongSingers)
                     .HasForeignKey(d => d.SongId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK_SongSinger_Song");
             });
 
@@ -1175,7 +1175,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Sender)
                     .WithMany(p => p.SupportRequests)
                     .HasForeignKey(d => d.SenderId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__SupportRe__sende__2645B050");
             });
 
@@ -1222,14 +1222,14 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.VoiceAudios)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasForeignKey(d => d.MemberId)
                     .HasConstraintName("FK__VoiceAudi__membe__2739D489");
 
                 entity.HasOne(d => d.Recording)
                     .WithMany(p => p.VoiceAudios)
                     .HasForeignKey(d => d.RecordingId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK__VoiceAudi__recor__282DF8C2");
             });
 
