@@ -29,6 +29,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
     public class AccountService : IAccountService
     {
         private const decimal InitialUpBalance = 300;
+        private const string InitialNewItemId = "52a1c65c-5347-4696-804d-d6d7ea4dea50";
 
         private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
@@ -243,7 +244,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
         }
 
 
-        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccountsForAdmin(
+        public DynamicModelResponse.DynamicModelsResponse<AccountViewModel> GetAccountsForAdmin(string? role,
     string? filter, PagingRequest paging, AccountOrderFilter orderFilter)
         {
             (int, IQueryable<AccountViewModel>) result;
@@ -268,7 +269,7 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 {
 
 
-                    data = data.DynamicFilterForAdmin<AccountViewModel>(filter);
+                    data = data.FilterByRole<AccountViewModel>(role, filter);
 
                     string? colName = Enum.GetName(typeof(AccountOrderFilter), orderFilter);
 
@@ -324,8 +325,9 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                     data.Email = data.Email.ToLower();
                     data.UserName = data.UserName.ToLower();
                     data.IsOnline = false;
-                    data.AccountStatus = (int)AccountStatus.ACTIVE;
+                    data.AccountStatus = (int)AccountStatus.INACTIVE;
                     data.CreatedTime = DateTime.Now;
+                    data.UpBalance = 1000;
 
                     data.Password = BCrypt.Net.BCrypt.HashPassword(data.Password, 12);
 
@@ -934,14 +936,15 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
                 UpBalance = InitialUpBalance,
             };
 
+            Guid newAccountItemId = Guid.NewGuid();
             AccountItem accountNewItem = new AccountItem()
             {
-                AccountItemId = Guid.NewGuid(),
+                AccountItemId = newAccountItemId,
                 ItemStatus = (int)ItemStatus.ENABLE,
                 ActivateDate = DateTime.Now,
                 ExpirationDate = DateTime.Now,
                 Quantity = 1,
-                ItemId = Guid.Parse("52a1c65c-5347-4696-804d-d6d7ea4dea50"),
+                ItemId = Guid.Parse(InitialNewItemId),
                 MemberId = newAccountId,
                 InAppTransactionId = null,
                 ObtainMethod = 0
@@ -951,11 +954,14 @@ namespace SU24SE069_PLATFORM_KAROKE_BusinessLayer.Services
             {
                 accountNewItem
             };
+            
 
             bool createResult = false;
             try
             {
                 createResult = await _accountRepository.CreateAccount(newAccount);
+                newAccount.CharacterItemId = newAccountItemId;
+                await _accountRepository.UpdateAccount(newAccount);
             }
             catch (Exception ex)
             {

@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
@@ -33,6 +34,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             try
             {
                 rs = _mapper.Map<Singer>(request);
+                rs.Status = (int)GenreStatus.ACTIVE;
+
 
                 if (!await _repository.AddSinger(rs))
                 {
@@ -72,6 +75,8 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                     };
                 }
 
+                data.Status = (int)SingerStatus.INACTIVE;
+                data.SingerId = id;
                 if(!await _repository.DeleteSinger(data))
                 {
                     _repository.DetachEntity(data);
@@ -234,6 +239,28 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         result = false,
                     };
                 }
+
+                request.GetType().GetProperties().Where(pro => pro.GetValue(request) == null)
+                .ToList().ForEach(e =>
+                {
+                    if (e.PropertyType.IsEnum ||
+                        (Nullable.GetUnderlyingType(e.PropertyType)?.IsEnum ?? false))
+                    {
+
+                        Type? enumType = Type.GetType(Regex.Match(e.PropertyType.FullName, @"(SU24SE069_PLATFORM_KAROKE_BusinessLayer\.Commons[^,]*)").Value);
+                        var value = Enum.GetName(enumType, data.GetType().GetProperty(e.Name)?.GetValue(data));
+
+                        var value1 = Enum.Parse(enumType, value);
+                        e.SetValue(request, value1);
+
+
+                    }
+                    else
+                    {
+                        e.SetValue(request, data.GetType().GetProperty(e.Name)?.GetValue(data));
+
+                    }
+                });
 
                 rs = _mapper.Map<Singer>(request);
                 rs.SingerId = id;

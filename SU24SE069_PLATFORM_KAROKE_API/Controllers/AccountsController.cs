@@ -64,12 +64,16 @@ namespace SU24SE069_PLATFORM_KAROKE_API.Controllers
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }
-        
+        [Authorize(Policy = Constraints.ADMIN_STAFF_ROLE)]
         [HttpGet("get-accounts")]
-        public IActionResult GetAccountsForAdmin([FromQuery] string? filter,
+        public IActionResult GetAccountsForAdmin([FromQuery] string? filter, [FromQuery] string? role,
                 [FromQuery] PagingRequest paging, [FromQuery] AccountOrderFilter orderFilter = AccountOrderFilter.CreatedTime)
         {
-            var rs = _service.GetAccountsForAdmin(filter, paging, orderFilter);
+            if (User.IsInRole("STAFF"))
+            {
+                role = "MEMBER";
+            }
+            var rs = _service.GetAccountsForAdmin(role, filter, paging, orderFilter);
 
             return rs.Results.IsNullOrEmpty() ? NotFound(rs) : Ok(rs);
         }

@@ -13,6 +13,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
         public string GenreName { get; set; } = null!;
         public Guid GenreId { get; set; }
         public string? Image {  get; set; }
+        public int? Status { get; set; }
         public virtual ICollection<SongGenre> SongGenres { get; set; }
     }
 }

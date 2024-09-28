@@ -14,5 +14,6 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.RequestModels.Genre
         [Required(ErrorMessage = Constraints.EMPTY_INPUT_INFORMATION)]
         public string GenreName { get; set; } = null!;
         public string? Image {  get; set; }
+        public GenreStatus? Status { get; set; }
     }
 }

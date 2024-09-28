@@ -264,6 +264,11 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.Image)
                        .HasColumnName("image");
+
+                entity.Property(e => e.Status)
+                .HasColumnType("int")
+                .HasColumnName("status");
+                
             });
 
             modelBuilder.Entity<Song>(entity =>
@@ -322,6 +327,8 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasForeignKey(d => d.CreatorId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__Song__creator_id__25518C17");
+
+
 
             });
 
@@ -395,6 +402,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
 
                 entity.Property(e => e.Image)
                    .HasColumnName("image");
+
+                entity.Property(e => e.Status)
+                .HasColumnType("int")
+                .HasColumnName("status");
 
 
                 entity.Property(e => e.GenreName)
@@ -1025,6 +1036,10 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasMaxLength(150)
                     .HasColumnName("singer_name");
 
+                entity.Property(e => e.Status)
+                .HasColumnType("int")
+                .HasColumnName("status");
+
                 entity.Property(e => e.Image).HasColumnName("image");
             });
 
@@ -1102,7 +1117,9 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasForeignKey(d => d.SongId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_SongGenre_Song");
-            });
+
+
+    });
 
             modelBuilder.Entity<SongSinger>(entity =>
             {

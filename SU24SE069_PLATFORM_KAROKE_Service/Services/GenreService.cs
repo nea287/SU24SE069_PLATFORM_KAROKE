@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SU24SE069_PLATFORM_KAROKE_Service.Services
@@ -34,6 +35,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
             {
                 rs = _mapper.Map<Genre>(request);
 
+                rs.Status = (int)GenreStatus.ACTIVE;
                 rs.GenreName = rs.GenreName.Trim().ToLower();
 
                 if (_repository.CheckGenre(rs.GenreName))
@@ -83,6 +85,9 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         result = false,
                     };
                 }
+
+                data.GenreId = id;
+                data.Status = (int)GenreStatus.INACTIVE;
 
                 if (!await _repository.DeleteGenre(data))
                 {
@@ -247,6 +252,29 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
                         result = false,
                     };
                 }
+
+
+                request.GetType().GetProperties().Where(pro => pro.GetValue(request) == null)
+                .ToList().ForEach(e =>
+                {
+                    if (e.PropertyType.IsEnum ||
+                        (Nullable.GetUnderlyingType(e.PropertyType)?.IsEnum ?? false))
+                    {
+
+                        Type? enumType = Type.GetType(Regex.Match(e.PropertyType.FullName, @"(SU24SE069_PLATFORM_KAROKE_BusinessLayer\.Commons[^,]*)").Value);
+                        var value = Enum.GetName(enumType, data.GetType().GetProperty(e.Name)?.GetValue(data));
+
+                        var value1 = Enum.Parse(enumType, value);
+                        e.SetValue(request, value1);
+
+
+                    }
+                    else
+                    {
+                        e.SetValue(request, data.GetType().GetProperty(e.Name)?.GetValue(data));
+
+                    }
+                });
 
                 rs = _mapper.Map<Genre>(request);
                 rs.GenreId = id;
