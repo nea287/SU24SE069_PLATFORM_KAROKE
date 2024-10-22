@@ -707,7 +707,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                     .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Caption)
-                    .HasColumnType("text")
+                .HasMaxLength(500)
                     .HasColumnName("caption");
 
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
@@ -1229,7 +1229,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Models
                 entity.HasOne(d => d.Recording)
                     .WithMany(p => p.VoiceAudios)
                     .HasForeignKey(d => d.RecordingId)
-                    .OnDelete(DeleteBehavior.NoAction)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__VoiceAudi__recor__282DF8C2");
             });
 

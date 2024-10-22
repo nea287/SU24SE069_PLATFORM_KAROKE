@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 
@@ -11,9 +12,10 @@ using SU24SE069_PLATFORM_KAROKE_DataAccess.Models;
 namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
 {
     [DbContext(typeof(KokDBContext))]
-    partial class KokDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240928085846_UpdateMigration_v1")]
+    partial class UpdateMigration_v1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -669,8 +671,7 @@ namespace SU24SE069_PLATFORM_KAROKE_DataAccess.Migrations
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("Caption")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
+                        .HasColumnType("text")
                         .HasColumnName("caption");
 
                     b.Property<Guid>("MemberId")

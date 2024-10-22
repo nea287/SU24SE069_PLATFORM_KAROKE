@@ -208,7 +208,7 @@ builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsigh
 #endregion
 
 #region BackgroundServices
-builder.Services.AddHostedService<PendingMonetaryTransactionCancelService>();
+//builder.Services.AddHostedService<PendingMonetaryTransactionCancelService>();
 #endregion
 
 var app = builder.Build();

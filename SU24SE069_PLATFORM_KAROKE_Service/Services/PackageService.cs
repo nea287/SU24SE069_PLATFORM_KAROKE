@@ -426,7 +426,7 @@ namespace SU24SE069_PLATFORM_KAROKE_Service.Services
 
         private long GenerateOrderCode()
         {
-            int count = _monetaryTransactionRepository.Count();
+            int count = _monetaryTransactionRepository.Count() + 10000;
             return count++;
         }
 
